@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
+import React from "react";
 
-import './Settings.css';
+import "./Settings.css";
 
-class Settings extends Component {
+class Settings extends React.Component {
   state = {
-    email: '',
-    oldPassword: '',
-    newPassword: ''
-  }
+    email: "",
+    oldPassword: "",
+    newPassword: ""
+  };
 
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
+    this.setState({ [event.target.name]: event.target.value });
+  };
 
   handleSubmit = event => {
     event.preventDefault();
     // TODO: axios request
-  }
+  };
 
   render() {
     return (
@@ -28,17 +28,27 @@ class Settings extends Component {
           </label>
           <label>
             Old Password:
-            <input name="oldPassword" type="password" onChange={this.handleChange} />
+            <input
+              name="oldPassword"
+              type="password"
+              onChange={this.handleChange}
+            />
           </label>
           <label>
             New Password:
-            <input name="newPassword" type="password" onChange={this.handleChange} />
+            <input
+              name="newPassword"
+              type="password"
+              onChange={this.handleChange}
+            />
           </label>
-          <button type="submit" onClick={this.handleSubmit}>Save</button>
+          <button type="submit" onClick={this.handleSubmit}>
+            Save
+          </button>
         </form>
       </div>
-    )
+    );
   }
 }
 
-export default Settings
+export default Settings;
