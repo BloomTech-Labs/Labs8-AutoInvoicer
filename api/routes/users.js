@@ -1,8 +1,6 @@
 const router = require("express").Router();
 
-router.get("/", (req, res) => {
-  // possibly may need to be a post
-});
+router.get("/test", (req, res) => res.json({ msg: "User Works" }));
 
 router.put("/", (req, res) => {
   // for editing user settings
