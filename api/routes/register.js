@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
-router.get("/", (req, res) => {
-  res.send("Hello, world");
+router.post("/", (req, res) => {
+  // for creating new users
 });
 
 module.exports = router;
