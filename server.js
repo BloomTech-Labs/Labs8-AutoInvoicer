@@ -19,6 +19,19 @@ dotenv.load();
 const moduleConfig = require("./config/modules");
 const serveClient = require("./config/serveClient");
 
+const server = express();
+
+server.use(express.json())
+
+server.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  return next();
+});
+
+routeConfig(server);
+moduleConfig(server);
+
 // Configure Passport to use Auth0
 var strategy = new Auth0Strategy(
   {
@@ -47,7 +60,7 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-const server = express();
+
 
 connectMongo(server);
 // View engine setup
@@ -124,8 +137,13 @@ server.use(function(err, req, res, next) {
   });
 });
 
-routeConfig(server);
-moduleConfig(server);
+
 serveClient(server);
+
+// server.use(function(err, req, res, next){
+//   console.log(err.stack);
+//   res.send(500);
+//   // or you could call res.render('error'); if you have a view for that.
+// });
 
 module.exports = { server };
