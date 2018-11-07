@@ -1,0 +1,15 @@
+.signup-wrapper {
+  margin: 15px auto;
+  max-width: 35%;
+}
+
+.signup-wrapper form label {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+
+.signup-wrapper form button {
+  margin: 35px auto;
+}
+
