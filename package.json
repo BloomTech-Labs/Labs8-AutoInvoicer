@@ -9,13 +9,6 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-<<<<<<< HEAD
-    "dotenv": "^6.0.0",
-    "express": "^4.16.3",
-    "helmet": "^3.13.0",
-    "mongoose": "^5.2.16",
-    "path": "^0.12.7"
-=======
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
     "dotenv": "^6.1.0",
@@ -32,6 +25,5 @@
     "passport-auth0": "^1.1.0",
     "path": "^0.12.7",
     "pug": "^2.0.3"
->>>>>>> completed login test for auth0 on the backend
   }
 }
