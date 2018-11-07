@@ -1,0 +1,20 @@
+.settings-wrapper {
+  margin: 15px auto;
+}
+
+.settings-wrapper form {
+  display: flex;
+  flex-direction: column;
+  max-width: 35%;
+}
+
+.settings-wrapper form label {
+  display: flex;
+  justify-content: space-between;
+  margin: 15px 0;
+}
+
+.settings-wrapper form button {
+  width: 50px;
+  margin: 35px auto;
+}
