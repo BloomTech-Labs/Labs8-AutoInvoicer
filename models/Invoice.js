@@ -29,7 +29,7 @@ const InvoiceSchema = new Schema({
   },
   zipcode: {
     type: String,
-    required: tru
+    required: true
   },
   city: {
     type: String,
@@ -44,7 +44,7 @@ const InvoiceSchema = new Schema({
     required: true
   },
   item: {
-    type: Text,
+    type: String,
     required: true
   },
   quantity: {
@@ -79,16 +79,12 @@ const InvoiceSchema = new Schema({
     type: Number,
     required: true
   },
-  amount: {
-    type: Number,
-    required: true
-  },
   notes: {
-    type: Text,
+    type: String,
     required: false
   },
   terms: {
-    type: Text,
+    type: String,
     required: false
   }
 });
