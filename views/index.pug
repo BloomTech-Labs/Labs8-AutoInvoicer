@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  .w3-container
+    if loggedIn
+      h4 You are logged in!
+    else
+      h1 Welcome to Auto Invoicer's Auth0 handling.
+      h4 You are not logged in! Please #[a(href="/login") Log In] to test login/sign-up via Auth0.
