@@ -3,13 +3,6 @@ const router = require("express").Router();
 // Load User model
 const User = require("../../models/User");
 
-// router.options('/', function (req, res) {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader('Access-Control-Allow-Methods', '*');
-//   res.setHeader("Access-Control-Allow-Headers", "*");
-//   res.end();
-// });
-
 // @route GET api/users/test
 // @desc Tests users route
 // @access Public
