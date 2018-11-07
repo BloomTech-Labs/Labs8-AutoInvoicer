@@ -1,0 +1,33 @@
+.NavBar {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  display: flex; 
+
+}
+
+.top-nav {
+    height: 30px;
+    width: 1600px;
+    display: flex;
+    align-items: left;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.signout-button {
+    margin-left: 1320px;
+}
+
+.side-nav {
+  height: 100%;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: left;  
+}
+
+.invoices {
+    margin-left: 20px;
+}
+
