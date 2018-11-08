@@ -3,8 +3,31 @@ const router = require("express").Router();
 // Load Billing model
 const Billing = require("../../models/Billing");
 
+//Get List of ALL billing info
 router.get("/", (req, res) => {
-  // possibly may need to be a post
+  let query = req.params || {};
+
+  Billing.find(query)
+    .then(info => {
+      res.status(200).send(info);
+    })
+    .catch(err => {
+      res.status(500);
+      console.log(err);
+    });
+});
+
+//Get info of single user billing info using _id
+router.get("/:_id", (req, res) => {
+
+  Billing.findOne({ _id: req.params._id })
+      .then(info => {
+        res.status(200).send(info);
+      })
+      .catch(err => {
+        res.status(500);
+        console.log(err);
+      });
 });
 
 router.post("/", (req, res) => {

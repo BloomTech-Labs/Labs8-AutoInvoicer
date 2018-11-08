@@ -8,7 +8,6 @@ router.get("/", (req, res) => {
   user.find(query)
       .then(user => {
         res.status(200).send(user);
-        next();
       })
       .catch(err => {
         res.status(500);
@@ -21,7 +20,6 @@ router.get("/:_id", (req, res) => {
   user.findOne({_id: req.params._id})
       .then(user => {
         res.status(200).send(user);
-        next()
       })
       .catch(err => {
         res.status(500);
