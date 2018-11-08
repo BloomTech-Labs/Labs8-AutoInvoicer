@@ -54,24 +54,24 @@ export default class Billing extends Component {
               />
               <form className="expiration">
                 Expiration Date:&nbsp;
-                 <input
-                    placeholder="Month"
-                    name="expirationMonth"
-                    type="number"
-                    min="1"
-                    max="12"
-                    onChange={this.handleChange}
+                <input
+                  placeholder="Month"
+                  name="expirationMonth"
+                  type="number"
+                  min="1"
+                  max="12"
+                  onChange={this.handleChange}
                 />
                 /
                 <input
-                    placeholder="Year"
-                    name="expirationYear"
-                    type="number"
-                    min="18"
-                    max="99"
-                    onChange={this.handleChange}
+                  placeholder="Year"
+                  name="expirationYear"
+                  type="number"
+                  min="18"
+                  max="99"
+                  onChange={this.handleChange}
                 />
-                </form> 
+              </form>
               <input
                 id="CVV"
                 placeholder="CVV"
