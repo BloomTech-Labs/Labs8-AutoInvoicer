@@ -22,4 +22,4 @@ const BillingSchema = new Schema({
   }
 });
 
-module.exports = User = mongoose.model("billing", BillingSchema);
+module.exports = Billing = mongoose.model("billing", BillingSchema);

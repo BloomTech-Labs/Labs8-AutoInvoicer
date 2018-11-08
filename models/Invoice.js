@@ -89,4 +89,4 @@ const InvoiceSchema = new Schema({
   }
 });
 
-module.exports = User = mongoose.model("invoice", InvoiceSchema);
+module.exports = Invoice = mongoose.model("invoice", InvoiceSchema);
