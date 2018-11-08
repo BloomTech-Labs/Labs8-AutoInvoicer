@@ -1,11 +1,12 @@
 const router = require("express").Router();
 
 // Load Billing model
-const Invoice = require("../../models/Billing");
+const Billing = require("../../models/Billing");
 
 router.get("/", (req, res) => {
   // possibly may need to be a post
-  res.send("Billing");
+  res.send();
+  console.log(res);
 });
 
 router.post("/", (req, res) => {
