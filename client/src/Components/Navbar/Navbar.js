@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavLink, Route } from "react-router-dom";
+import { NavLink, Link, Route } from "react-router-dom";
 
 // import App from "../App.js";
 import "./Navbar.css";
@@ -11,50 +11,54 @@ class NavBar extends Component {
         <div className="NavBar-header">
           <nav>
             <div className="top-nav">
-              <NavLink classname="home" to="/" exact>
+              <NavLink className="home" to="/" exact>
                 Home
                 {/* <button className="button1">Home</button> */}
               </NavLink>
-              &nbsp;|&nbsp;
-              <NavLink classname="invoices" to="/invoices" exact>
+              &nbsp; > &nbsp;
+              <NavLink className="invoices1" to="/invoices" exact>
                 Invoices
                 {/* <button className="button2">Invoices</button> */}
               </NavLink>
-              &nbsp;|&nbsp;
-              <button className="signout-button" onClick={this.signout}>Signout</button>
+            </div>
+            <div className="signout-container">
+              <NavLink className="signout" to="/signout" exact>
+                Signout
+                {/* <button className="signout-button" onClick={this.signout}>Signout</button> */}
+              </NavLink>
             </div>
           </nav>
-
-          <nav>
-            <div classname="side-nav">
-              <NavLink classname="invoices" to="/invoices" exact>
+            <div className="newInvoice">
+              <h2 >Add a New Invoice</h2>
+              <Link to="/new" exact>
+                  Add Here
+              </Link>
+            </ div>
+            <div class="side-nav">
+              <NavLink className="invoices2" to="/invoices" exact>
                 Invoices
                 {/* <button className="button2">Invoices</button> */}
               </NavLink>
-              &nbsp;|&nbsp;
-              <NavLink to="/billing" exact>
+              <NavLink className="billing" to="/billing" exact>
                 Billing
                 {/* <button className="button3">Billing</button> */}
               </NavLink>
-              &nbsp;|&nbsp;
-              <NavLink to="/settings" exact>
+              <NavLink className="settings" to="/settings" exact>
                 Settings
                 {/* <button className="button4">Settings</button> */}
               </NavLink>
-              &nbsp;|&nbsp;
             </div>
-          </nav>
+          </div>
           <main>
-            <Route path="/" />
+            <Route path="/" exact/>
             {/* <Route path="/" component={Home} exact /> */}
             {/* <Route path="/invoices" component={Invoices} /> */}
             {/* <Route path="/billing" component={Billing} /> */}
+            {/* <Route path="/new" component={NewInvoice} /> */}
           </main>
         </div>
-      </div>
     );
   }
-
   signout = () => {
     localStorage.removeItem("jwt");
   };
