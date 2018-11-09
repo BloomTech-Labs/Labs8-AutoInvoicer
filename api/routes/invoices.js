@@ -44,4 +44,16 @@ router.put("/", (req, res) => {
   // for editing existing invoices
 });
 
+router.delete("/:_id", (req, res) => {
+  Invoice.findOneAndRemove({ _id: req.params._id})
+      .then(item => {
+        res.send(item)
+      })
+      .catch(err=>{
+        res.status(500)
+        console.log(err)
+      })
+})
+
+
 module.exports = router;

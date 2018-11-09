@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
 // Load Billing model
-const Invoice = require("../../models/Billing");
+const Billing = require("../../models/Billing");
 
 router.get("/", (req, res) => {
   // possibly may need to be a post
@@ -26,5 +26,16 @@ router.post("/", (req, res) => {
 router.put("/", (req, res) => {
   // for editing existing invoices
 });
+
+router.delete("/:_id", (req, res) => {
+  Billing.findOneAndRemove({ _id: req.params._id})
+      .then(item => {
+        res.send(item)
+      })
+      .catch(err => {
+        res.status(500)
+        console.log(err)
+      })
+})
 
 module.exports = router;
