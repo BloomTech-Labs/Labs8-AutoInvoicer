@@ -5,7 +5,7 @@ import { NavLink, Link, Route } from "react-router-dom";
 import "./Navbar.css";
 import AddInvoice from "../AddInvoice/AddInvoice";
 
-class NavBar extends Component {
+class Navbar extends Component {
   render() {
     return (
       <div className="NavBar">
@@ -49,4 +49,4 @@ class NavBar extends Component {
   };
 }
 
-export default NavBar;
+export default Navbar;
