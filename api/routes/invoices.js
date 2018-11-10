@@ -3,10 +3,32 @@ const router = require("express").Router();
 // Load Invoice model
 const Invoice = require("../../models/Invoice");
 
+//Get List of ALL Invoice info
 router.get("/", (req, res) => {
-  // possibly may need to be a post
-  res.send("Invoices");
+  let query = req.params || {};
+
+  Invoice.find(query)
+      .then(user => {
+        res.status(200).send(user);
+      })
+      .catch(err => {
+        res.status(500);
+        console.log(err);
+      })
 });
+
+//Get invoices of a single user using _id
+router.get("/:_id", (req, res) => {
+  
+  Invoice.find({_id: req.params._id})
+      .then(invoices => {
+        res.status(200).send(invoices);
+      })
+      .catch(err => {
+        res.status(500);
+        console.log(err);
+      })
+})
 
 router.post("/", (req, res) => {
   // for creating new invoices
