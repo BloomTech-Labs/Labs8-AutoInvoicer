@@ -11,6 +11,11 @@ var userInViews = require("./lib/middleware/userInViews");
 var authRouter = require("./routes/auth");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
+var invoicesRouter = require("./api/routes/invoices");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
 
 const connectMongo = require("./config/mongo");
 const routeConfig = require("./config/routes");
@@ -21,11 +26,22 @@ const serveClient = require("./config/serveClient");
 
 const server = express();
 
-server.use(express.json())
+server.use(express.json());
+
+// enhance app security with helmet
+server.use(helmet());
+
+// enable all CORS requests
+server.use(cors());
+
+server.use(morgan("combined"));
 
 server.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   return next();
 });
 
@@ -59,8 +75,6 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(user, done) {
   done(null, user);
 });
-
-
 
 connectMongo(server);
 // View engine setup
@@ -105,6 +119,7 @@ server.use(userInViews());
 server.use("/", authRouter);
 server.use("/", indexRouter);
 server.use("/", usersRouter);
+server.use("/", invoicesRouter);
 
 // Catch 404 and forward to error handler
 server.use(function(req, res, next) {
@@ -137,7 +152,6 @@ server.use(function(err, req, res, next) {
   });
 });
 
-
 serveClient(server);
 
 // server.use(function(err, req, res, next){
@@ -145,5 +159,7 @@ serveClient(server);
 //   res.send(500);
 //   // or you could call res.render('error'); if you have a view for that.
 // });
+
+console.log("CHECKING FOR COOKIE: ", sess);
 
 module.exports = { server };
