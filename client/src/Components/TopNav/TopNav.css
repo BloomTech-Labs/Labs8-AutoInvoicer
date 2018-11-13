@@ -1,0 +1,36 @@
+.nav-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.nav-container > * {
+  flex: 1 100%; /* We tell all items to be 100% width, via flex-basis */
+}
+
+.topNav-container {
+  flex: 1 100%;
+  width: 50%;
+  display: flex;
+  margin-top: 15px;
+  margin-left: 25px;
+}
+
+.signout-container {
+  width: 80px;
+  display: flex;
+  margin-top: 15px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  z-index: 1;
+  text-align: center;
+}
+
+.signout {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  position: absolute;
+}
