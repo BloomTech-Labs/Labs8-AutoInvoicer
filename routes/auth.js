@@ -17,11 +17,14 @@ router.get(
 router.get("/callback", function(req, res, next) {
   passport.authenticate("auth0", function(err, user, info) {
     if (err) {
-      return next(err);
+      next(err);
+      return res.redirect("/login");
     }
     if (!user) {
       return res.redirect("/login");
     }
+    console.log(req.logIn(user));
+    return;
     req.logIn(user, function(err) {
       if (err) {
         return next(err);
