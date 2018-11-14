@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./Landing.css";
+import { Link } from 'react-router-dom';
 
 export default class LandingPage extends Component {
   state = {};
@@ -8,7 +9,7 @@ export default class LandingPage extends Component {
     return (
       <div className="landing-page-container">
         <div className="login-bar-container">
-          <a>Sign Up</a>
+                <a href="/login">Sign In</a>
           <a>Sign In</a>
         </div>
         <div className="centerpiece-container">

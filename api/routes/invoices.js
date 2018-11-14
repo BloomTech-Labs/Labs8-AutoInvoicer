@@ -33,7 +33,7 @@ router.get("/:_id", (req, res) => {
 router.post("/", (req, res) => {
   // for creating new invoices
   const newInvoice = new Invoice({
-    // user: req.user.id,
+    user: req.body.user_id,
     invoice_number: req.body.invoice_number,
     date: req.body.date,
     due_date: req.body.due_date,

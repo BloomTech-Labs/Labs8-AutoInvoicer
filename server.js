@@ -119,38 +119,38 @@ server.use(userInViews());
 server.use("/", authRouter);
 server.use("/", indexRouter);
 server.use("/", usersRouter);
-server.use("/", invoicesRouter);
+// server.use("/", invoicesRouter);
 
 // Catch 404 and forward to error handler
-server.use(function(req, res, next) {
-  const err = new Error("Not Found");
-  err.status = 404;
-  next(err);
-});
+// server.use(function(req, res, next) {
+//   const err = new Error("Not Found");
+//   err.status = 404;
+//   next(err);
+// });
 
 // Error handlers
 
-// Development error handler
-// Will print stacktrace
-if (server.get("env") === "development") {
-  server.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render("error", {
-      message: err.message,
-      error: err
-    });
-  });
-}
+// // Development error handler
+// // Will print stacktrace
+// if (server.get("env") === "development") {
+//   server.use(function(err, req, res, next) {
+//     res.status(err.status || 500);
+//     res.render("error", {
+//       message: err.message,
+//       error: err
+//     });
+//   });
+// }
 
-// Production error handler
-// No stacktraces leaked to user
-server.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render("error", {
-    message: err.message,
-    error: {}
-  });
-});
+// // Production error handler
+// // No stacktraces leaked to user
+// server.use(function(err, req, res, next) {
+//   res.status(err.status || 500);
+//   res.render("error", {
+//     message: err.message,
+//     error: {}
+//   });
+// });
 
 serveClient(server);
 
