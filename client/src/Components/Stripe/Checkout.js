@@ -7,9 +7,7 @@ import StripeCheckout from "react-stripe-checkout";
 const STRIPE_PUBLISHABLE = process.env.STRIPE_PUBLISHABLE;
 const PAYMENT_SERVER_URL = process.env.PAYMENT_SERVER_URL;
 
-const CURRENCY = "EUR";
-
-const fromEuroToCent = amount => amount * 100;
+const CURRENCY = "USD";
 
 const successPayment = data => {
   alert("Payment Successful");
@@ -25,7 +23,7 @@ const onToken = (amount, description) => token =>
       description,
       source: token.id,
       currency: CURRENCY,
-      amount: fromEuroToCent(amount)
+      amount: amount
     })
     .then(successPayment)
     .catch(errorPayment);
@@ -34,7 +32,7 @@ const Checkout = ({ name, description, amount }) => (
   <StripeCheckout
     name={name}
     description={description}
-    amount={fromEuroToCent(amount)}
+    amount={amount}
     token={onToken(amount, description)}
     currency={CURRENCY}
     stripeKey={STRIPE_PUBLISHABLE}

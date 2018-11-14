@@ -22,7 +22,7 @@ export default class LandingPage extends Component {
           <Checkout
             name={"Auto Invoicer"}
             description={"#1 Invoicing App"}
-            amount={1}
+            amount={100}
           />
           <button className="buy-button">BUY NOW</button>
         </div>
