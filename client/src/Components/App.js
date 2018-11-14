@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import LandingPage from "./Landing/Landing";
 import SignUp from "./SignUp/SignUp";
 import Settings from "./Settings/Settings";
+import Invoices from "./Invoices/Invoices";
+import InvoiceForm from "./InvoiceForm/InvoiceForm";
 
 import "./App.css";
 
@@ -19,6 +21,8 @@ class App extends Component {
             <Route exact path="/" component={LandingPage} />
             <Route path="/register" component={SignUp} />
             <Route path="/settings" component={Settings} />
+            <Route path="/invoices" component={Invoices} />
+            <Route path="/invoices/:id" component={InvoiceForm} />
           </Switch>
         </div>
       </Router>

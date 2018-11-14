@@ -5,6 +5,8 @@ const User = require("../models/User");
 
 /* GET user profile. */
 router.get("/user", secured(), function(req, res, next) {
+  console.log("hit endpoint")
+  console.log("REQUEST.USER: ", req.user);
   const { _raw, _json, ...userProfile } = req.user;
   const auth0_userID = req.user._json.sub.split("|")[1];
   User.findOne({ auth0_userID })

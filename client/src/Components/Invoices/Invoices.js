@@ -13,7 +13,7 @@ export default class Invoices extends Component {
   }
 
   async componentDidMount(){
-    const invoices = (await axios.get('http://localhost:8000/invoices')).data;
+    const invoices = (await axios.get('http://localhost:8000/test/invoices')).data;
     this.setState({
       invoices,
     });
@@ -23,7 +23,8 @@ export default class Invoices extends Component {
     return (
       <div className="container">
         <div className="invoices">
-        {this.state.invoices === null && <p>Loading invoices...</p>}
+        Hello, Invoices
+        {/* {this.state.invoices === null && <p>Loading invoices...</p>}
         {
           this.state.invoices && this.state.invoices.map(invoice => (
             <div key={invoice.id} className="">
@@ -38,7 +39,7 @@ export default class Invoices extends Component {
               </Link>
             </div>
           ))
-        }
+        } */}
         </div>
       </div>
     )
