@@ -24,6 +24,8 @@
     "passport": "^0.4.0",
     "passport-auth0": "^1.1.0",
     "path": "^0.12.7",
-    "pug": "^2.0.3"
+    "pug": "^2.0.3",
+    "react-stripe-checkout": "^2.6.3",
+    "react-stripe-elements": "^2.0.1"
   }
 }
