@@ -1,11 +1,11 @@
 const router = require("express").Router();
-const user = require("../../models/User");
+const User = require("../../models/User");
 
 //Get List of ALL user info
 router.get("/", (req, res) => {
   let query = req.params || {};
 
-  user.find(query)
+  User.find(query)
       .then(user => {
         res.status(200).send(user);
       })
@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
 
 //Get info one user using _id
 router.get("/:_id", (req, res) => {
-  user.findOne({_id: req.params._id})
+  User.findOne({_id: req.params._id})
       .then(user => {
         res.status(200).send(user);
       })
@@ -27,12 +27,26 @@ router.get("/:_id", (req, res) => {
       })
 })
 
-router.put("/", (req, res) => {
+router.put("/:_id", (req, res) => {
   // for editing user settings
+  let edit = req.body || {},
+    options = {
+      new: true
+    }
+
+    User.findOneAndUpdate({_id: req.params._id}, edit, options)
+    .then(item => {
+      res.send(item)
+    })
+    .catch(err => {
+      res.status(500)
+      console.log(err)
+    })
+
 });
 
 router.delete("/:_id", (req, res) => {
-  user.findOneAndRemove({ _id: req.params._id})
+  User.findOneAndRemove({ _id: req.params._id})
       .then(item => {
         res.send(item)
       })

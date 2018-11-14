@@ -62,8 +62,22 @@ router.post("/", (req, res) => {
     .catch(err => console.log(err));
 });
 
-router.put("/", (req, res) => {
+router.put("/:_id", (req, res) => {
   // for editing existing invoices
+  let edit = req.body || {},
+    options = {
+      new: true
+    }
+
+    Invoice.findOneAndUpdate({_id: req.params._id}, edit, options)
+    .then(item => {
+      res.send(item)
+    })
+    .catch(err => {
+      res.status(500)
+      console.log(err)
+    })
+
 });
 
 router.delete("/:_id", (req, res) => {
