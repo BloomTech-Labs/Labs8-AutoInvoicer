@@ -1,0 +1,39 @@
+.form-container1 {
+    flex: 1 100%;
+    /* height: 30%; */
+    width: 70%;
+    display: flex;
+    position: absolute;
+    right: 50px;
+    top: 70px;
+    z-index: 1;
+    text-align: left;
+    /* justify-content: center;
+    align-items: center; */
+    flex-direction: column;
+    background-color: aqua;
+  }
+
+.form-container2 {
+    flex: 1 100%;
+    height: 50%;
+    display: flex;
+    position: absolute;
+    right: 100px;
+    text-align: right;
+    background-color: blueviolet;
+}
+
+.right-indent {
+    flex: 1 100%;
+    height: 30%;
+    width: 70%;
+    display: flex;
+    position: absolute;
+    right: 50px;
+    top: 70px;
+    z-index: 1;
+    text-align: right;
+
+}
+  
