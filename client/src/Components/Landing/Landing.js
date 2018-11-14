@@ -12,8 +12,8 @@ export default class LandingPage extends Component {
     return (
       <div className="landing-page-container">
         <div className="login-bar-container">
-                <a href="/login">Sign In</a>
-          <a>Sign In</a>
+          <a href={process.env.REACT_APP_LOGIN}>Sign In</a>
+          <a href={process.env.REACT_APP_LOGIN}>Sign Up</a>
         </div>
         <div className="centerpiece-container">
           <h3>
