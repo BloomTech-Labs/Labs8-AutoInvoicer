@@ -39,7 +39,6 @@ class InvoiceForm extends Component {
   handlesubmit = event => {
     event.preventDefault();
     };
-  };
 
   render() {
     return (
