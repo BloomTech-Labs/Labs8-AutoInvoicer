@@ -11,11 +11,11 @@ class AddInvoice extends Component {
   render() {
     return (
       <div>
-        <TopNav />
-        <Navbar />
+        {/* <TopNav /> */}
+        {/* <Navbar /> */}
         <div className="newInvoice">
           <h2>Add a New Invoice</h2>
-          <Link to="/new" exact>
+          <Link to="/create_invoice" exact>
             Add Here
           </Link>
         </div>
