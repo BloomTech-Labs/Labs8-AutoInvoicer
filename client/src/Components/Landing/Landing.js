@@ -8,12 +8,21 @@ import Checkout from "../Stripe/Checkout";
 export default class LandingPage extends Component {
   state = {};
 
+  placeToken() {
+    window.localStorage.setItem('token', 'token')
+  }
+
   render() {
     return (
       <div className="landing-page-container">
         <div className="login-bar-container">
+<<<<<<< HEAD
           <a href="/login">Sign In</a>
           <a>Sign In</a>
+=======
+          <a href={process.env.REACT_APP_LOGIN} onClick={this.placeToken}>Sign In</a>
+          <a href={process.env.REACT_APP_LOGIN} onClick={this.placeToken}>Sign Up</a>
+>>>>>>> master
         </div>
         <div className="centerpiece-container">
           <h3>

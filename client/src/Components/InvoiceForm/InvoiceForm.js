@@ -1,20 +1,12 @@
 import React, { Component } from "react";
 import { Route } from "react-router-dom";
-import {
-  Col,
-  Row,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  FormText
-} from "reactstrap";
+import { Row, Col, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
-// import "./InvoiceForm.css";
+import "./InvoiceForm.css";
+import Navbar from "../Navbar/Navbar";
+import TopNav from "../TopNav/TopNav";
 
-// class InvoiceForm extends Component {
-export default class InvoiceForm extends React.Component {
+class InvoiceForm extends Component {
   state = {
     invoiceNumber: "",
     date: "",
@@ -46,109 +38,84 @@ export default class InvoiceForm extends React.Component {
 
   handlesubmit = event => {
     event.preventDefault();
-    const {
-      invoiceNumber,
-      date,
-      dueDate,
-      invoiceFrom,
-      invoiceTo,
-      balanceDue,
-      address,
-      zip,
-      city,
-      cityState,
-      item,
-      quantity,
-      rate,
-      amount,
-      subtotal,
-      discount,
-      tax,
-      shipping,
-      total,
-      amountPaid,
-      notes,
-      terms
-    } = {
-      ...this.state
     };
   };
 
   render() {
     return (
-      <Form>
-        <Row form>
-          <Col md={6}>
+      <div>
+        <TopNav />
+        <Navbar />
+        <div className="form-container1">
+          <form>
+            {/* Add Logo */}
             <FormGroup>
-              <Label for="exampleEmail">Email</Label>
-              <Input
-                type="email"
-                name="email"
-                id="exampleEmail"
-                placeholder="with a placeholder"
-              />
+              <Label for="addLogo">Add Your Logo</Label>
+              <Input type="file" name="file" id="addLogo" />
+              <FormText color="muted">
+                Browse file to add your company logo.
+              </FormText>
             </FormGroup>
-          </Col>
-          <Col md={6}>
-            <FormGroup>
-              <Label for="examplePassword">Password</Label>
-              <Input
-                type="password"
-                name="password"
-                id="examplePassword"
-                placeholder="password placeholder"
-              />
-            </FormGroup>
-          </Col>
-        </Row>
-        <FormGroup>
-          <Label for="exampleAddress">Address</Label>
-          <Input
-            type="text"
-            name="address"
-            id="exampleAddress"
-            placeholder="1234 Main St"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleAddress2">Address 2</Label>
-          <Input
-            type="text"
-            name="address2"
-            id="exampleAddress2"
-            placeholder="Apartment, studio, or floor"
-          />
-        </FormGroup>
-        <Row form>
-          <Col md={6}>
-            <FormGroup>
-              <Label for="exampleCity">City</Label>
-              <Input type="text" name="city" id="exampleCity" />
-            </FormGroup>
-          </Col>
-          <Col md={4}>
-            <FormGroup>
-              <Label for="exampleState">State</Label>
-              <Input type="text" name="state" id="exampleState" />
-            </FormGroup>
-          </Col>
-          <Col md={2}>
-            <FormGroup>
-              <Label for="exampleZip">Zip</Label>
-              <Input type="text" name="zip" id="exampleZip" />
-            </FormGroup>
-          </Col>
-        </Row>
-        <FormGroup check>
-          <Input type="checkbox" name="check" id="exampleCheck" />
-          <Label for="exampleCheck" check>
-            Check me out
-          </Label>
-        </FormGroup>
-        <Button>Sign in</Button>
-      </Form>
-    );
-  }
-}
 
-// export default NewInvoice;
+            {/* Invoice Header Rigth Side */}
+            <FormGroup row classname="right-indent">
+              <Label for="Invoice Number" sm={2}>Invoice Number</Label>
+              <Col sm={10}>
+                <Input type="number" name="number" id="invoiceNumber" placeholder="Invoice Number" />
+              </Col>
+              <Label for="date" sm={2}>Date</Label>
+              <Col sm={10}>
+                <Input type="date" name="date" id="date" placeholder="Date" />
+              </Col>
+              <Label for="dueDate" sm={2}>Due Date</Label>
+              <Col sm={10}>
+                <Input type="date" name="dueDate" id="dueDate" placeholder="Due Date" />
+              </Col>
+              <Label for="balanceDue" sm={2}>Balance Due</Label>
+              <Col sm={10}>
+                <Input type="number" name="balanceDue" id="balanceDue" placeholder="Balance Due" />
+              </Col>
+            </FormGroup>
+
+            {/* Invoice Customer Company Details */}
+            <FormGroup>
+              <Label for="Invoice From" sm={2}>Invoice From</Label>
+              <Col sm={10}>
+                <Input type="text" name="invoiceFrom" id="invoiceFrom" placeholder="Invoice From" />
+              </Col>
+              <Label for="Invoice To" sm={2}>Invoice To</Label>
+              <Col sm={10}>
+                <Input type="text" name="invoiceTo" id="invoiceTo" placeholder="Invoice To" />
+              </Col>
+              <Label for="address">Address</Label>
+              <Input type="text" name="address" id="address" placeholder="Address"/>              
+            </FormGroup>
+
+            <Row form>
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="city">City</Label>
+                  <Input type="text" name="city" id="city" placeholder="City"/>
+                </FormGroup>
+              </Col>
+              <Col md={4}>
+                <FormGroup>
+                  <Label for="state">State</Label>
+                  <Input type="text" name="state" id="state" placeholder="State"/>
+                </FormGroup>
+              </Col>
+              <Col md={2}>
+                <FormGroup>
+                  <Label for="exampleZip">Zip</Label>
+                  <Input type="text" name="zip" id="zip" placeholder="Zip"/>
+                </FormGroup>  
+              </Col>
+            </Row>
+          </form>
+        </div>
+      </div>
+    );
+  };
+};
+
+export default InvoiceForm;
