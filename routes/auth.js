@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
+var secured = require("../lib/middleware/secured");
 var passport = require("passport");
+const User = require("../models/User");
 
 // Perform the login, after login Auth0 will redirect to callback
 router.get("/login",
@@ -13,7 +15,6 @@ router.get("/login",
 );
 
 // router.get("/register", passport.authenticate("auth0", {}));
-
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'
 router.get("/callback", function(req, res, next) {
   passport.authenticate("auth0", function(err, user, info) {
@@ -28,9 +29,10 @@ router.get("/callback", function(req, res, next) {
       if (err) {
         return next(err);
       }
+
       const returnTo = req.session.returnTo;
       delete req.session.returnTo;
-      res.redirect("/invoices");
+      res.redirect("/user");
     });
   })(req, res, next);
 });

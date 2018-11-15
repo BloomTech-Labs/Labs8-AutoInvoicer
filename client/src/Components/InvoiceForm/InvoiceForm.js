@@ -5,8 +5,8 @@ import qs from 'qs';
 
 
 import {
-  Col,
   Row,
+  Col,
   Button,
   Form,
   FormGroup,
@@ -15,10 +15,11 @@ import {
   FormText
 } from "reactstrap";
 
-// import "./InvoiceForm.css";
+import "./InvoiceForm.css";
+import Navbar from "../Navbar/Navbar";
+import TopNav from "../TopNav/TopNav";
 
-// class InvoiceForm extends Component {
-export default class InvoiceForm extends React.Component {
+class InvoiceForm extends Component {
   state = {
     invoiceNumber: "",
     date: "",
@@ -50,6 +51,7 @@ export default class InvoiceForm extends React.Component {
 
   handlesubmit = event => {
     event.preventDefault();
+<<<<<<< HEAD
     const {
       invoiceNumber,
       date,
@@ -77,6 +79,8 @@ export default class InvoiceForm extends React.Component {
     };
 
     this.calculateTax();
+=======
+>>>>>>> origin/master
   };
 
   calculateTax() {
@@ -112,67 +116,183 @@ export default class InvoiceForm extends React.Component {
 
   render() {
     return (
-      <Form>
-        <Row form>
-          <Col md={6}>
+      <div>
+        {/* <TopNav /> */}
+        {/* <Navbar /> */}
+        <div className="form-container1">
+          <form>
+            {/* Add Logo */}
             <FormGroup>
-              <Label for="exampleEmail">Email</Label>
+              <Label for="addLogo">Add Your Logo</Label>
+              <Input type="file" name="file" id="addLogo" />
+              <FormText color="muted">
+                Browse file to add your company logo.
+              </FormText>
+            </FormGroup>
+
+            {/* Invoice Header Rigth Side */}
+            <FormGroup row classname="right-indent">
+              <Label for="invoiceNumber" sm={2}>
+                Invoice Number
+              </Label>
+              <Col sm={4}>
+                <Input
+                  type="number"
+                  name="invoiceNumber"
+                  id="invoiceNumber"
+                  placeholder="Invoice Number"
+                />
+              </Col>
+              <Label for="date" sm={2}>
+                Date
+              </Label>
+              <Col sm={4}>
+                <Input type="date" name="date" id="date" placeholder="Date" />
+              </Col>
+              <Label for="dueDate" sm={2}>
+                Due Date
+              </Label>
+              <Col sm={4}>
+                <Input
+                  type="date"
+                  name="dueDate"
+                  id="dueDate"
+                  placeholder="Due Date"
+                />
+              </Col>
+              <Label for="balanceDue" sm={2}>
+                Balance Due
+              </Label>
+              <Col sm={4}>
+                <Input
+                  type="number"
+                  name="balanceDue"
+                  id="balanceDue"
+                  placeholder="$ 0.00"
+                />
+              </Col>
+            </FormGroup>
+
+            {/* Invoice Customer Company Details */}
+
+            <FormGroup>
+              <Label for="invoiceFrom">Invoice From</Label>
               <Input
-                type="email"
-                name="email"
-                id="exampleEmail"
-                placeholder="with a placeholder"
+                type="text"
+                name="invoiceFrom"
+                id="invoiceFrom"
+                placeholder="Invoice From"
               />
             </FormGroup>
-          </Col>
-          <Col md={6}>
             <FormGroup>
-              <Label for="examplePassword">Password</Label>
+              <Label for="invoiceTo">Invoice To</Label>
               <Input
-                type="password"
-                name="password"
-                id="examplePassword"
-                placeholder="password placeholder"
+                type="text"
+                name="invoiceTo"
+                id="invoiceTo"
+                placeholder="Invoice To"
               />
             </FormGroup>
-          </Col>
-        </Row>
-        <FormGroup>
-          <Label for="exampleAddress">Address</Label>
-          <Input
-            type="text"
-            name="address"
-            id="exampleAddress"
-            placeholder="1234 Main St"
-          />
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleAddress2">Address 2</Label>
-          <Input
-            type="text"
-            name="address2"
-            id="exampleAddress2"
-            placeholder="Apartment, studio, or floor"
-          />
-        </FormGroup>
-        <Row form>
-          <Col md={6}>
+          
+            {/* Address, State, Zip */}
             <FormGroup>
-              <Label for="exampleCity">City</Label>
-              <Input type="text" name="city" id="exampleCity" />
+              <Label for="address">Address</Label>
+              <Input
+                type="text"
+                name="address"
+                id="address"
+                placeholder="Address"
+              />
             </FormGroup>
-          </Col>
-          <Col md={4}>
+            <Row form>
+              <Col md={2}>
+                <FormGroup>
+                  <Label for="zip">Zip</Label>
+                  <Input type="text" name="zip" id="zip" placeholder="Zip" />
+                </FormGroup>
+              </Col>
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="city">City</Label>
+                  <Input type="text" name="city" id="city" placeholder="City" />
+                </FormGroup>
+              </Col>
+              <Col md={4}>
+                <FormGroup>
+                  <Label for="state">State</Label>
+                  <Input
+                    type="text"
+                    name="state"
+                    id="state"
+                    placeholder="State"
+                  />
+                </FormGroup>                
+              </Col>
+            </Row>
+
+            {/* Items and Cost */}
+            <Row form>
+              <Col md={6}>
+                <FormGroup>
+                  <Label for="item">Item</Label>
+                  <Input type="text" name="item" id="item" placeholder="Add Item Here" />
+                </FormGroup>
+              </Col>
+              <Col md={2}>
+                <FormGroup>
+                  <Label for="quanity">Quantity</Label>
+                  <Input type="number" name="quantity" id="quantity" placeholder="1" />
+                </FormGroup>
+              </Col>
+              <Col md={2}>
+                <FormGroup>
+                  <Label for="rate">Rate</Label>
+                  <Input
+                    type="amount"
+                    name="rate"
+                    id="rate"
+                    placeholder="$ 0.00"
+                  />
+                </FormGroup>
+              </Col>
+              <Col md={2}>
+                <FormGroup>
+                  <Label for="invoiceAmount">Amount</Label>                  
+                  <Input
+                    type="amount"
+                    name="invoiceAmount"
+                    id="invoiceAmount"
+                    placeholder="$ 0.00"
+                  />
+                </FormGroup>                
+              </Col>
+              <button>Add Line Item +</button>
+            </Row>
+
             <FormGroup>
-              <Label for="exampleState">State</Label>
-              <Input type="text" name="state" id="exampleState" />
             </FormGroup>
-          </Col>
-          <Col md={2}>
+
+            {/* Notes and Terms */}
+
             <FormGroup>
-              <Label for="exampleZip">Zip</Label>
-              <Input type="text" name="zip" id="exampleZip" />
+              <Label for="notes">Notes</Label>
+              <Input
+                type="text"
+                name="notes"
+                id="notes"
+                placeholder="Add Notes Here"
+              />
             </FormGroup>
+            <FormGroup>
+              <Label for="terms">Terms</Label>
+              <Input
+                type="text"
+                name="terms"
+                id="terms"
+                placeholder="Add Terms Here"
+              />
+            </FormGroup>
+<<<<<<< HEAD
           </Col>
         </Row>
         <FormGroup check>
@@ -183,8 +303,14 @@ export default class InvoiceForm extends React.Component {
         </FormGroup>
         <Button onClick={this.handlesubmit}>Sign in</Button>
       </Form>
+=======
+            <Button>Generate</Button>
+          </form>
+        </div>
+      </div>
+>>>>>>> origin/master
     );
   }
 }
 
-// export default NewInvoice;
+export default InvoiceForm;

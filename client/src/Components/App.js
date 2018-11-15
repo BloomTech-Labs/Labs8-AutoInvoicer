@@ -1,29 +1,87 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import axios from "axios";
 
 // Import pages
 import LandingPage from "./Landing/Landing";
-import SignUp from "./SignUp/SignUp";
 import Settings from "./Settings/Settings";
 import Invoices from "./Invoices/Invoices";
 import InvoiceForm from "./InvoiceForm/InvoiceForm";
+import NavBar from "./Navbar/Navbar";
+import TopNav from "./TopNav/TopNav";
+import Billing from "./Billing/Billing";
 
 import "./App.css";
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: null,
+      routes: <Route key={this.routeKey()} exact path="/" component={LandingPage} />
+    };
+  }
+
+  componentDidMount() {
+    //this gets the user info to be used on the client
+    console.log("component mounted");
+    axios
+      .get("http://localhost:8000/react_user_info")
+      .then(res => {
+        console.log("axios success");
+        const user = res.data;
+        console.log(user);
+        this.setState({user}, this.setRoutes);
+      })
+      .catch(err => {
+        console.log("axios fails");
+        console.log(err, "error");
+      });
+  }
+
+  setRoutes() {
+    console.log("component did update");
+    // console.log(this.state.routes);
+    // console.log(this.state.user);
+
+    if (this.state.user && !this.state.user.error) {
+      let routes = [
+        <Route key={this.routeKey()} path="/" component={TopNav} />,
+        <Route key={this.routeKey()} path="/" component={NavBar} />,
+        <Route key={this.routeKey()} path="/billing" component={Billing} />,
+        <Route key={this.routeKey()} path="/settings" component={Settings} />,
+        <Route
+          key={this.routeKey()}
+          path="/create_invoice"
+          component={InvoiceForm}
+        />,
+        <Route key={this.routeKey()} path="/" component={Invoices} />,
+        <Route
+          key={this.routeKey()}
+          path="/invoices/:id"
+          component={InvoiceForm}
+        />
+      ];
+      this.setState({ routes });
+    }
+  }
+
+  routeKey() {
+    return Math.floor(Math.random() * Math.floor(999999));
+  }
+
   render() {
+    // for testing, we're logging the state.user to our console to see when we're logged in, this.state.user has the information from mongooose
+    // when we're logged out, this is null, so we'll only ever have this.state.user populated when the user's logged in
+    // console.log(this.state.user);
     return (
       <Router>
         <div className="App">
-          {/* <h1>Hello, world!</h1>
-          <h1>Auto-Invoicer</h1> */}
-          <Switch>
-            <Route exact path="/" component={LandingPage} />
-            <Route path="/register" component={SignUp} />
-            <Route path="/settings" component={Settings} />
-            <Route path="/invoices" component={Invoices} />
-            <Route path="/invoices/:id" component={InvoiceForm} />
-          </Switch>
+          {!this.state.routes ? (
+            <p>loading</p>
+          ) : (
+            <React.Fragment>{this.state.routes}</React.Fragment>
+          )}
         </div>
       </Router>
     );
