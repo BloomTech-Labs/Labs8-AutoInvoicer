@@ -17,11 +17,18 @@ export default class LandingPage extends Component {
       <div className="landing-page-container">
         <div className="login-bar-container">
 <<<<<<< HEAD
+<<<<<<< HEAD
           <a href="/login">Sign In</a>
           <a>Sign In</a>
 =======
           <a href={process.env.REACT_APP_LOGIN} onClick={this.placeToken}>Sign In</a>
           <a href={process.env.REACT_APP_LOGIN} onClick={this.placeToken}>Sign Up</a>
+>>>>>>> master
+=======
+
+          <a href={process.env.REACT_APP_LOGIN} onClick={this.placeToken}>Sign In</a>
+          <a href={process.env.REACT_APP_LOGIN} onClick={this.placeToken}>Sign Up</a>
+      
 >>>>>>> master
         </div>
         <div className="centerpiece-container">

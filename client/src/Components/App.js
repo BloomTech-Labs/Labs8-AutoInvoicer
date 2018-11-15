@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import axios from "axios";
 
 // Import pages
 import LandingPage from "./Landing/Landing";
@@ -13,20 +14,38 @@ import Billing from "./Billing/Billing";
 import "./App.css";
 
 class App extends Component {
-  state = {
-    routes: null
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      user: null,
+      routes: <Route key={this.routeKey()} exact path="/" component={LandingPage} />
+    };
+  }
 
   componentDidMount() {
-    // TODO: check for valid session
-    const token = localStorage.getItem("token");
-    if (!token) {
-      const routes = [
-        <Route key={this.routeKey()} exact path="/" component={LandingPage} />
-      ];
-      this.setState({ routes });
-    } else {
-      const routes = [
+    //this gets the user info to be used on the client
+    console.log("component mounted");
+    axios
+      .get("http://localhost:8000/react_user_info")
+      .then(res => {
+        console.log("axios success");
+        const user = res.data;
+        console.log(user);
+        this.setState({user}, this.setRoutes);
+      })
+      .catch(err => {
+        console.log("axios fails");
+        console.log(err, "error");
+      });
+  }
+
+  setRoutes() {
+    console.log("component did update");
+    // console.log(this.state.routes);
+    // console.log(this.state.user);
+
+    if (this.state.user && !this.state.user.error) {
+      let routes = [
         <Route key={this.routeKey()} path="/" component={TopNav} />,
         <Route key={this.routeKey()} path="/" component={NavBar} />,
         <Route key={this.routeKey()} path="/billing" component={Billing} />,
@@ -36,7 +55,7 @@ class App extends Component {
           path="/create_invoice"
           component={InvoiceForm}
         />,
-        <Route key={this.routeKey()} path="/invoices" component={Invoices} />,
+        <Route key={this.routeKey()} path="/" component={Invoices} />,
         <Route
           key={this.routeKey()}
           path="/invoices/:id"
@@ -52,16 +71,17 @@ class App extends Component {
   }
 
   render() {
+    // for testing, we're logging the state.user to our console to see when we're logged in, this.state.user has the information from mongooose
+    // when we're logged out, this is null, so we'll only ever have this.state.user populated when the user's logged in
+    // console.log(this.state.user);
     return (
       <Router>
         <div className="App">
-          <Switch>
-            {!this.state.routes ? (
-              <p>loading</p>
-            ) : (
-              <React.Fragment>{this.state.routes}</React.Fragment>
-            )}
-          </Switch>
+          {!this.state.routes ? (
+            <p>loading</p>
+          ) : (
+            <React.Fragment>{this.state.routes}</React.Fragment>
+          )}
         </div>
       </Router>
     );

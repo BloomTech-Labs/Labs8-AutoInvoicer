@@ -21,11 +21,11 @@ router.get("/user", secured(), function(req, res, next) {
       })
         .save()
         .then(user => {
-          res.redirect("/invoices")
+          res.redirect("/")
         })
         .catch(err => console.log(err));
     } else {
-      res.redirect("/invoices");
+      res.redirect("/");
     }
   })
   .catch(err => {
@@ -43,6 +43,28 @@ router.get("/user/:_id", (req, res) => {
       res.status(500);
       console.log(err);
     });
+});
+
+/* GET user profile. */
+router.get("/react_user_info", function(req, res, next) {
+  if(!req.user) {return res.json({error: "No user."})}
+  else {
+    const { _raw, _json, ...userProfile } = req.user;
+    const auth0_user = req.user._json;
+    const auth0_userID = req.user._json.sub.split("|")[1];
+    
+    User.findOne({ auth0_userID })
+    .then(mongo_user => {
+      if (auth0_user == null) {
+        res.redirect("/");
+      } else {
+        res.json(mongo_user);
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }
 });
 
 module.exports = router;
