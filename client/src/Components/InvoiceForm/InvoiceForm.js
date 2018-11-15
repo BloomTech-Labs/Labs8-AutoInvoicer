@@ -3,7 +3,6 @@ import { Route } from "react-router-dom";
 import axios from "axios";
 import qs from 'qs';
 
-
 import {
   Row,
   Col,
@@ -18,46 +17,47 @@ import {
 import "./InvoiceForm.css";
 import Navbar from "../Navbar/Navbar";
 import TopNav from "../TopNav/TopNav";
+import Axios from "axios";
 
 class InvoiceForm extends Component {
   state = {
     invoiceNumber: "",
     date: "",
     dueDate: "",
+    balanceDue: "",
     invoiceFrom: "",
     invoiceTo: "",
-    balanceDue: 0,
     address: "",
     zip: "",
     city: "",
     cityState: "",
     item: "",
-    quantity: 0,
-    rate: 0,
-    amount: 0,
-    subtotal: 0,
-    discount: 0,
-    tax: 0,
-    shipping: 0,
-    total: 0,
-    amountPaid: 0,
+    quantity: "",
+    rate: "",
+    amount: "",
+    subtotal: "",
+    discount: "",
+    tax: "",
+    shipping: "",
+    total: "",
+    amountPaid: "",
     notes: "",
     terms: ""
   };
 
-  handleChange = event => {
+  handleInputChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  handlesubmit = event => {
+  handleSubmit = event => {
     event.preventDefault();
     const {
       invoiceNumber,
       date,
       dueDate,
+      balanceDue,
       invoiceFrom,
       invoiceTo,
-      balanceDue,
       address,
       zip,
       city,
@@ -68,16 +68,72 @@ class InvoiceForm extends Component {
       amount,
       subtotal,
       discount,
+      tax,
       shipping,
       total,
       amountPaid,
       notes,
       terms
-    } = {
-      ...this.state
+    } = { ...this.state };
+
+    const newInvoice = {
+      invoiceNumber,
+      date,
+      dueDate,
+      balanceDue,
+      invoiceFrom,
+      invoiceTo,
+      address,
+      zip,
+      city,
+      cityState,
+      item,
+      quantity,
+      rate,
+      amount,
+      subtotal,
+      discount,
+      tax,
+      shipping,
+      total,
+      amountPaid,
+      notes,
+      terms
     };
 
     this.calculateTax();
+  
+    axios.post('http://localhost:/8000/api/invoices', newInvoice);
+      .then(res => {
+        console.log(res, 'Invoice added!');
+      })
+      .catch(err => {
+      console.log("ERROR", err);
+      });
+      this.setState({
+        invoiceNumber: "",
+        date: "",
+        dueDate: "",
+        balanceDue: "",
+        invoiceFrom: "",
+        invoiceTo: "",
+        address: "",
+        zip: "",
+        city: "",
+        cityState: "",
+        item: "",
+        quantity: "",
+        rate: "",
+        amount: "",
+        subtotal: "",
+        discount: "",
+        tax: "",
+        shipping: "",
+        total: "",
+        amountPaid: "",
+        notes: "",
+        terms: ""
+      });
   };
 
   calculateTax() {
@@ -121,7 +177,7 @@ class InvoiceForm extends Component {
             {/* Add Logo */}
             <FormGroup>
               <Label for="addLogo">Add Your Logo</Label>
-              <Input type="file" name="file" id="addLogo" />
+              <Input type="file" name="addLogo" id="addLogo" />
               <FormText color="muted">
                 Browse file to add your company logo.
               </FormText>
@@ -134,27 +190,38 @@ class InvoiceForm extends Component {
               </Label>
               <Col sm={4}>
                 <Input
+                  value={this.state.invoiceNumber}
                   type="number"
                   name="invoiceNumber"
                   id="invoiceNumber"
                   placeholder="Invoice Number"
+                  onChange={this.handleInputChange}
                 />
               </Col>
               <Label for="date" sm={2}>
                 Date
               </Label>
               <Col sm={4}>
-                <Input type="date" name="date" id="date" placeholder="Date" />
+                <Input
+                  value={this.state.date}
+                  type="date" 
+                  name="date" 
+                  id="date" 
+                  placeholder="Date"
+                  onChange={this.handleInputChange}
+                />
               </Col>
               <Label for="dueDate" sm={2}>
                 Due Date
               </Label>
               <Col sm={4}>
                 <Input
+                  value={this.state.dueDate}
                   type="date"
                   name="dueDate"
                   id="dueDate"
                   placeholder="Due Date"
+                  onChange={this.handleInputChange}
                 />
               </Col>
               <Label for="balanceDue" sm={2}>
@@ -162,68 +229,91 @@ class InvoiceForm extends Component {
               </Label>
               <Col sm={4}>
                 <Input
+                  value={this.state.balanceDue}
                   type="number"
                   name="balanceDue"
                   id="balanceDue"
                   placeholder="$ 0.00"
+                  onChange={this.handleInputChange}
                 />
               </Col>
             </FormGroup>
 
             {/* Invoice Customer Company Details */}
-
             <FormGroup>
               <Label for="invoiceFrom">Invoice From</Label>
               <Input
+                value={this.state.invoiceFrom}
                 type="text"
                 name="invoiceFrom"
                 id="invoiceFrom"
                 placeholder="Invoice From"
+                onChange={this.handleInputChange}
               />
             </FormGroup>
             <FormGroup>
               <Label for="invoiceTo">Invoice To</Label>
               <Input
+                value={this.state.invoiceTo}
                 type="text"
                 name="invoiceTo"
                 id="invoiceTo"
                 placeholder="Invoice To"
+                onChange={this.handleInputChange}
               />
             </FormGroup>
-          
+
             {/* Address, State, Zip */}
             <FormGroup>
               <Label for="address">Address</Label>
               <Input
+                value={this.state.address}
                 type="text"
                 name="address"
                 id="address"
                 placeholder="Address"
+                onChange={this.handleInputChange}
               />
             </FormGroup>
             <Row form>
               <Col md={2}>
                 <FormGroup>
                   <Label for="zip">Zip</Label>
-                  <Input type="text" name="zip" id="zip" placeholder="Zip" />
+                  <Input
+                    value={this.state.zip}
+                    type="text" 
+                    name="zip" 
+                    id="zip" 
+                    placeholder="Zip"
+                    onChange={this.handleInputChange}
+                  />
                 </FormGroup>
               </Col>
               <Col md={6}>
                 <FormGroup>
                   <Label for="city">City</Label>
-                  <Input type="text" name="city" id="city" placeholder="City" />
+                  <Input 
+                    value={this.state.city}
+                    type="text" 
+                    name="city" 
+                    id="city" 
+                    placeholder="City"
+                    onChange={this.handleInputChange}
+                  />
                 </FormGroup>
               </Col>
               <Col md={4}>
                 <FormGroup>
-                  <Label for="state">State</Label>
+                  <Label for="cityState">State</Label>
                   <Input
+                    value={this.state.cityState}
                     type="text"
-                    name="state"
-                    id="state"
+                    name="cityState"
+                    id="cityState"
                     placeholder="State"
+                    onChange={this.handleInputChange}
                   />
-                </FormGroup>                
+                </FormGroup>
               </Col>
             </Row>
 
@@ -232,68 +322,89 @@ class InvoiceForm extends Component {
               <Col md={6}>
                 <FormGroup>
                   <Label for="item">Item</Label>
-                  <Input type="text" name="item" id="item" placeholder="Add Item Here" />
+                  <Input
+                    value={this.state.item}
+                    type="text"
+                    name="item"
+                    id="item"
+                    placeholder="Add Item Here"
+                    onChange={this.handleInputChange}
+                  />
                 </FormGroup>
               </Col>
               <Col md={2}>
                 <FormGroup>
                   <Label for="quanity">Quantity</Label>
-                  <Input type="number" name="quantity" id="quantity" placeholder="1" />
+                  <Input
+                    value={this.state.quantity}
+                    type="number"
+                    name="quantity"
+                    id="quantity"
+                    placeholder="1"
+                    onChange={this.handleInputChange}
+                  />
                 </FormGroup>
               </Col>
               <Col md={2}>
                 <FormGroup>
                   <Label for="rate">Rate</Label>
                   <Input
-                    type="amount"
+                    value={this.state.rate}
+                    type="number"
                     name="rate"
                     id="rate"
                     placeholder="$ 0.00"
+                    onChange={this.handleInputChange}
                   />
                 </FormGroup>
               </Col>
               <Col md={2}>
                 <FormGroup>
-                  <Label for="invoiceAmount">Amount</Label>                  
+                  <Label for="amount">Amount</Label>
                   <Input
-                    type="amount"
-                    name="invoiceAmount"
-                    id="invoiceAmount"
+                    value={this.state.amount}
+                    type="number"
+                    name="amount"
+                    id="amount"
                     placeholder="$ 0.00"
+                    onChange={this.handleInputChange}
                   />
-                </FormGroup>                
+                </FormGroup>
               </Col>
               <button>Add Line Item +</button>
             </Row>
 
-            <FormGroup>
-            </FormGroup>
+            <FormGroup />
 
             {/* Notes and Terms */}
-
             <FormGroup>
               <Label for="notes">Notes</Label>
               <Input
+                value={this.state.notes}
                 type="text"
                 name="notes"
                 id="notes"
                 placeholder="Add Notes Here"
+                onChange={this.handleInputChange}
               />
             </FormGroup>
             <FormGroup>
               <Label for="terms">Terms</Label>
               <Input
+                value={this.state.terms}
                 type="text"
                 name="terms"
                 id="terms"
                 placeholder="Add Terms Here"
+                onChange={this.handleInputChange}
               />
             </FormGroup>
-        <Button onClick={this.handlesubmit}>Sign in</Button>
-        </form>
+            <Button type="generate" onClick={this.handleSubmit}>
+              Generate
+            </Button>
+          </form>
+        </div>
       </div>
-    </div>
-
     );
   }
 }
