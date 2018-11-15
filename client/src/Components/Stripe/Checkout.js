@@ -4,8 +4,8 @@ import StripeCheckout from "react-stripe-checkout";
 
 // import STRIPE_PUBLISHABLE from .env
 // import PAYMENT_SERVER_URL from .env
-const STRIPE_PUBLISHABLE = process.env.STRIPE_PUBLISHABLE;
-const PAYMENT_SERVER_URL = process.env.PAYMENT_SERVER_URL;
+const STRIPE_PUBLISHABLE = process.env.REACT_APP_STRIPE_PUBLISHABLE;
+const PAYMENT_SERVER_URL = process.env.REACT_APP_PAYMENT_SERVER_URL;
 
 const CURRENCY = "USD";
 
