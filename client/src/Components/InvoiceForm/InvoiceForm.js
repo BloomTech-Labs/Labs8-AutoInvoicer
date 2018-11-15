@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 import { Route } from "react-router-dom";
+import axios from "axios";
+import qs from 'qs';
+
+
 import {
   Row,
   Col,
@@ -47,7 +51,68 @@ class InvoiceForm extends Component {
 
   handlesubmit = event => {
     event.preventDefault();
+<<<<<<< HEAD
+    const {
+      invoiceNumber,
+      date,
+      dueDate,
+      invoiceFrom,
+      invoiceTo,
+      balanceDue,
+      address,
+      zip,
+      city,
+      cityState,
+      item,
+      quantity,
+      rate,
+      amount,
+      subtotal,
+      discount,
+      shipping,
+      total,
+      amountPaid,
+      notes,
+      terms
+    } = {
+      ...this.state
+    };
+
+    this.calculateTax();
+=======
+>>>>>>> origin/master
   };
+
+  calculateTax() {
+    //Calculates the tax rate of the invoice total by using an external tax API.
+    //Calculated using the address
+
+    //Turn our data into a querystring
+    const query = qs.stringify({
+      line1: '3919 w. Greenleaf Ave.', //Line 1,2,3 are used for addresses. 2 and 3 are optional
+      line2: '',
+      line3: '',
+      city: 'Chicago',//this.state.city,
+      region: 'IL',//this.state.cityState,
+      postalCode: '60712', //this.state.zipcode,
+      country: 'US' //Only works in US for free version
+    })
+
+    axios({
+      method: 'get',
+      url: `https://rest.avatax.com/api/v2/taxrates/byaddress?${query}`,
+      headers: {
+          'Accept': "application/json",
+          'Authorization': process.env.REACT_APP_TAX_AUTH
+      }
+    })
+      .then(res => {
+        this.setState({ tax: this.state.subtotal * res.data.totalRate }); //Our tax is the subtotal * tax rate returned by API
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
 
   render() {
     return (
@@ -227,10 +292,23 @@ class InvoiceForm extends Component {
                 placeholder="Add Terms Here"
               />
             </FormGroup>
+<<<<<<< HEAD
+          </Col>
+        </Row>
+        <FormGroup check>
+          <Input type="checkbox" name="check" id="exampleCheck" />
+          <Label for="exampleCheck" check>
+            Check me out
+          </Label>
+        </FormGroup>
+        <Button onClick={this.handlesubmit}>Sign in</Button>
+      </Form>
+=======
             <Button>Generate</Button>
           </form>
         </div>
       </div>
+>>>>>>> origin/master
     );
   }
 }
