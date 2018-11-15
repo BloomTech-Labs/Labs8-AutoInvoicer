@@ -51,7 +51,6 @@ class InvoiceForm extends Component {
 
   handlesubmit = event => {
     event.preventDefault();
-<<<<<<< HEAD
     const {
       invoiceNumber,
       date,
@@ -79,8 +78,6 @@ class InvoiceForm extends Component {
     };
 
     this.calculateTax();
-=======
->>>>>>> origin/master
   };
 
   calculateTax() {
@@ -292,23 +289,11 @@ class InvoiceForm extends Component {
                 placeholder="Add Terms Here"
               />
             </FormGroup>
-<<<<<<< HEAD
-          </Col>
-        </Row>
-        <FormGroup check>
-          <Input type="checkbox" name="check" id="exampleCheck" />
-          <Label for="exampleCheck" check>
-            Check me out
-          </Label>
-        </FormGroup>
         <Button onClick={this.handlesubmit}>Sign in</Button>
-      </Form>
-=======
-            <Button>Generate</Button>
-          </form>
-        </div>
+        </form>
       </div>
->>>>>>> origin/master
+    </div>
+
     );
   }
 }
