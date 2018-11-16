@@ -70,7 +70,6 @@ class InvoiceForm extends Component {
       subtotal,
       discount,
       tax,
-      taxRate,
       shipping,
       total,
       amountPaid,
@@ -96,7 +95,6 @@ class InvoiceForm extends Component {
       subtotal,
       discount,
       tax,
-      taxRate,
       shipping,
       total,
       amountPaid,
@@ -150,8 +148,8 @@ class InvoiceForm extends Component {
       line2: '',
       line3: '',
       city: this.state.city,
-      region: this.state.cityState,
-      postalCode: this.state.zip,
+      region: this.state.state,
+      postalCode: this.state.zipcode,
       country: 'US' //Only works in US for free version
     })
 
@@ -419,7 +417,7 @@ class InvoiceForm extends Component {
                 onChange={this.handleInputChange}
               />
               <div>Tax: {this.state.taxRate * 100}% <Button onClick={() => this.calculateTax()}> Calculate Tax</Button></div>
-              <div>Total: ${this.state.total} </div>
+              <div>Total: {this.state.total} </div>
             </FormGroup>
             <Button type="generate" onClick={this.handleSubmit}>
               Generate
