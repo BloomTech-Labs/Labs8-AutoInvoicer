@@ -38,6 +38,7 @@ class InvoiceForm extends Component {
     subtotal: "",
     discount: "",
     tax: "",
+    taxRate:"",
     shipping: "",
     total: "",
     amountPaid: "",
@@ -101,9 +102,8 @@ class InvoiceForm extends Component {
       terms
     };
 
-    this.calculateTax();
   
-    axios.post('http://localhost:/8000/api/invoices', newInvoice);
+    axios.post('http://localhost:/8000/api/invoices', newInvoice)
       .then(res => {
         console.log(res, 'Invoice added!');
       })
@@ -128,6 +128,7 @@ class InvoiceForm extends Component {
         subtotal: "",
         discount: "",
         tax: "",
+        taxRate:"",
         shipping: "",
         total: "",
         amountPaid: "",
@@ -141,13 +142,14 @@ class InvoiceForm extends Component {
     //Calculated using the address
 
     //Turn our data into a querystring
+    console.log(this.state);
     const query = qs.stringify({
-      line1: '3919 w. Greenleaf Ave.', //Line 1,2,3 are used for addresses. 2 and 3 are optional
+      line1: this.state.address, //Line 1,2,3 are used for addresses. 2 and 3 are optional
       line2: '',
       line3: '',
-      city: 'Chicago',//this.state.city,
-      region: 'IL',//this.state.cityState,
-      postalCode: '60712', //this.state.zipcode,
+      city: this.state.city,
+      region: this.state.state,
+      postalCode: this.state.zipcode,
       country: 'US' //Only works in US for free version
     })
 
@@ -160,11 +162,16 @@ class InvoiceForm extends Component {
       }
     })
       .then(res => {
-        this.setState({ tax: this.state.subtotal * res.data.totalRate }); //Our tax is the subtotal * tax rate returned by API
+        this.setState({ tax: this.state.subtotal * res.data.totalRate, taxRate: res.data.totalRate }); //Our tax is the subtotal * tax rate returned by API
+        //FOR SHOWCASE PURPOSES
+        let nuTotal = parseInt(this.state.subtotal) + this.state.tax
+        this.setState({total: nuTotal});
       })
       .catch(error => {
         console.log(error);
       })
+
+      
   }
 
   render() {
@@ -398,6 +405,19 @@ class InvoiceForm extends Component {
                 placeholder="Add Terms Here"
                 onChange={this.handleInputChange}
               />
+            </FormGroup>
+            <FormGroup>
+             <Label for="terms">SubTotal </Label>
+             <Input
+                value={this.state.subtotal}
+                type="number"
+                name="subtotal"
+                id="subtotal"
+                placeholder="Subtotal"
+                onChange={this.handleInputChange}
+              />
+              <div>Tax: {this.state.taxRate * 100}% <Button onClick={() => this.calculateTax()}> Calculate Tax</Button></div>
+              <div>Total: {this.state.total} </div>
             </FormGroup>
             <Button type="generate" onClick={this.handleSubmit}>
               Generate
