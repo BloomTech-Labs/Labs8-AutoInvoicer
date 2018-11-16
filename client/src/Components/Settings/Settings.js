@@ -23,11 +23,11 @@ class Settings extends React.Component {
       <div className="settings-wrapper">
         <form>
           <label>
-            Email:
+            Email: 
             <input name="email" type="email" onChange={this.handleChange} />
           </label>
           <label>
-            Old Password:
+            Old Password: 
             <input
               name="oldPassword"
               type="password"
@@ -35,7 +35,7 @@ class Settings extends React.Component {
             />
           </label>
           <label>
-            New Password:
+            New Password: 
             <input
               name="newPassword"
               type="password"

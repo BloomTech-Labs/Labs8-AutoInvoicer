@@ -46,21 +46,23 @@ class App extends Component {
 
     if (this.state.user && !this.state.user.error) {
       let routes = [
-        <Route key={this.routeKey()} path="/" component={TopNav} />,
-        <Route key={this.routeKey()} path="/" component={NavBar} />,
-        <Route key={this.routeKey()} path="/billing" component={Billing} />,
-        <Route key={this.routeKey()} path="/settings" component={Settings} />,
-        <Route
-          key={this.routeKey()}
-          path="/create_invoice"
-          component={InvoiceForm}
-        />,
-        <Route key={this.routeKey()} path="/" component={Invoices} />,
-        <Route
-          key={this.routeKey()}
-          path="/invoices/:id"
-          component={InvoiceForm}
-        />
+          <Route key={this.routeKey()} path="/" component={TopNav} />,
+        <div className = "app-container">  
+          <Route key={this.routeKey()} path="/" component={NavBar} />
+          <Route key={this.routeKey()} path="/billing" component={Billing} />
+          <Route key={this.routeKey()} path="/settings" component={Settings} />
+          <Route
+            key={this.routeKey()}
+            path="/create_invoice"
+            component={InvoiceForm}
+          />
+          <Route key={this.routeKey()} exact path="/" component={Invoices} />
+          <Route
+            key={this.routeKey()}
+            path="/invoices/:id"
+            component={InvoiceForm}
+          />
+        </div>
       ];
       this.setState({ routes });
     }

@@ -10,7 +10,7 @@ class Navbar extends Component {
       <div className="NavBar">
         <div className="NavBar-header">
           <div class="side-nav">
-            <NavLink className="invoices2" to="/invoices" exact>
+            <NavLink className="invoices2" to="/" exact>
               Invoices
             </NavLink>
             <NavLink className="billing" to="/billing" exact>

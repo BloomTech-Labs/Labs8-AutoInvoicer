@@ -41,9 +41,8 @@ export default class Billing extends Component {
           </div>
         </div>
         <div className="content-container">
-          <div className="navbar-placeholder" />
           <div className="payment-container">
-            <h2> Billing </h2>
+            <h2 className="billing-h2"> Billing </h2>
             <p>Payment Info</p>
             <div className="card-info-container">
               <input
