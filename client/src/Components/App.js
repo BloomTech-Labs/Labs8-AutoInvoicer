@@ -12,6 +12,7 @@ import TopNav from "./TopNav/TopNav";
 import Billing from "./Billing/Billing";
 
 import AddInvoice from "./AddInvoice/AddInvoice";
+import PrintPdf from "./PrintPdf/PrintPdf"
 import "./App.css";
 
 class App extends Component {
@@ -67,6 +68,7 @@ class App extends Component {
         //   path="/invoices/:id"
         //   component={InvoiceForm}
         // />
+        <Route key={this.routeKey()} path="/pdf_invoice" component={PrintPdf} />,
       ];
       this.setState({ routes });
     }
