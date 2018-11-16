@@ -9,75 +9,84 @@ const InvoiceSchema = new Schema({
   },
   invoice_number: {
     type: Number,
-    required: true
+    required: false
+    // TODO - set back to true
   },
   date: {
     type: Date,
-    required: true
+    required: false
+    // TODO - set back to true
   },
   due_date: {
     type: Date,
-    required: true
+    required: false
+    // TODO - set back to true
   },
   balance_due: {
     type: Number,
-    required: true
+    required: false
+    // TODO - set back to true
   },
   address: {
     type: String,
-    required: true
+    required: false // TODO - set back to true
   },
   zipcode: {
     type: String,
-    required: true
+    required: false // TODO - set back to true
   },
   city: {
     type: String,
-    required: true
+    required: false // TODO - set back to true
   },
   state: {
     type: String,
-    required: true
+    required: false // TODO - set back to true
   },
   company_name: {
     type: String,
-    required: true
+    required: false // TODO - set back to true
   },
   item: {
     type: String,
-    required: true
+    required: false // TODO - set back to true
   },
   quantity: {
     type: Number,
-    required: true
+    required: false // TODO - set back to true
   },
   rate: {
     type: Number,
-    required: true
+    required: false // TODO - set back to true
   },
   amount: {
     type: Number,
-    required: true
+    required: false // TODO - set back to true
   },
   subtotal: {
     type: Number,
-    required: true
+    required: false,
   },
   discount: {
     type: Number,
-    required: true
+    required: false
   },
   tax: {
     type: Number,
-    required: true
+    required: false
+    // TODO - change this back to true after testing
   },
   shipping: {
     type: Number,
-    required: true
+    required: false
+  },
+  total: {
+    type: Number,
+    required: false
   },
   amount_paid: {
     type: Number,
-    required: true
+    required: false
   },
   notes: {
     type: String,

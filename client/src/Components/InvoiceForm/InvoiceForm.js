@@ -21,16 +21,16 @@ import Axios from "axios";
 
 class InvoiceForm extends Component {
   state = {
-    invoiceNumber: "",
+    invoice_number: "",
     date: "",
-    dueDate: "",
-    balanceDue: "",
-    invoiceFrom: "",
+    due_date: "",
+    balance_due: "",
+    company_name: "",
     invoiceTo: "",
     address: "",
-    zip: "",
+    zipcode: "",
     city: "",
-    cityState: "",
+    state: "",
     item: "",
     quantity: "",
     rate: "",
@@ -40,7 +40,7 @@ class InvoiceForm extends Component {
     tax: "",
     shipping: "",
     total: "",
-    amountPaid: "",
+    amount_paid: "",
     notes: "",
     terms: ""
   };
@@ -52,16 +52,16 @@ class InvoiceForm extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const {
-      invoiceNumber,
+      invoice_number,
       date,
-      dueDate,
-      balanceDue,
-      invoiceFrom,
+      due_date,
+      balance_due,
+      company_name,
       invoiceTo,
       address,
-      zip,
+      zipcode,
       city,
-      cityState,
+      state,
       item,
       quantity,
       rate,
@@ -71,22 +71,22 @@ class InvoiceForm extends Component {
       tax,
       shipping,
       total,
-      amountPaid,
+      amount_paid,
       notes,
       terms
     } = { ...this.state };
 
     const newInvoice = {
-      invoiceNumber,
+      invoice_number,
       date,
-      dueDate,
-      balanceDue,
-      invoiceFrom,
+      due_date,
+      balance_due,
+      company_name,
       invoiceTo,
       address,
-      zip,
+      zipcode,
       city,
-      cityState,
+      state,
       item,
       quantity,
       rate,
@@ -96,44 +96,46 @@ class InvoiceForm extends Component {
       tax,
       shipping,
       total,
-      amountPaid,
+      amount_paid,
       notes,
       terms
     };
 
-    this.calculateTax();
+    // this.calculateTax();
   
-    axios.post('http://localhost:/8000/api/invoices', newInvoice);
+    axios.post('http://localhost:/8000/api/invoices', newInvoice)
       .then(res => {
         console.log(res, 'Invoice added!');
+        console.log('NEW INVOICE: ', newInvoice);
+        console.log("Invoice from: ", this.state.company_name);
       })
       .catch(err => {
       console.log("ERROR", err);
       });
-      this.setState({
-        invoiceNumber: "",
-        date: "",
-        dueDate: "",
-        balanceDue: "",
-        invoiceFrom: "",
-        invoiceTo: "",
-        address: "",
-        zip: "",
-        city: "",
-        cityState: "",
-        item: "",
-        quantity: "",
-        rate: "",
-        amount: "",
-        subtotal: "",
-        discount: "",
-        tax: "",
-        shipping: "",
-        total: "",
-        amountPaid: "",
-        notes: "",
-        terms: ""
-      });
+      // this.setState({
+      //   invoice_number: "",
+      //   date: "",
+      //   due_date: "",
+      //   balance_due: "",
+      //   company_name: "",
+      //   invoiceTo: "",
+      //   address: "",
+      //   zipcode: "",
+      //   city: "",
+      //   state: "",
+      //   item: "",
+      //   quantity: "",
+      //   rate: "",
+      //   amount: "",
+      //   subtotal: "",
+      //   discount: "",
+      //   tax: "",
+      //   shipping: "",
+      //   total: "",
+      //   amount_paid: "",
+      //   notes: "",
+      //   terms: ""
+      // });
   };
 
   calculateTax() {
@@ -146,7 +148,7 @@ class InvoiceForm extends Component {
       line2: '',
       line3: '',
       city: 'Chicago',//this.state.city,
-      region: 'IL',//this.state.cityState,
+      region: 'IL',//this.state.state,
       postalCode: '60712', //this.state.zipcode,
       country: 'US' //Only works in US for free version
     })
@@ -185,15 +187,15 @@ class InvoiceForm extends Component {
 
             {/* Invoice Header Rigth Side */}
             <FormGroup row classname="right-indent">
-              <Label for="invoiceNumber" sm={2}>
+              <Label for="invoice_number" sm={2}>
                 Invoice Number
               </Label>
               <Col sm={4}>
                 <Input
-                  value={this.state.invoiceNumber}
+                  value={this.state.invoice_number}
                   type="number"
-                  name="invoiceNumber"
-                  id="invoiceNumber"
+                  name="invoice_number"
+                  id="invoice_number"
                   placeholder="Invoice Number"
                   onChange={this.handleInputChange}
                 />
@@ -211,28 +213,28 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </Col>
-              <Label for="dueDate" sm={2}>
+              <Label for="due_date" sm={2}>
                 Due Date
               </Label>
               <Col sm={4}>
                 <Input
-                  value={this.state.dueDate}
+                  value={this.state.due_date}
                   type="date"
-                  name="dueDate"
-                  id="dueDate"
+                  name="due_date"
+                  id="due_date"
                   placeholder="Due Date"
                   onChange={this.handleInputChange}
                 />
               </Col>
-              <Label for="balanceDue" sm={2}>
+              <Label for="balance_due" sm={2}>
                 Balance Due
               </Label>
               <Col sm={4}>
                 <Input
-                  value={this.state.balanceDue}
+                  value={this.state.balance_due}
                   type="number"
-                  name="balanceDue"
-                  id="balanceDue"
+                  name="balance_due"
+                  id="balance_due"
                   placeholder="$ 0.00"
                   onChange={this.handleInputChange}
                 />
@@ -241,12 +243,12 @@ class InvoiceForm extends Component {
 
             {/* Invoice Customer Company Details */}
             <FormGroup>
-              <Label for="invoiceFrom">Invoice From</Label>
+              <Label for="company_name">Invoice From</Label>
               <Input
-                value={this.state.invoiceFrom}
+                value={this.state.company_name}
                 type="text"
-                name="invoiceFrom"
-                id="invoiceFrom"
+                name="company_name"
+                id="company_name"
                 placeholder="Invoice From"
                 onChange={this.handleInputChange}
               />
@@ -278,12 +280,12 @@ class InvoiceForm extends Component {
             <Row form>
               <Col md={2}>
                 <FormGroup>
-                  <Label for="zip">Zip</Label>
+                  <Label for="zipcode">Zip</Label>
                   <Input
-                    value={this.state.zip}
+                    value={this.state.zipcode}
                     type="text" 
-                    name="zip" 
-                    id="zip" 
+                    name="zipcode" 
+                    id="zipcode" 
                     placeholder="Zip"
                     onChange={this.handleInputChange}
                   />
@@ -304,12 +306,12 @@ class InvoiceForm extends Component {
               </Col>
               <Col md={4}>
                 <FormGroup>
-                  <Label for="cityState">State</Label>
+                  <Label for="state">State</Label>
                   <Input
-                    value={this.state.cityState}
+                    value={this.state.state}
                     type="text"
-                    name="cityState"
-                    id="cityState"
+                    name="state"
+                    id="state"
                     placeholder="State"
                     onChange={this.handleInputChange}
                   />
