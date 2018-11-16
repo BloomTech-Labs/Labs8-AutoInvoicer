@@ -4,12 +4,12 @@ const router = require("express").Router();
 const Invoice = require("../../models/Invoice");
 
 //Get List of ALL Invoice info
-router.get("/", (req, res) => {
+router.get("/api/invoices", (req, res) => {
   let query = req.params || {};
 
   Invoice.find(query)
-      .then(user => {
-        res.status(200).send(user);
+      .then(invoices => {
+        res.status(200).send(invoices);
       })
       .catch(err => {
         res.status(500);
@@ -18,9 +18,13 @@ router.get("/", (req, res) => {
 });
 
 //Get invoices of a single user using _id
-router.get("/:_id", (req, res) => {
+router.get("/api/invoices/:_id", (req, res) => {
   
-  Invoice.find({_id: req.params._id})
+  const invoice_number = req.params.id;
+  console.log(req.params, invoice_number);
+
+  // Invoice.find({_id: req.params._id})
+  Invoice.find({invoice_number})
       .then(invoices => {
         res.status(200).send(invoices);
       })
@@ -30,7 +34,7 @@ router.get("/:_id", (req, res) => {
       })
 })
 
-router.post("/", (req, res) => {
+router.post("/api/invoices", (req, res) => {
   // for creating new invoices
   const newInvoice = new Invoice({
     user: req.body.user_id,
@@ -51,6 +55,7 @@ router.post("/", (req, res) => {
     discount: req.body.discount,
     tax: req.body.tax,
     shipping: req.body.shipping,
+    total: req.body.total,
     amount_paid: req.body.amount_paid,
     notes: req.body.notes,
     terms: req.body.terms

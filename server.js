@@ -119,7 +119,7 @@ server.use(userInViews());
 server.use("/", authRouter);
 server.use("/", indexRouter);
 server.use("/", usersRouter);
-// server.use("/", invoicesRouter);
+server.use("/", invoicesRouter);
 
 // Catch 404 and forward to error handler
 // server.use(function(req, res, next) {
