@@ -55,7 +55,13 @@ class App extends Component {
         <Route
           key={this.routeKey()}
           path="/create_invoice"
-          component={InvoiceForm}
+          render= {
+            (props) => {
+              return (
+                <InvoiceForm user={this.state.user} {...props} />
+              )
+            }
+          }
         />,
         <Route key={this.routeKey()} path="/" component={Invoices} />,
         <Route key={this.routeKey()} path="/invoices" component={Invoices} />,

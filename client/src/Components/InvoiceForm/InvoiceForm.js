@@ -78,6 +78,7 @@ class InvoiceForm extends Component {
     } = { ...this.state };
 
     const newInvoice = {
+      user: this.props.user.user_id.split("|")[1],
       invoice_number,
       date,
       due_date,
@@ -103,7 +104,7 @@ class InvoiceForm extends Component {
     };
 
   
-    axios.post('http://localhost:/8000/api/invoices', newInvoice)
+    axios.post('http://localhost:8000/api/invoices', newInvoice)
       .then(res => {
         console.log(res, 'Invoice added!');
         console.log('NEW INVOICE: ', newInvoice);

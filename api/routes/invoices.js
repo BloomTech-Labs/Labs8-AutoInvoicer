@@ -2,14 +2,19 @@ const router = require("express").Router();
 
 // Load Invoice model
 const Invoice = require("../../models/Invoice");
+const User = require("../../models/User");
 
-//Get List of ALL Invoice info
+//Get the list of all invoices from a user
 router.get("/api/invoices", (req, res) => {
   let query = req.params || {};
+  const { _raw, _json, ...userProfile } = req.user;
 
-  Invoice.find(query)
-      .then(invoices => {
-        res.status(200).send(invoices);
+  const auth0_userID = req.user._json.sub.split("|")[1];
+  
+  User.findOne({ auth0_userID })
+      .populate('invoices')
+      .then(user => {
+        res.status(200).send(user.invoices);
       })
       .catch(err => {
         res.status(500);
@@ -17,14 +22,19 @@ router.get("/api/invoices", (req, res) => {
       })
 });
 
-//Get invoices of a single user using _id
+// Get a specific invoice from the logged in user by its invoice ID
 router.get("/api/invoices/:_id", (req, res) => {
-  
-  const invoice_number = req.params.id;
-  console.log(req.params, invoice_number);
+
+  const invoice_number = req.params;
+
+  const { _raw, _json, ...userProfile } = req.user;
+  const auth0_userID = req.user._json.sub.split("|")[1];
+
+  console.log(invoice_number);
+  console.log("USER LOGGED IN: ", auth0_userID);
 
   // Invoice.find({_id: req.params._id})
-  Invoice.find({invoice_number})
+  Invoice.findOne({auth0_userID, invoice_number})
       .then(invoices => {
         res.status(200).send(invoices);
       })
@@ -37,7 +47,7 @@ router.get("/api/invoices/:_id", (req, res) => {
 router.post("/api/invoices", (req, res) => {
   // for creating new invoices
   const newInvoice = new Invoice({
-    user: req.body.user_id,
+    user: req.body.user,
     invoice_number: req.body.invoice_number,
     date: req.body.date,
     due_date: req.body.due_date,
@@ -61,10 +71,16 @@ router.post("/api/invoices", (req, res) => {
     terms: req.body.terms
   });
 
-  newInvoice
-    .save()
-    .then(post => res.json(post))
-    .catch(err => console.log(err));
+  User.findOne(newInvoice.user).then(user =>
+    newInvoice.save().then(invoice => {
+      invoice.save().then(invoice => {
+        user.invoices.push(invoice._id);
+        user.save().then(() => {
+          res.send("Success!");
+        })
+      })
+    }).catch(err => console.log(err))
+  );
 });
 
 router.put("/:_id", (req, res) => {
