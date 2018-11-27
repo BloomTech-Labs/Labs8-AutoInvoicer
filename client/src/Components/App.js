@@ -52,8 +52,12 @@ class App extends Component {
         <Route key={this.routeKey()} path="/" component={NavBar} />,
         <Route key={this.routeKey()} path="/billing" render={(props) => <Billing user={this.state.user} />} />,
         <Route key={this.routeKey()} path="/settings" component={Settings} />,
-        <Route key={this.routeKey()} path="/create_invoice" component={InvoiceForm}/>,        
-        <Route key={this.routeKey()} path="/" component={Invoices} />,
+        <Route
+          key={this.routeKey()}
+          path="/create_invoice"
+          component={InvoiceForm}
+        />,
+        <Route key={this.routeKey()} exact path="/" component={Invoices} />,
         <Route key={this.routeKey()} path="/invoices" component={Invoices} />,
         <Route key={this.routeKey()} path="/empty_invoice" component={AddInvoice} />,
         <Route key={this.routeKey()} path="/pdf_invoice" component={PrintPdf} />,
