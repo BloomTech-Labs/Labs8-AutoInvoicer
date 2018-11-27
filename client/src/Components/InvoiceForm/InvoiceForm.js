@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Route } from "react-router-dom";
 import axios from "axios";
-import qs from 'qs';
+import qs from "qs";
 import jsPDF from "jspdf";
 
 import {
@@ -13,7 +13,7 @@ import {
   Label,
   Input,
   FormText,
-  ListGroup, 
+  ListGroup,
   ListGroupItem
 } from "reactstrap";
 
@@ -42,7 +42,7 @@ class InvoiceForm extends Component {
     subtotal: "",
     discount: "",
     tax: "",
-    taxRate:"",
+    taxRate: "",
     shipping: "",
     total: "",
     amount_paid: "",
@@ -84,11 +84,8 @@ class InvoiceForm extends Component {
     } = { ...this.state };
 
     const newInvoice = {
-<<<<<<< HEAD
       user: this.props.user.user_id.split("|")[1],
-=======
       logo,
->>>>>>> 77d9d2b871e42971d03cf77f3e0d769d6324ff2b
       invoice_number,
       date,
       due_date,
@@ -141,43 +138,44 @@ class InvoiceForm extends Component {
     pdf.text(`Amount Paid: $${this.state.amount_paid}`, 0.5, 7.4);
     pdf.text(`Notes: ${this.state.notes}`, 0.5, 7.7);
     pdf.text(`Terms: ${this.state.terms}`, 0.5, 8.1);
-    pdf.addImage(`${this.state.logo}`, 'JPEG', 0.5, 8.4, 100, 100, 'logo');
+    pdf.addImage(`${this.state.logo}`, "JPG", 0.5, 8.4, 100, 100, "logo");
 
     pdf.save(`${this.state.invoiceTo}`);
-  
-    axios.post('http://localhost:8000/api/invoices', newInvoice)
+
+    axios
+      .post("http://localhost:8000/api/invoices", newInvoice)
       .then(res => {
-        console.log(res, 'Invoice added!');
-        console.log('NEW INVOICE: ', newInvoice);
+        console.log(res, "Invoice added!");
+        console.log("NEW INVOICE: ", newInvoice);
         console.log("Invoice from: ", this.state.company_name);
       })
       .catch(err => {
-      console.log("ERROR", err);
+        console.log("ERROR", err);
       });
-      this.setState({
-        invoice_number: "",
-        date: "",
-        due_date: "",
-        balance_due: "",
-        company_name: "",
-        invoiceTo: "",
-        address: "",
-        zipcode: "",
-        city: "",
-        state: "",
-        item: "",
-        quantity: "",
-        rate: "",
-        amount: "",
-        subtotal: "",
-        discount: "",
-        tax: "",
-        shipping: "",
-        total: "",
-        amount_paid: "",
-        notes: "",
-        terms: ""
-      });
+    this.setState({
+      invoice_number: "",
+      date: "",
+      due_date: "",
+      balance_due: "",
+      company_name: "",
+      invoiceTo: "",
+      address: "",
+      zipcode: "",
+      city: "",
+      state: "",
+      item: "",
+      quantity: "",
+      rate: "",
+      amount: "",
+      subtotal: "",
+      discount: "",
+      tax: "",
+      shipping: "",
+      total: "",
+      amount_paid: "",
+      notes: "",
+      terms: ""
+    });
   };
 
   calculateTax() {
@@ -188,33 +186,34 @@ class InvoiceForm extends Component {
     console.log(this.state);
     const query = qs.stringify({
       line1: this.state.address, //Line 1,2,3 are used for addresses. 2 and 3 are optional
-      line2: '',
-      line3: '',
+      line2: "",
+      line3: "",
       city: this.state.city,
       region: this.state.state,
       postalCode: this.state.zipcode,
-      country: 'US' //Only works in US for free version
-    })
+      country: "US" //Only works in US for free version
+    });
 
     axios({
-      method: 'get',
+      method: "get",
       url: `https://rest.avatax.com/api/v2/taxrates/byaddress?${query}`,
       headers: {
-          'Accept': "application/json",
-          'Authorization': process.env.REACT_APP_TAX_AUTH
+        Accept: "application/json",
+        Authorization: process.env.REACT_APP_TAX_AUTH
       }
     })
       .then(res => {
-        this.setState({ tax: this.state.subtotal * res.data.totalRate, taxRate: res.data.totalRate }); //Our tax is the subtotal * tax rate returned by API
+        this.setState({
+          tax: this.state.subtotal * res.data.totalRate,
+          taxRate: res.data.totalRate
+        }); //Our tax is the subtotal * tax rate returned by API
         //FOR SHOWCASE PURPOSES
-        let nuTotal = parseInt(this.state.subtotal) + this.state.tax
-        this.setState({total: nuTotal});
+        let nuTotal = parseInt(this.state.subtotal) + this.state.tax;
+        this.setState({ total: nuTotal });
       })
       .catch(error => {
         console.log(error);
-      })
-
-      
+      });
   }
 
   render() {
@@ -227,13 +226,12 @@ class InvoiceForm extends Component {
             {/* Add Logo */}
             <FormGroup>
               <Label for="addLogo">Add Your Logo</Label>
-              <Input 
+              <Input
                 value={this.state.logo}
-                type="file" 
-                name="addLogo" 
+                type="file"
+                name="addLogo"
                 id="addLogo"
                 onChange={this.handleInputChange}
-
               />
               <FormText color="muted">
                 Browse file to add your company logo.
@@ -261,9 +259,9 @@ class InvoiceForm extends Component {
               <Col sm={4}>
                 <Input
                   value={this.state.date}
-                  type="date" 
-                  name="date" 
-                  id="date" 
+                  type="date"
+                  name="date"
+                  id="date"
                   placeholder="Date"
                   onChange={this.handleInputChange}
                 />
@@ -338,9 +336,9 @@ class InvoiceForm extends Component {
                   <Label for="zipcode">Zip</Label>
                   <Input
                     value={this.state.zipcode}
-                    type="text" 
-                    name="zipcode" 
-                    id="zipcode" 
+                    type="text"
+                    name="zipcode"
+                    id="zipcode"
                     placeholder="Zip"
                     onChange={this.handleInputChange}
                   />
@@ -349,11 +347,11 @@ class InvoiceForm extends Component {
               <Col md={6}>
                 <FormGroup>
                   <Label for="city">City</Label>
-                  <Input 
+                  <Input
                     value={this.state.city}
-                    type="text" 
-                    name="city" 
-                    id="city" 
+                    type="text"
+                    name="city"
+                    id="city"
                     placeholder="City"
                     onChange={this.handleInputChange}
                   />
@@ -457,8 +455,8 @@ class InvoiceForm extends Component {
               />
             </FormGroup>
             <FormGroup>
-             <Label for="terms">SubTotal </Label>
-             <Input
+              <Label for="terms">SubTotal </Label>
+              <Input
                 value={this.state.subtotal}
                 type="number"
                 name="subtotal"
@@ -466,7 +464,13 @@ class InvoiceForm extends Component {
                 placeholder="Subtotal"
                 onChange={this.handleInputChange}
               />
-              <div>Tax: {this.state.taxRate * 100}% <Button onClick={() => this.calculateTax()}> Calculate Tax</Button></div>
+              <div>
+                Tax: {this.state.taxRate * 100}%{" "}
+                <Button onClick={() => this.calculateTax()}>
+                  {" "}
+                  Calculate Tax
+                </Button>
+              </div>
               <div>Total: {this.state.total} </div>
             </FormGroup>
             <Button type="generate" onClick={this.handleSubmit}>
