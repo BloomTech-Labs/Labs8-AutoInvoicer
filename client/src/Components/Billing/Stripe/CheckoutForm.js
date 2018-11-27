@@ -19,17 +19,38 @@ class CheckoutForm extends Component {
   };
 
   async submit(ev) {
-    let { token } = await this.props.stripe.createToken({ name: "Name" });
+    let purchaseOption = {
+      user: this.props.user.user._id,
+      option: this.state.purchaseOption,
+      token: await this.props.stripe.createToken({ name: "Name" }),
+    }
+    // let { token } = await this.props.stripe.createToken({ name: "Name" });
     axios
-      .post(process.env.REACT_APP_STRIPE_CHARGE, token)
+      .post(process.env.REACT_APP_STRIPE_CHARGE, purchaseOption)
       .then(res => {
+        console.log(res);
         console.log("Purchase Complete!");
+        if (purchaseOption.option === "subscription") {
+          console.log("user: " + purchaseOption.user);
+          axios
+            .put(`/api/users/${purchaseOption.user}`, {"subscribed_member": true})
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
+        } else {
+          let credits = this.props.user.user.credits;
+          axios
+            .put(`/api/users/${purchaseOption.user}`, {"credits": credits += 1})
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
+          console.log("one credit");
+        }
         this.setState({ complete: true });
       })
       .catch(err => console.log(err));
   }
 
   render() {
+    console.log(this.props)
     if (this.state.complete) {
       return <h1>Purchase Complete</h1>;
     }

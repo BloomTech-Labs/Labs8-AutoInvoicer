@@ -50,7 +50,7 @@ class App extends Component {
       let routes = [
         <Route key={this.routeKey()} path="/" component={TopNav} />,
         <Route key={this.routeKey()} path="/" component={NavBar} />,
-        <Route key={this.routeKey()} path="/billing" component={Billing} />,
+        <Route key={this.routeKey()} path="/billing" render={(props) => <Billing user={this.state.user} />} />,
         <Route key={this.routeKey()} path="/settings" component={Settings} />,
         <Route
           key={this.routeKey()}
