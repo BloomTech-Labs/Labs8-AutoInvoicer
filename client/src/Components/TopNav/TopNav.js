@@ -1,12 +1,44 @@
 import React, { Component } from "react";
-import { NavLink, Link, Route } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
-// import App from "../App.js";
 import "./TopNav.css";
-import Navbar from "../Navbar/Navbar";
 
 class TopNav extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      credits: this.props.credits,
+      subbed: this.props.subbed
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) {
+      this.setState({
+        credits: this.props.credits,
+        subbed: this.props.subbed
+      })
+    }
+  }
+
+  findMounted() {
+    const mounted = window.location.pathname.split('/')[1];
+    switch (mounted) {
+      case "":
+        return "Invoices";
+      case "invoices":
+        return "Invoices";
+      case "billing":
+        return "Billing";
+      case "create_invoice":
+        return "Create Invoice";
+      default:
+        return null;
+    }
+  }
+
   render() {
+    console.log(this.findMounted());
     return (
       <div className="nav-container">
         <div className="nav-header">
@@ -15,15 +47,22 @@ class TopNav extends Component {
               <NavLink className="home" to="/" exact>
                 Home
               </NavLink>
-              &nbsp; > &nbsp;
-              <NavLink className="invoices1" to="/invoices" exact>
-                Invoices
-              </NavLink>
+              <p>></p>
+              <p>{this.findMounted() ? (
+                <p>{this.findMounted()}</p>
+              ) : (
+                <p>Invoices</p>
+              )}</p>
+            </div>
+            <div>
+              {this.state.subbed ? (
+                <p>Unlimited</p>
+              ) : (
+                <p>Credits: {this.state.credits}</p>
+              )}
             </div>
             <div className="signout-container">
-              <NavLink className="signout" to="/signout" exact>
-                Signout
-              </NavLink>
+              <a href={process.env.REACT_APP_LOGOUT}>Sign Out</a>
             </div>
           </nav>
         </div>
