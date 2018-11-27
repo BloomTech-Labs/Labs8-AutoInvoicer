@@ -84,8 +84,7 @@ class InvoiceForm extends Component {
     } = { ...this.state };
 
     const newInvoice = {
-      user: this.props.user.user_id.split("|")[1],
-      logo,
+      // logo,
       invoice_number,
       date,
       due_date,
@@ -111,6 +110,46 @@ class InvoiceForm extends Component {
       terms
     };
 
+    axios
+      .post("http://localhost:8000/api/invoices", newInvoice)
+      .then(res => {
+        console.log(res, "Invoice added!");
+        console.log("NEW INVOICE: ", newInvoice);
+        console.log("Invoice from: ", this.state.company_name);
+      })
+      .catch(err => {
+        console.log("ERROR", err);
+      });
+    // COMMENTED OUT this is meant to reset the form to blank, but since we're creating two separate buttons for Saving the Invoice and Downloading the PDF, the form data needs to persist
+    // TODO this means that we should finish full CRUD for the invoices (we still have yet to make routes for UPDATE and DELETE)  
+    // this.setState({
+    //   invoice_number: "",
+    //   date: "",
+    //   due_date: "",
+    //   balance_due: "",
+    //   company_name: "",
+    //   invoiceTo: "",
+    //   address: "",
+    //   zipcode: "",
+    //   city: "",
+    //   state: "",
+    //   item: "",
+    //   quantity: "",
+    //   rate: "",
+    //   amount: "",
+    //   subtotal: "",
+    //   discount: "",
+    //   tax: "",
+    //   shipping: "",
+    //   total: "",
+    //   amount_paid: "",
+    //   notes: "",
+    //   terms: ""
+    // });
+  };
+
+  createPDF = event => {
+    event.preventDefault();
     const pdf = new jsPDF({
       unit: "in",
       format: [8.5, 11]
@@ -138,45 +177,10 @@ class InvoiceForm extends Component {
     pdf.text(`Amount Paid: $${this.state.amount_paid}`, 0.5, 7.4);
     pdf.text(`Notes: ${this.state.notes}`, 0.5, 7.7);
     pdf.text(`Terms: ${this.state.terms}`, 0.5, 8.1);
-    pdf.addImage(`${this.state.logo}`, "JPG", 0.5, 8.4, 100, 100, "logo");
+    // pdf.addImage(`${this.state.logo}`, "JPEG", 0.5, 8.4, 100, 100, "logo");
 
     pdf.save(`${this.state.invoiceTo}`);
-
-    axios
-      .post("http://localhost:8000/api/invoices", newInvoice)
-      .then(res => {
-        console.log(res, "Invoice added!");
-        console.log("NEW INVOICE: ", newInvoice);
-        console.log("Invoice from: ", this.state.company_name);
-      })
-      .catch(err => {
-        console.log("ERROR", err);
-      });
-    this.setState({
-      invoice_number: "",
-      date: "",
-      due_date: "",
-      balance_due: "",
-      company_name: "",
-      invoiceTo: "",
-      address: "",
-      zipcode: "",
-      city: "",
-      state: "",
-      item: "",
-      quantity: "",
-      rate: "",
-      amount: "",
-      subtotal: "",
-      discount: "",
-      tax: "",
-      shipping: "",
-      total: "",
-      amount_paid: "",
-      notes: "",
-      terms: ""
-    });
-  };
+  }
 
   calculateTax() {
     //Calculates the tax rate of the invoice total by using an external tax API.
@@ -231,6 +235,7 @@ class InvoiceForm extends Component {
                 type="file"
                 name="addLogo"
                 id="addLogo"
+                accept="image/png, image/jpeg"
                 onChange={this.handleInputChange}
               />
               <FormText color="muted">
@@ -455,7 +460,7 @@ class InvoiceForm extends Component {
               />
             </FormGroup>
             <FormGroup>
-              <Label for="terms">SubTotal </Label>
+              <Label for="terms">Subtotal </Label>
               <Input
                 value={this.state.subtotal}
                 type="number"
@@ -474,7 +479,10 @@ class InvoiceForm extends Component {
               <div>Total: {this.state.total} </div>
             </FormGroup>
             <Button type="generate" onClick={this.handleSubmit}>
-              Generate
+              Save Invoice
+            </Button>
+            <Button className="download-pdf-button" type="generate" onClick={this.createPDF}>
+              Download PDF
             </Button>
           </form>
         </div>

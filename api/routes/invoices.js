@@ -22,7 +22,7 @@ router.get("/api/invoices", (req, res) => {
       })
 });
 
-// Get a specific invoice from the logged in user by its invoice ID
+// NOT FINISHED YET Get a specific invoice from the logged in user by its invoice ID
 router.get("/api/invoices/:_id", (req, res) => {
 
   const invoice_number = req.params;
@@ -46,8 +46,10 @@ router.get("/api/invoices/:_id", (req, res) => {
 
 router.post("/api/invoices", (req, res) => {
   // for creating new invoices
+
+  const auth0_userID = req.user._json.sub.split("|")[1];
+
   const newInvoice = new Invoice({
-    user: req.body.user,
     invoice_number: req.body.invoice_number,
     date: req.body.date,
     due_date: req.body.due_date,
@@ -71,16 +73,14 @@ router.post("/api/invoices", (req, res) => {
     terms: req.body.terms
   });
 
-  User.findOne(newInvoice.user).then(user =>
+  User.findOne({auth0_userID}).then(user => {
     newInvoice.save().then(invoice => {
-      invoice.save().then(invoice => {
         user.invoices.push(invoice._id);
         user.save().then(() => {
           res.send("Success!");
         })
-      })
     }).catch(err => console.log(err))
-  );
+  });
 });
 
 router.put("/:_id", (req, res) => {

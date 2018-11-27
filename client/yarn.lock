@@ -4958,6 +4958,7 @@ jsonify@~0.0.0:
 jspdf@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/jspdf/-/jspdf-1.4.1.tgz#8dbd437986346d65efe20ede5361927666b8e4ca"
+  integrity sha512-2vYVdrvrQUdKKPyWHw81t1jEYYAJ6uFJ/HtTcGbI4qXIQEdl18dLEuL2wTeSv2GzeQLSgUvEvwsXsszuHK+PTw==
   dependencies:
     canvg "^1.0"
     cf-blob.js "0.0.1"
