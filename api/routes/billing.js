@@ -4,7 +4,7 @@ const router = require("express").Router();
 const Billing = require("../../models/Billing");
 
 //Get List of ALL billing info
-router.get("/", (req, res) => {
+router.get("/billings", (req, res) => {
   let query = req.params || {};
 
   Billing.find(query)
@@ -18,7 +18,7 @@ router.get("/", (req, res) => {
 });
 
 //Get info of single user billing info using _id
-router.get("/:_id", (req, res) => {
+router.get("/billings/:_id", (req, res) => {
 
   Billing.findOne({ _id: req.params._id })
       .then(info => {
@@ -30,7 +30,7 @@ router.get("/:_id", (req, res) => {
       });
 });
 
-router.post("/", (req, res) => {
+router.post("/billings", (req, res) => {
   // for creating new billing
   const newBilling = new Billing({
     // user: req.user.id,
@@ -45,7 +45,7 @@ router.post("/", (req, res) => {
     .catch(err => console.log(err));
 });
 
-router.put("/:_id", (req, res) => {
+router.put("/billings/:_id", (req, res) => {
   // for editing existing invoices
   let edit = req.body || {},
     options = {
@@ -63,7 +63,7 @@ router.put("/:_id", (req, res) => {
 
 });
 
-router.delete("/:_id", (req, res) => {
+router.delete("/billings/:_id", (req, res) => {
   Billing.findOneAndRemove({ _id: req.params._id})
       .then(item => {
         res.send(item)

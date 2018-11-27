@@ -1,8 +1,8 @@
 var express = require("express");
 var router = express.Router();
-var secured = require("../lib/middleware/secured");
+var secured = require("../../lib/middleware/secured");
 var passport = require("passport");
-const User = require("../models/User");
+const User = require("../../models/User");
 
 // Perform the login, after login Auth0 will redirect to callback
 router.get("/login",
