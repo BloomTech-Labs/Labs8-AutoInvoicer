@@ -1,0 +1,27 @@
+.checkout {
+  text-align: initial;
+}
+
+.card-wrapper {
+  width: 500px;
+  border: 1px solid black;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.checkout button {
+  background: none;
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 250px;
+  height: 100px;
+  
+}

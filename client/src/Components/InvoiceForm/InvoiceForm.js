@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Route } from "react-router-dom";
 import axios from "axios";
 import qs from 'qs';
+import jsPDF from "jspdf";
 
 import {
   Row,
@@ -11,7 +12,9 @@ import {
   FormGroup,
   Label,
   Input,
-  FormText
+  FormText,
+  ListGroup, 
+  ListGroupItem
 } from "reactstrap";
 
 import "./InvoiceForm.css";
@@ -21,6 +24,7 @@ import Axios from "axios";
 
 class InvoiceForm extends Component {
   state = {
+    logo: "",
     invoice_number: "",
     date: "",
     due_date: "",
@@ -53,6 +57,7 @@ class InvoiceForm extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const {
+      logo,
       invoice_number,
       date,
       due_date,
@@ -70,6 +75,7 @@ class InvoiceForm extends Component {
       subtotal,
       discount,
       tax,
+      taxRate,
       shipping,
       total,
       amount_paid,
@@ -78,7 +84,11 @@ class InvoiceForm extends Component {
     } = { ...this.state };
 
     const newInvoice = {
+<<<<<<< HEAD
       user: this.props.user.user_id.split("|")[1],
+=======
+      logo,
+>>>>>>> 77d9d2b871e42971d03cf77f3e0d769d6324ff2b
       invoice_number,
       date,
       due_date,
@@ -96,6 +106,7 @@ class InvoiceForm extends Component {
       subtotal,
       discount,
       tax,
+      taxRate,
       shipping,
       total,
       amount_paid,
@@ -103,7 +114,38 @@ class InvoiceForm extends Component {
       terms
     };
 
+    const pdf = new jsPDF({
+      unit: "in",
+      format: [8.5, 11]
+    });
+    pdf.text(`Invoice Number: ${this.state.invoice_number}`, 0.5, 0.8);
+    pdf.text(`Date: ${this.state.date}`, 0.5, 1.1);
+    pdf.text(`Due Date: ${this.state.due_date}`, 0.5, 1.4);
+    pdf.text(`Balance Due: ${this.state.balance_due}`, 0.5, 1.7);
+    pdf.text(`Company Name: ${this.state.company_name}`, 0.5, 2.1);
+    pdf.text(`Invoice To: ${this.state.invoiceTo}`, 0.5, 2.4);
+    pdf.text(`Address: ${this.state.address}`, 0.5, 2.7);
+    pdf.text(`Zip: ${this.state.zipcode}`, 0.5, 3.1);
+    pdf.text(`City: ${this.state.city}`, 0.5, 3.4);
+    pdf.text(`State: ${this.state.state}`, 0.5, 3.7);
+    pdf.text(`Item: ${this.state.item}`, 0.5, 4.1);
+    pdf.text(`Quantity: ${this.state.quantity}`, 0.5, 4.4);
+    pdf.text(`Rate: ${this.state.rate}`, 0.5, 4.7);
+    pdf.text(`Amount: $${this.state.amount}`, 0.5, 5.1);
+    pdf.text(`Subtotal: $${this.state.subtotal}`, 0.5, 5.4);
+    pdf.text(`Discount: ${this.state.discount}`, 0.5, 5.7);
+    pdf.text(`Tax: $${this.state.tax}`, 0.5, 6.1);
+    pdf.text(`Tax Rate: ${this.state.taxRate * 100}%`, 0.5, 6.4);
+    pdf.text(`Shipping: ${this.state.shipping}`, 0.5, 6.7);
+    pdf.text(`Total: $${this.state.total}`, 0.5, 7.1);
+    pdf.text(`Amount Paid: $${this.state.amount_paid}`, 0.5, 7.4);
+    pdf.text(`Notes: ${this.state.notes}`, 0.5, 7.7);
+    pdf.text(`Terms: ${this.state.terms}`, 0.5, 8.1);
+    pdf.addImage(`${this.state.logo}`, 'JPEG', 0.5, 8.4, 100, 100, 'logo');
+
+    pdf.save(`${this.state.invoiceTo}`);
   
+<<<<<<< HEAD
     axios.post('http://localhost:8000/api/invoices', newInvoice)
       .then(res => {
         console.log(res, 'Invoice added!');
@@ -137,6 +179,41 @@ class InvoiceForm extends Component {
         notes: "",
         terms: ""
       });
+=======
+    // axios.post('http://localhost:/8000/api/invoices', newInvoice)
+    //   .then(res => {
+    //     console.log(res, 'Invoice added!');
+    //     console.log('NEW INVOICE: ', newInvoice);
+    //     console.log("Invoice from: ", this.state.company_name);
+    //   })
+    //   .catch(err => {
+    //   console.log("ERROR", err);
+      // });
+      // this.setState({
+      //   invoice_number: "",
+      //   date: "",
+      //   due_date: "",
+      //   balance_due: "",
+      //   company_name: "",
+      //   invoiceTo: "",
+      //   address: "",
+      //   zipcode: "",
+      //   city: "",
+      //   state: "",
+      //   item: "",
+      //   quantity: "",
+      //   rate: "",
+      //   amount: "",
+      //   subtotal: "",
+      //   discount: "",
+      //   tax: "",
+      //   shipping: "",
+      //   total: "",
+      //   amount_paid: "",
+      //   notes: "",
+      //   terms: ""
+      // });
+>>>>>>> 77d9d2b871e42971d03cf77f3e0d769d6324ff2b
   };
 
   calculateTax() {
@@ -186,7 +263,14 @@ class InvoiceForm extends Component {
             {/* Add Logo */}
             <FormGroup>
               <Label for="addLogo">Add Your Logo</Label>
-              <Input type="file" name="addLogo" id="addLogo" />
+              <Input 
+                value={this.state.logo}
+                type="file" 
+                name="addLogo" 
+                id="addLogo"
+                onChange={this.handleInputChange}
+
+              />
               <FormText color="muted">
                 Browse file to add your company logo.
               </FormText>
