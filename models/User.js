@@ -34,7 +34,9 @@ const UserSchema = new Schema({
   credits: {
     type: Number,
     default: 3
-  }
+  },
+  invoices: [{type: Schema.Types.ObjectId, ref: 'invoice'}],
+  billings: [{type: Schema.Types.ObjectId, ref: 'billing'}]
 });
 
 const userModel = mongoose.model("users", UserSchema);

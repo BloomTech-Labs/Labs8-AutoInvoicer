@@ -50,7 +50,7 @@ class App extends Component {
       let routes = [
         <Route key={this.routeKey()} path="/" component={TopNav} />,
         <Route key={this.routeKey()} path="/" component={NavBar} />,
-        <Route key={this.routeKey()} path="/billing" component={Billing} />,
+        <Route key={this.routeKey()} path="/billing" render={(props) => <Billing user={this.state.user} />} />,
         <Route key={this.routeKey()} path="/settings" component={Settings} />,
         <Route
           key={this.routeKey()}
@@ -60,14 +60,6 @@ class App extends Component {
         <Route key={this.routeKey()} exact path="/" component={Invoices} />,
         <Route key={this.routeKey()} path="/invoices" component={Invoices} />,
         <Route key={this.routeKey()} path="/empty_invoice" component={AddInvoice} />,
-        // This should be re-written to display the eventual finished PDF or invoice form that's been filled out;
-        // Right now, it's directing to the New Invoice Form, which is already covered by
-        // path="/create_invoice" - Mark Hong
-        // <Route
-        //   key={this.routeKey()}
-        //   path="/invoices/:id"
-        //   component={InvoiceForm}
-        // />
         <Route key={this.routeKey()} path="/pdf_invoice" component={PrintPdf} />,
       ];
       this.setState({ routes });
