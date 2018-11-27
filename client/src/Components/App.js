@@ -57,7 +57,7 @@ class App extends Component {
           path="/create_invoice"
           component={InvoiceForm}
         />,
-        <Route key={this.routeKey()} path="/" component={Invoices} />,
+        <Route key={this.routeKey()} exact path="/" component={Invoices} />,
         <Route key={this.routeKey()} path="/invoices" component={Invoices} />,
         <Route key={this.routeKey()} path="/empty_invoice" component={AddInvoice} />,
         // This should be re-written to display the eventual finished PDF or invoice form that's been filled out;
