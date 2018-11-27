@@ -113,30 +113,30 @@ class InvoiceForm extends Component {
       .catch(err => {
       console.log("ERROR", err);
       });
-      // this.setState({
-      //   invoice_number: "",
-      //   date: "",
-      //   due_date: "",
-      //   balance_due: "",
-      //   company_name: "",
-      //   invoiceTo: "",
-      //   address: "",
-      //   zipcode: "",
-      //   city: "",
-      //   state: "",
-      //   item: "",
-      //   quantity: "",
-      //   rate: "",
-      //   amount: "",
-      //   subtotal: "",
-      //   discount: "",
-      //   tax: "",
-      //   shipping: "",
-      //   total: "",
-      //   amount_paid: "",
-      //   notes: "",
-      //   terms: ""
-      // });
+      this.setState({
+        invoice_number: "",
+        date: "",
+        due_date: "",
+        balance_due: "",
+        company_name: "",
+        invoiceTo: "",
+        address: "",
+        zipcode: "",
+        city: "",
+        state: "",
+        item: "",
+        quantity: "",
+        rate: "",
+        amount: "",
+        subtotal: "",
+        discount: "",
+        tax: "",
+        shipping: "",
+        total: "",
+        amount_paid: "",
+        notes: "",
+        terms: ""
+      });
   };
 
   calculateTax() {
