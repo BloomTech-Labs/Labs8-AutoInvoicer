@@ -1,5 +1,4 @@
 .nav-container {
-  height: 100%;
   width: 100%;
   display: flex;
   flex-flow: row wrap;
@@ -11,10 +10,10 @@
 
 .topNav-container {
   flex: 1 100%;
-  width: 50%;
+  max-width: 880px;
   display: flex;
-  margin-top: 15px;
-  margin-left: 25px;
+  padding-left: 12px;
+  margin: 15px auto;
 }
 
 .signout-container {

@@ -1,15 +1,39 @@
+.NavBar {
+  width: 200px;
+}
+
 .side-nav {
   height: 600px;
   width: 200px;
-  margin-left: 15px;
-  margin-top: 25px;
-  padding-top: 10px;
-  padding-left: 10px;
+  /* margin-left: 15px; */
+  /* margin-top: 25px; */
+  padding-top: 15px;
+  padding-left: 15px;
   display: flex;
   flex-direction: column;
   font-weight: bold;
   text-align: left;
-  background-color: lightgray;
+  background-color: #CCFFCC;
+}
+
+/* unvisited link */
+.side-nav a:link {
+  color: #000000;
+}
+
+/* visited link */
+.side-nav a:visited {
+  color: green;
+}
+
+/* mouse over link */
+.side-nav a:hover {
+  color: hotpink;
+}
+
+/* selected link */
+.side-nav a:active {
+  color: blue;
 }
 
 .invoices1 {
