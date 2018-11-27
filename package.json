@@ -1,7 +1,9 @@
 {
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "server": "nodemon index.js",
+    "client": "yarn --cwd client start",
+    "dev": "concurrently --kill-others-on-fail \"yarn run server\" \"yarn run client\""
   },
   "devDependencies": {
     "cors": "^2.8.4",
@@ -9,6 +11,7 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
+    "concurrently": "^4.1.0",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",
     "dotenv": "^6.1.0",
