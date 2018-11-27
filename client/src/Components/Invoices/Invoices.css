@@ -7,6 +7,7 @@
 
 .invoices {
   display: flex;
+  width: 70%;
 }
 
 .card {
@@ -14,4 +15,39 @@
   margin: 10px;
   padding: 10px;
   border-radius: 10px;
+}
+
+.create-new-invoice {
+  border: solid 1px #d3d3d3;
+  border-radius: 5px;
+  padding: 0 5% 5% 5%;
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+}
+
+.create-new-invoice p {
+  margin: unset;
+  margin-bottom: 15px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.create-new-invoice button {
+  border: none;
+  color: white;
+  background: #007bff;
+  padding: 5% 10% 6% 10%;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 20px;
+}
+
+.create-new-invoice button:hover{
+  color: black;
+  background: #d3d3d3;
 }
