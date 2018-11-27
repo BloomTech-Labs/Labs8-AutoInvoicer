@@ -145,7 +145,6 @@ class InvoiceForm extends Component {
 
     pdf.save(`${this.state.invoiceTo}`);
   
-<<<<<<< HEAD
     axios.post('http://localhost:8000/api/invoices', newInvoice)
       .then(res => {
         console.log(res, 'Invoice added!');
@@ -179,41 +178,6 @@ class InvoiceForm extends Component {
         notes: "",
         terms: ""
       });
-=======
-    // axios.post('http://localhost:/8000/api/invoices', newInvoice)
-    //   .then(res => {
-    //     console.log(res, 'Invoice added!');
-    //     console.log('NEW INVOICE: ', newInvoice);
-    //     console.log("Invoice from: ", this.state.company_name);
-    //   })
-    //   .catch(err => {
-    //   console.log("ERROR", err);
-      // });
-      // this.setState({
-      //   invoice_number: "",
-      //   date: "",
-      //   due_date: "",
-      //   balance_due: "",
-      //   company_name: "",
-      //   invoiceTo: "",
-      //   address: "",
-      //   zipcode: "",
-      //   city: "",
-      //   state: "",
-      //   item: "",
-      //   quantity: "",
-      //   rate: "",
-      //   amount: "",
-      //   subtotal: "",
-      //   discount: "",
-      //   tax: "",
-      //   shipping: "",
-      //   total: "",
-      //   amount_paid: "",
-      //   notes: "",
-      //   terms: ""
-      // });
->>>>>>> 77d9d2b871e42971d03cf77f3e0d769d6324ff2b
   };
 
   calculateTax() {
