@@ -220,26 +220,50 @@ class InvoiceForm extends Component {
       });
   }
 
-  getCityState() {
-    let zipcode = "28269";
+  // Handle Zip Change
+  handleZipChange = event => {
+    this.setState(
+      { [event.target.name]: event.target.value },
+      this.getCityState
+    );
+  };
 
-    axios
-      .get("https://maps.googleapis.com/maps/api/geocode/json", {
-        params: {
-          address: zipcode,
-          key: "AIzaSyD3LRQ0RscwOXxV3AcaID2KJkFJWbcvUms"
-        }
-      })
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+  // Get City State by Zip
+  getCityState() {
+    let zipcode = this.state.zipcode;
+    if (zipcode.toString().length < 5) {
+      return;
+    } else {
+      axios
+        .get("https://maps.googleapis.com/maps/api/geocode/json", {
+          params: {
+            address: zipcode,
+            key: process.env.REACT_APP_CITY_STATE
+          }
+        })
+        .then(res => {
+          console.log(res);
+          let city = res.data.results[0].address_components[1].short_name;
+          // let state = res.data.results[0].address_components[2].short_name;
+          let state = () => {
+            return res.data.results[0].formatted_address
+              .split(",")[1]
+              .split(" ")[1];
+          };
+          console.log(`STATE: ${state()}`);
+          console.log(`CITY: ${city}`);
+          this.setState({
+            city: city,
+            state: state()
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 
   render() {
-    this.getCityState();
     return (
       <div>
         {/* <TopNav /> */}
@@ -364,7 +388,7 @@ class InvoiceForm extends Component {
                     name="zipcode"
                     id="zipcode"
                     placeholder="Zip"
-                    onChange={this.handleInputChange}
+                    onChange={this.handleZipChange}
                   />
                 </FormGroup>
               </Col>
