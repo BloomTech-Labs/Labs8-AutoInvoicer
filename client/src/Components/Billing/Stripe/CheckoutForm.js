@@ -8,7 +8,6 @@ class CheckoutForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      complete: false,
       purchaseOption: ""
     };
     this.submit = this.submit.bind(this);
@@ -19,41 +18,37 @@ class CheckoutForm extends Component {
   };
 
   async submit(ev) {
-    let purchaseOption = {
-      user: this.props.user.user._id,
+    let purchase = {
+      user: this.props.user._id,
       option: this.state.purchaseOption,
-      token: await this.props.stripe.createToken({ name: "Name" }),
-    }
-    // let { token } = await this.props.stripe.createToken({ name: "Name" });
+      token: await this.props.stripe.createToken({ name: "Name" })
+    };
     axios
-      .post(process.env.REACT_APP_STRIPE_CHARGE, purchaseOption)
+      .post(process.env.REACT_APP_STRIPE_CHARGE, purchase)
       .then(res => {
-        console.log(res);
-        console.log("Purchase Complete!");
-        if (purchaseOption.option === "subscription") {
-          console.log("user: " + purchaseOption.user);
+        if (purchase.option === "subscription") {
+          console.log("user: " + purchase.user);
           axios
-            .put(`/api/users/${purchaseOption.user}`, {"subscribed_member": true})
-            .then(res => console.log(res))
-            .catch(err => console.log(err))
+            .put(`/api/users/users/${purchase.user}`, {
+              subscribed_member: true
+            })
+            .then(res => this.props.fetchUser())
+            .catch(err => console.log(err));
         } else {
-          let credits = this.props.user.user.credits;
+          let credits = this.props.user.credits;
           axios
-            .put(`/api/users/${purchaseOption.user}`, {"credits": credits += 1})
-            .then(res => console.log(res))
-            .catch(err => console.log(err))
+            .put(`/api/users/users/${purchase.user}`, {
+              credits: (credits += 1)
+            })
+            .then(res => this.props.fetchUser())
+            .catch(err => console.log(err));
           console.log("one credit");
         }
-        this.setState({ complete: true });
       })
       .catch(err => console.log(err));
   }
 
   render() {
-    console.log(this.props)
-    if (this.state.complete) {
-      return <h1>Purchase Complete</h1>;
-    }
     return (
       <div className="checkout">
         <div className="card-wrapper">
