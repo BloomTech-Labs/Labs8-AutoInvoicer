@@ -121,7 +121,7 @@ class InvoiceForm extends Component {
         console.log("ERROR", err);
       });
     // COMMENTED OUT this is meant to reset the form to blank, but since we're creating two separate buttons for Saving the Invoice and Downloading the PDF, the form data needs to persist
-    // TODO this means that we should finish full CRUD for the invoices (we still have yet to make routes for UPDATE and DELETE)  
+    // TODO this means that we should finish full CRUD for the invoices (we still have yet to make routes for UPDATE and DELETE)
     // this.setState({
     //   invoice_number: "",
     //   date: "",
@@ -180,7 +180,7 @@ class InvoiceForm extends Component {
     // pdf.addImage(`${this.state.logo}`, "JPEG", 0.5, 8.4, 100, 100, "logo");
 
     pdf.save(`${this.state.invoiceTo}`);
-  }
+  };
 
   calculateTax() {
     //Calculates the tax rate of the invoice total by using an external tax API.
@@ -218,6 +218,49 @@ class InvoiceForm extends Component {
       .catch(error => {
         console.log(error);
       });
+  }
+
+  // Handle Zip Change
+  handleZipChange = event => {
+    this.setState(
+      { [event.target.name]: event.target.value },
+      this.getCityState
+    );
+  };
+
+  // Get City State by Zip
+  getCityState() {
+    let zipcode = this.state.zipcode;
+    if (zipcode.toString().length < 5) {
+      return;
+    } else {
+      axios
+        .get("https://maps.googleapis.com/maps/api/geocode/json", {
+          params: {
+            address: zipcode,
+            key: process.env.REACT_APP_CITY_STATE
+          }
+        })
+        .then(res => {
+          console.log(res);
+          let city = res.data.results[0].address_components[1].short_name;
+          // let state = res.data.results[0].address_components[2].short_name;
+          let state = () => {
+            return res.data.results[0].formatted_address
+              .split(",")[1]
+              .split(" ")[1];
+          };
+          console.log(`STATE: ${state()}`);
+          console.log(`CITY: ${city}`);
+          this.setState({
+            city: city,
+            state: state()
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 
   render() {
@@ -345,7 +388,7 @@ class InvoiceForm extends Component {
                     name="zipcode"
                     id="zipcode"
                     placeholder="Zip"
-                    onChange={this.handleInputChange}
+                    onChange={this.handleZipChange}
                   />
                 </FormGroup>
               </Col>
@@ -481,7 +524,11 @@ class InvoiceForm extends Component {
             <Button type="generate" onClick={this.handleSubmit}>
               Save Invoice
             </Button>
-            <Button className="download-pdf-button" type="generate" onClick={this.createPDF}>
+            <Button
+              className="download-pdf-button"
+              type="generate"
+              onClick={this.createPDF}
+            >
               Download PDF
             </Button>
           </form>
