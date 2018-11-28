@@ -10,7 +10,7 @@ var flash = require("connect-flash");
 var userInViews = require("./lib/middleware/userInViews");
 var authRouter = require("./api/routes/auth");
 var indexRouter = require("./api/routes/index");
-var usersRouter = require("./api/routes/users");
+var usersRouter = require("./api/routes/users_auth");
 var invoicesRouter = require("./api/routes/invoices");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -117,7 +117,6 @@ server.use(function(req, res, next) {
 
 server.use(userInViews());
 server.use("/", authRouter);
-server.use("/", indexRouter);
 server.use("/", usersRouter);
 server.use("/", invoicesRouter);
 
