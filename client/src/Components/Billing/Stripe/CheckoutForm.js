@@ -29,7 +29,7 @@ class CheckoutForm extends Component {
         if (purchase.option === "subscription") {
           console.log("user: " + purchase.user);
           axios
-            .put(`/api/users/users/${purchase.user}`, {
+            .put(`/api/users/${purchase.user}`, {
               subscribed_member: true
             })
             .then(res => this.props.fetchUser())
@@ -37,7 +37,7 @@ class CheckoutForm extends Component {
         } else {
           let credits = this.props.user.credits;
           axios
-            .put(`/api/users/users/${purchase.user}`, {
+            .put(`/api/users/${purchase.user}`, {
               credits: (credits += 1)
             })
             .then(res => this.props.fetchUser())
