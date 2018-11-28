@@ -19,13 +19,16 @@ class Invoice extends Component {
   }
 
   render() {
+    const {invoice} = this.state;
     if (this.state.invoice === null) return <p>Loading ...</p>;
     return (
       <div className="container">
         <div className="">
           <div className="">
-            <h1 className="">{this.state.invoice.company_name}</h1>
-            <p className="">{this.state.invoice.date}</p> 
+            <h1 className="">From: {invoice.company_name}</h1>
+            <p className="">Date:{invoice.date}</p> 
+            <p className="">Due Date: {invoice.due_date}</p>
+            <p className="">Item: {invoice.item}</p>
           </div>
         </div>
       </div>
