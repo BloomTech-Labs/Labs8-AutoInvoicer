@@ -121,7 +121,7 @@ class InvoiceForm extends Component {
         console.log("ERROR", err);
       });
     // COMMENTED OUT this is meant to reset the form to blank, but since we're creating two separate buttons for Saving the Invoice and Downloading the PDF, the form data needs to persist
-    // TODO this means that we should finish full CRUD for the invoices (we still have yet to make routes for UPDATE and DELETE)  
+    // TODO this means that we should finish full CRUD for the invoices (we still have yet to make routes for UPDATE and DELETE)
     // this.setState({
     //   invoice_number: "",
     //   date: "",
@@ -180,7 +180,7 @@ class InvoiceForm extends Component {
     // pdf.addImage(`${this.state.logo}`, "JPEG", 0.5, 8.4, 100, 100, "logo");
 
     pdf.save(`${this.state.invoiceTo}`);
-  }
+  };
 
   calculateTax() {
     //Calculates the tax rate of the invoice total by using an external tax API.
@@ -220,7 +220,26 @@ class InvoiceForm extends Component {
       });
   }
 
+  getCityState() {
+    let zipcode = "28269";
+
+    axios
+      .get("https://maps.googleapis.com/maps/api/geocode/json", {
+        params: {
+          address: zipcode,
+          key: "AIzaSyD3LRQ0RscwOXxV3AcaID2KJkFJWbcvUms"
+        }
+      })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
   render() {
+    this.getCityState();
     return (
       <div>
         {/* <TopNav /> */}
@@ -481,7 +500,11 @@ class InvoiceForm extends Component {
             <Button type="generate" onClick={this.handleSubmit}>
               Save Invoice
             </Button>
-            <Button className="download-pdf-button" type="generate" onClick={this.createPDF}>
+            <Button
+              className="download-pdf-button"
+              type="generate"
+              onClick={this.createPDF}
+            >
               Download PDF
             </Button>
           </form>
