@@ -1,28 +1,17 @@
 import React, { Component } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import "./TopNav.css";
 
 class TopNav extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      credits: this.props.credits,
-      subbed: this.props.subbed
-    }
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps !== this.props) {
-      this.setState({
-        credits: this.props.credits,
-        subbed: this.props.subbed
-      })
-    }
+    this.credits = this.props.credits;
+    this.subbed = this.props.subbed;
   }
 
   findMounted() {
-    const mounted = window.location.pathname.split('/')[1];
+    const mounted = window.location.pathname.split("/")[1];
     switch (mounted) {
       case "":
         return "Invoices";
@@ -38,7 +27,6 @@ class TopNav extends Component {
   }
 
   render() {
-    console.log(this.findMounted());
     return (
       <div className="nav-container">
         <div className="nav-header">
@@ -48,17 +36,19 @@ class TopNav extends Component {
                 Home
               </NavLink>
               <p>></p>
-              <p>{this.findMounted() ? (
-                <p>{this.findMounted()}</p>
-              ) : (
-                <p>Invoices</p>
-              )}</p>
+              <p>
+                {this.findMounted() ? (
+                  <p>{this.findMounted()}</p>
+                ) : (
+                  <p>Invoices</p>
+                )}
+              </p>
             </div>
             <div>
-              {this.state.subbed ? (
+              {this.subbed ? (
                 <p>Unlimited</p>
               ) : (
-                <p>Credits: {this.state.credits}</p>
+                <p>Credits: {this.credits}</p>
               )}
             </div>
             <div className="signout-container">
@@ -69,9 +59,6 @@ class TopNav extends Component {
       </div>
     );
   }
-  signout = () => {
-    localStorage.removeItem("jwt");
-  };
 }
 
 export default TopNav;

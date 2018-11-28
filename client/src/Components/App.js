@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import axios from "axios";
 
 // Import pages
@@ -12,7 +12,7 @@ import TopNav from "./TopNav/TopNav";
 import Billing from "./Billing/Billing";
 
 import AddInvoice from "./AddInvoice/AddInvoice";
-import PrintPdf from "./PrintPdf/PrintPdf"
+import PrintPdf from "./PrintPdf/PrintPdf";
 import "./App.css";
 
 class App extends Component {
@@ -20,26 +20,29 @@ class App extends Component {
     super(props);
     this.state = {
       user: null,
-      routes: <Route key={this.routeKey()} exact path="/" component={LandingPage} />
+      routes: (
+        <Route key={this.routeKey()} exact path="/" component={LandingPage} />
+      )
     };
   }
 
   componentDidMount() {
     //this gets the user info to be used on the client
-    console.log("component mounted");
+    this.fetchUser();
+  }
+
+  // should be used by child components that need to update user information after performing an operation
+  fetchUser = () => {
     axios
-      .get("http://localhost:8000/react_user_info")
+      .get(process.env.REACT_APP_VERIFY_USER)
       .then(res => {
-        console.log("axios success");
         const user = res.data;
-        console.log(user);
-        this.setState({user}, this.setRoutes);
+        this.setState({ user }, this.setRoutes);
       })
       .catch(err => {
-        console.log("axios fails");
-        console.log(err, "error");
+        console.log(err);
       });
-  }
+  };
 
   setRoutes() {
     console.log("component did update");
@@ -48,10 +51,24 @@ class App extends Component {
 
     if (this.state.user && !this.state.user.error) {
       let routes = [
-        <Route key={this.routeKey()} path="/" render={(props) => <TopNav credits={this.state.user.credits} subbed={this.state.user.subscribed_member} 
-        />} />,
+        <Route
+          key={this.routeKey()}
+          path="/"
+          render={props => (
+            <TopNav
+              credits={this.state.user.credits}
+              subbed={this.state.user.subscribed_member}
+            />
+          )}
+        />,
         <Route key={this.routeKey()} path="/" component={NavBar} />,
-        <Route key={this.routeKey()} path="/billing" render={(props) => <Billing user={this.state.user} />} />,
+        <Route
+          key={this.routeKey()}
+          path="/billing"
+          render={props => (
+            <Billing user={this.state.user} fetchUser={this.fetchUser} />
+          )}
+        />,
         <Route key={this.routeKey()} path="/settings" component={Settings} />,
         <Route
           key={this.routeKey()}
@@ -60,8 +77,12 @@ class App extends Component {
         />,
         <Route key={this.routeKey()} exact path="/" component={Invoices} />,
         <Route key={this.routeKey()} path="/invoices" component={Invoices} />,
-        <Route key={this.routeKey()} path="/empty_invoice" component={AddInvoice} />,
-        <Route key={this.routeKey()} path="/pdf_invoice" component={PrintPdf} />,
+        <Route
+          key={this.routeKey()}
+          path="/empty_invoice"
+          component={AddInvoice}
+        />,
+        <Route key={this.routeKey()} path="/pdf_invoice" component={PrintPdf} />
       ];
       this.setState({ routes });
     }
