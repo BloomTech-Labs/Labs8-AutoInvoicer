@@ -6,6 +6,7 @@ import axios from "axios";
 import LandingPage from "./Landing/Landing";
 import Settings from "./Settings/Settings";
 import Invoices from "./Invoices/Invoices";
+import Invoice from "./Invoices/Invoice/Invoice";
 import InvoiceForm from "./InvoiceForm/InvoiceForm";
 import NavBar from "./Navbar/Navbar";
 import TopNav from "./TopNav/TopNav";
@@ -77,6 +78,7 @@ class App extends Component {
         />,
         <Route key={this.routeKey()} exact path="/" component={Invoices} />,
         <Route key={this.routeKey()} path="/invoices" component={Invoices} />,
+        <Route key={this.routeKey()} path="/invoices/:id" component={Invoice} />,
         <Route
           key={this.routeKey()}
           path="/empty_invoice"

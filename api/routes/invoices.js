@@ -25,22 +25,35 @@ router.get("/api/invoices", (req, res) => {
 // NOT FINISHED YET Get a specific invoice from the logged in user by its invoice ID
 router.get("/api/invoices/:_id", (req, res) => {
 
-  const invoice_number = req.params;
+  const invoice_number = req.params._id;
+  let single_invoice;
 
   const { _raw, _json, ...userProfile } = req.user;
   const auth0_userID = req.user._json.sub.split("|")[1];
 
-  console.log(invoice_number);
-  console.log("USER LOGGED IN: ", auth0_userID);
-
-  // Invoice.find({_id: req.params._id})
-  Invoice.findOne({auth0_userID, invoice_number})
-      .then(invoices => {
-        res.status(200).send(invoices);
+  User.findOne({auth0_userID})
+      .populate('invoices')
+      .then(user => {
+        /* Check to see if the invoice is part of the user's invoice,
+        personally I feel this is redundant but I included it for assurance that the
+        invoice was part of the user's invoices -Kevin */
+        user.invoices.forEach( invoice => {
+          if(invoice._id == invoice_number)
+            single_invoice = invoice._id;
+        })
+       
+        Invoice.findOne({ _id: single_invoice})
+          .then(invoice =>{
+            res.status(200).send(invoice);
+        })
+          .catch(err =>{
+            res.status(500);
+            console.log(err, "User look up successful but unable to find invoice with that ID");
+          })
       })
       .catch(err => {
         res.status(500);
-        console.log(err);
+        console.log(err, "Unable to look up user for invoice ID.");
       })
 })
 
