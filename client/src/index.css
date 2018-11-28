@@ -1,5 +1,6 @@
 html {
-  box-sizing: border-box;
+	box-sizing: border-box;
+	height: 100%;
 }
 *, *:before, *:after {
   box-sizing: inherit;
@@ -62,7 +63,8 @@ body {
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	-moz-osx-font-smoothing: grayscale;
+	height: 100%;
 }
 
 code {
