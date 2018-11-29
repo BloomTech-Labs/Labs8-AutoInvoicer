@@ -18,3 +18,9 @@
   width: 50px;
   margin: 35px auto;
 }
+
+@media (max-width: 768px) {
+  .settings-wrapper {
+    margin-top: 178px;
+  } 
+}
