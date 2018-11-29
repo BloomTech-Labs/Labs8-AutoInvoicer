@@ -18,6 +18,8 @@ import {
   Table
 } from "reactstrap";
 
+import LineItems from "./LineItems/LineItems";
+
 import "./InvoiceForm.css";
 
 class InvoiceForm extends Component {
@@ -51,7 +53,14 @@ class InvoiceForm extends Component {
     total: "",
     amount_paid: "",
     notes: "",
-    terms: ""
+    terms: "",
+    lineItems: [
+      {
+        item: "",
+        quantity: 0,
+        rate: 0
+      }
+    ]
   };
 
   handleInputChange = event => {
@@ -248,6 +257,24 @@ class InvoiceForm extends Component {
     }
   }
 
+  addLineItem = event => {
+    event.preventDefault();
+    const lineItem = {
+      item: "",
+      quantity: 0,
+      rate: 0
+    }
+    this.setState({
+      lineItems: [ ...this.state.lineItems, lineItem]
+    })
+  }
+
+  handleLineItemChange = (event, index, item) => {
+    let lineItems = [...this.state.lineItems];
+    lineItems[index][item] = event.target.value;
+    this.setState({ lineItems });
+  }
+
   render() {
     return (
       <div>
@@ -416,7 +443,19 @@ class InvoiceForm extends Component {
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                {this.state.lineItems.map((row, index) => {
+                  return (
+                    <LineItems
+                      key={index}
+                      rowNumber={index + 1}
+                      item={row.item}
+                      quantity={row.quantity}
+                      rate={row.rate}
+                      handleLineItemChange={this.handleLineItemChange}
+                    />
+                  );
+                })}
+                {/* <tr>
                   <th scope="row">1</th>
                   <td>
                     <Input
@@ -450,11 +489,45 @@ class InvoiceForm extends Component {
                   </td>
                   <td>${this.state.quantity * this.state.rate} </td>
                 </tr>
+                <tr>
+                  <th scope="row">2</th>
+                  <td>
+                    <Input
+                      value={this.state.item2}
+                      type="text"
+                      name="item2"
+                      id="item"
+                      placeholder="Add Item Here"
+                      onChange={this.handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <Input
+                      value={this.state.quantity2}
+                      type="number"
+                      name="quantity2"
+                      id="quantity"
+                      placeholder="1"
+                      onChange={this.handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <Input
+                      value={this.state.rate2}
+                      type="currency"
+                      name="rate2"
+                      id="rate"
+                      placeholder="$ 0.00"
+                      onChange={this.handleInputChange}
+                    />
+                  </td>
+                  <td>${this.state.quantity2 * this.state.rate2} </td>
+                </tr> */}
               </tbody>
             </Table>
 
             <div>
-              <button>Add Line Item +</button>
+              <button onClick={this.addLineItem}>Add Line Item +</button>
             </div>
 
             {/* Item, Quantity, Rate, Amount - using Reacstrap FormGroup  */}
