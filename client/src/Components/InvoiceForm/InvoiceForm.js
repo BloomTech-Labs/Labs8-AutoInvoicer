@@ -18,13 +18,15 @@ import {
 } from "reactstrap";
 
 import "./InvoiceForm.css";
-import Navbar from "../Navbar/Navbar";
-import TopNav from "../TopNav/TopNav";
-import Axios from "axios";
 
 class InvoiceForm extends Component {
+  constructor(props) {
+    super(props);
+    this.auth0_userID = this.props.auth0_userID;
+    this.logo = null;
+    this.logoRaw = null;
+  }
   state = {
-    logo: "",
     invoice_number: "",
     date: "",
     due_date: "",
@@ -54,64 +56,87 @@ class InvoiceForm extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  handleImageChange = event => {
+    event.preventDefault()
+    const reader = new FileReader();
+    const logo = event.target.files[0];
+    reader.onloadend = () => {
+      this.logo = logo;
+      this.logoRaw = reader.result;
+    }
+    reader.readAsDataURL(logo)
+  }
+
   handleSubmit = event => {
     event.preventDefault();
-    const {
-      logo,
-      invoice_number,
-      date,
-      due_date,
-      balance_due,
-      company_name,
-      invoiceTo,
-      address,
-      zipcode,
-      city,
-      state,
-      item,
-      quantity,
-      rate,
-      amount,
-      subtotal,
-      discount,
-      tax,
-      taxRate,
-      shipping,
-      total,
-      amount_paid,
-      notes,
-      terms
-    } = { ...this.state };
+    // const {
+    //   invoice_number,
+    //   date,
+    //   due_date,
+    //   balance_due,
+    //   company_name,
+    //   invoiceTo,
+    //   address,
+    //   zipcode,
+    //   city,
+    //   state,
+    //   item,
+    //   quantity,
+    //   rate,
+    //   amount,
+    //   subtotal,
+    //   discount,
+    //   tax,
+    //   taxRate,
+    //   shipping,
+    //   total,
+    //   amount_paid,
+    //   notes,
+    //   terms
+    // } = { ...this.state };
 
-    const newInvoice = {
-      // logo,
-      invoice_number,
-      date,
-      due_date,
-      balance_due,
-      company_name,
-      invoiceTo,
-      address,
-      zipcode,
-      city,
-      state,
-      item,
-      quantity,
-      rate,
-      amount,
-      subtotal,
-      discount,
-      tax,
-      taxRate,
-      shipping,
-      total,
-      amount_paid,
-      notes,
-      terms
-    };
+    // const newInvoice = {
+    //   auth0_userID: this.auth0_userID,
+    //   invoice_number,
+    //   date,
+    //   due_date,
+    //   balance_due,
+    //   company_name,
+    //   invoiceTo,
+    //   address,
+    //   zipcode,
+    //   city,
+    //   state,
+    //   item,
+    //   quantity,
+    //   rate,
+    //   amount,
+    //   subtotal,
+    //   discount,
+    //   tax,
+    //   taxRate,
+    //   shipping,
+    //   total,
+    //   amount_paid,
+    //   notes,
+    //   terms
+    // };
+
+    // newInvoice.logo = new FormData();
+    // newInvoice.logo.append('logo', this.state.logo, this.state.logo.name);
+
+    const newInvoice = new FormData();
+    newInvoice.append('auth0_userID', this.auth0_userID);
+    newInvoice.append('logo', this.logo, this.logo.name);
+
+    const data = this.state;
+
+    for (const prop in data) {
+      newInvoice.append(`${prop}`, `${data[prop]}`)
+    }
 
     axios
-      .post("http://localhost:8000/api/invoices", newInvoice)
+      .post(process.env.REACT_APP_NEW_INVOICE, newInvoice)
       .then(res => {
         console.log(res, "Invoice added!");
         console.log("NEW INVOICE: ", newInvoice);
@@ -154,6 +179,7 @@ class InvoiceForm extends Component {
       unit: "in",
       format: [8.5, 11]
     });
+    pdf.addImage(this.logoRaw, "JPEG", 0.5, 0.3, 1.5, 1.5, "MEDIUM", 0)
     pdf.text(`Invoice Number: ${this.state.invoice_number}`, 0.5, 0.8);
     pdf.text(`Date: ${this.state.date}`, 0.5, 1.1);
     pdf.text(`Due Date: ${this.state.due_date}`, 0.5, 1.4);
@@ -274,12 +300,11 @@ class InvoiceForm extends Component {
             <FormGroup>
               <Label for="addLogo">Add Your Logo</Label>
               <Input
-                value={this.state.logo}
                 type="file"
                 name="addLogo"
                 id="addLogo"
                 accept="image/png, image/jpeg"
-                onChange={this.handleInputChange}
+                onChange={this.handleImageChange}
               />
               <FormText color="muted">
                 Browse file to add your company logo.
