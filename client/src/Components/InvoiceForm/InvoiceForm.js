@@ -53,6 +53,17 @@ class InvoiceForm extends Component {
     terms: ""
   };
 
+  async componentDidMount() {
+     const { match: { params } } = this.props;
+     const { match: { path } } = this.props;
+     if(path == "/invoices/:id"){
+      const invoice = (await axios.get(`http://localhost:8000/api/invoices/${params.id}`)).data;
+      this.setState({
+        invoice,
+        });
+      }
+    }
+
   handleInputChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };

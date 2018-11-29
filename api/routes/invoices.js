@@ -117,12 +117,38 @@ router.post("/", upload.single('logo'), (req, res) => {
 
 });
 
-router.put("/:_id", (req, res) => {
+router.put("/api/invoices/:_id", (req, res) => {
   // for editing existing invoices
   let edit = req.body || {},
-    options = {
-      new: true
-    }
+    options = {}
+
+  const invoice_number = req.params._id;
+  let single_invoice;
+
+  const { _raw, _json, ...userProfile } = req.user;
+  const auth0_userID = req.user._json.sub.split("|")[1];
+
+  User.findOne({auth0_userID})
+      .populate('invoices')
+      .then(user => {
+        user.invoices.forEach( invoice => {
+          if(invoice._id == invoice_number)
+            single_invoice = invoice._id;
+        })
+       
+        Invoice.findOneAndUpdate({ _id: single_invoice}, edit, options)
+          .then(invoice =>{
+            res.status(200).send(invoice);
+        })
+          .catch(err =>{
+            res.status(500);
+            console.log(err, "User look up successful but unable to find invoice with that ID");
+          })
+      })
+      .catch(err => {
+        res.status(500);
+        console.log(err, "Unable to look up user for invoice ID.");
+      })
 
     Invoice.findOneAndUpdate({_id: req.params._id}, edit, options)
     .then(item => {

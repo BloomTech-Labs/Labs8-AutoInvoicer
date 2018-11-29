@@ -79,7 +79,7 @@ class App extends Component {
               component={InvoiceForm}
             />
             <Route key={this.routeKey()} exact path="/" component={Invoices} />
-            <Route key={this.routeKey()} path="/invoices" component={Invoices} />
+            <Route key={this.routeKey()} path="/invoices/:id" component={InvoiceForm} />
             <Route
               key={this.routeKey()}
               path="/empty_invoice"
