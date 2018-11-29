@@ -15,4 +15,31 @@
   .checkout-wrapper {
     margin: 194px auto 0;
   }
+
+  .checkout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card-wrapper {
+    width: 350px;
+  }
+
+  .options label {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .options label input {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px; 
+  }
+
+  .checkout-button {
+    margin-top: 15px;
+  }
 }

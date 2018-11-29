@@ -130,11 +130,7 @@ class InvoiceForm extends Component {
       unit: "in",
       format: [8.5, 11]
     });
-<<<<<<< HEAD
     pdf.addImage(this.logoRaw, "JPEG", 6.5, 0.5, 1.5, 1.5, "MEDIUM", 0);
-=======
-    pdf.addImage(this.logoRaw, "JPG", 0.5, 0.3, 1.5, 1.5, "MEDIUM", 0);
->>>>>>> 38d50bcae31cdf093e7ff467435d45f887ff6b21
     pdf.text(`Invoice Number: ${this.state.invoice_number}`, 0.5, 0.8);
     pdf.text(`Date: ${this.state.date}`, 0.5, 1.1);
     pdf.text(`Due Date: ${this.state.due_date}`, 0.5, 1.4);
@@ -158,7 +154,6 @@ class InvoiceForm extends Component {
     pdf.text(`Amount Paid: $${this.state.amount_paid}`, 0.5, 7.4);
     pdf.text(`Notes: ${this.state.notes}`, 0.5, 7.7);
     pdf.text(`Terms: ${this.state.terms}`, 0.5, 8.1);
-    // pdf.addImage(`${this.state.logo}`, "JPEG", 0.5, 8.4, 100, 100, "logo");
 
     pdf.save(`${this.state.invoiceTo}`);
   };
