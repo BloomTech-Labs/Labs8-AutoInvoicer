@@ -19,13 +19,15 @@ import {
 } from "reactstrap";
 
 import "./InvoiceForm.css";
-import Navbar from "../Navbar/Navbar";
-import TopNav from "../TopNav/TopNav";
-import Axios from "axios";
 
 class InvoiceForm extends Component {
+  constructor(props) {
+    super(props);
+    this.auth0_userID = this.props.auth0_userID;
+    this.logo = null;
+    this.logoRaw = null;
+  }
   state = {
-    logo: "",
     invoice_number: "",
     date: "",
     due_date: "",
@@ -55,64 +57,87 @@ class InvoiceForm extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  handleImageChange = event => {
+    event.preventDefault();
+    const reader = new FileReader();
+    const logo = event.target.files[0];
+    reader.onloadend = () => {
+      this.logo = logo;
+      this.logoRaw = reader.result;
+    };
+    reader.readAsDataURL(logo);
+  };
+
   handleSubmit = event => {
     event.preventDefault();
-    const {
-      logo,
-      invoice_number,
-      date,
-      due_date,
-      balance_due,
-      company_name,
-      invoiceTo,
-      address,
-      zipcode,
-      city,
-      state,
-      item,
-      quantity,
-      rate,
-      amount,
-      subtotal,
-      discount,
-      tax,
-      taxRate,
-      shipping,
-      total,
-      amount_paid,
-      notes,
-      terms
-    } = { ...this.state };
+    // const {
+    //   invoice_number,
+    //   date,
+    //   due_date,
+    //   balance_due,
+    //   company_name,
+    //   invoiceTo,
+    //   address,
+    //   zipcode,
+    //   city,
+    //   state,
+    //   item,
+    //   quantity,
+    //   rate,
+    //   amount,
+    //   subtotal,
+    //   discount,
+    //   tax,
+    //   taxRate,
+    //   shipping,
+    //   total,
+    //   amount_paid,
+    //   notes,
+    //   terms
+    // } = { ...this.state };
 
-    const newInvoice = {
-      // logo,
-      invoice_number,
-      date,
-      due_date,
-      balance_due,
-      company_name,
-      invoiceTo,
-      address,
-      zipcode,
-      city,
-      state,
-      item,
-      quantity,
-      rate,
-      amount,
-      subtotal,
-      discount,
-      tax,
-      taxRate,
-      shipping,
-      total,
-      amount_paid,
-      notes,
-      terms
-    };
+    // const newInvoice = {
+    //   auth0_userID: this.auth0_userID,
+    //   invoice_number,
+    //   date,
+    //   due_date,
+    //   balance_due,
+    //   company_name,
+    //   invoiceTo,
+    //   address,
+    //   zipcode,
+    //   city,
+    //   state,
+    //   item,
+    //   quantity,
+    //   rate,
+    //   amount,
+    //   subtotal,
+    //   discount,
+    //   tax,
+    //   taxRate,
+    //   shipping,
+    //   total,
+    //   amount_paid,
+    //   notes,
+    //   terms
+    // };
+
+    // newInvoice.logo = new FormData();
+    // newInvoice.logo.append('logo', this.state.logo, this.state.logo.name);
+
+    const newInvoice = new FormData();
+    newInvoice.append("auth0_userID", this.auth0_userID);
+    newInvoice.append("logo", this.logo, this.logo.name);
+
+    const data = this.state;
+
+    for (const prop in data) {
+      newInvoice.append(`${prop}`, `${data[prop]}`);
+    }
 
     axios
-      .post("http://localhost:8000/api/invoices", newInvoice)
+      .post(process.env.REACT_APP_NEW_INVOICE, newInvoice)
       .then(res => {
         console.log(res, "Invoice added!");
         console.log("NEW INVOICE: ", newInvoice);
@@ -122,7 +147,7 @@ class InvoiceForm extends Component {
         console.log("ERROR", err);
       });
     // COMMENTED OUT this is meant to reset the form to blank, but since we're creating two separate buttons for Saving the Invoice and Downloading the PDF, the form data needs to persist
-    // TODO this means that we should finish full CRUD for the invoices (we still have yet to make routes for UPDATE and DELETE)  
+    // TODO this means that we should finish full CRUD for the invoices (we still have yet to make routes for UPDATE and DELETE)
     // this.setState({
     //   invoice_number: "",
     //   date: "",
@@ -155,6 +180,7 @@ class InvoiceForm extends Component {
       unit: "in",
       format: [8.5, 11]
     });
+    pdf.addImage(this.logoRaw, "JPEG", 0.5, 0.3, 1.5, 1.5, "MEDIUM", 0);
     pdf.text(`Invoice Number: ${this.state.invoice_number}`, 0.5, 0.8);
     pdf.text(`Date: ${this.state.date}`, 0.5, 1.1);
     pdf.text(`Due Date: ${this.state.due_date}`, 0.5, 1.4);
@@ -221,6 +247,57 @@ class InvoiceForm extends Component {
       });
   }
 
+  // Handle Tax
+  handleTaxChange = event => {
+    this.setState(
+      { [event.target.name]: event.target.value },
+      this.calculateTax
+    );
+  };
+
+  // Handle Zip Change
+  handleZipChange = event => {
+    this.setState({ [event.target.name]: event.target.value }, () => {
+      this.calculateTax();
+      this.getCityState();
+    });
+  };
+
+  // Get City State by Zip
+  getCityState() {
+    let zipcode = this.state.zipcode;
+    if (zipcode.toString().length < 5) {
+      return;
+    } else {
+      axios
+        .get("https://maps.googleapis.com/maps/api/geocode/json", {
+          params: {
+            address: zipcode,
+            key: process.env.REACT_APP_CITY_STATE
+          }
+        })
+        .then(res => {
+          console.log(res);
+          let city = res.data.results[0].address_components[1].short_name;
+          // let state = res.data.results[0].address_components[2].short_name;
+          let state = () => {
+            return res.data.results[0].formatted_address
+              .split(",")[1]
+              .split(" ")[1];
+          };
+          console.log(`STATE: ${state()}`);
+          console.log(`CITY: ${city}`);
+          this.setState({
+            city: city,
+            state: state()
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }
+
   render() {
     return (
       <div>
@@ -232,12 +309,11 @@ class InvoiceForm extends Component {
             <FormGroup>
               <Label for="addLogo">Add Your Logo</Label>
               <Input
-                value={this.state.logo}
                 type="file"
                 name="addLogo"
                 id="addLogo"
                 accept="image/png, image/jpeg"
-                onChange={this.handleInputChange}
+                onChange={this.handleImageChange}
               />
               <FormText color="muted">
                 Browse file to add your company logo.
@@ -346,7 +422,7 @@ class InvoiceForm extends Component {
                     name="zipcode"
                     id="zipcode"
                     placeholder="Zip"
-                    onChange={this.handleInputChange}
+                    onChange={this.handleZipChange}
                   />
                 </FormGroup>
               </Col>
@@ -359,7 +435,7 @@ class InvoiceForm extends Component {
                     name="city"
                     id="city"
                     placeholder="City"
-                    onChange={this.handleInputChange}
+                    onChange={this.handleTaxChange}
                   />
                 </FormGroup>
               </Col>
@@ -372,7 +448,7 @@ class InvoiceForm extends Component {
                     name="state"
                     id="state"
                     placeholder="State"
-                    onChange={this.handleInputChange}
+                    onChange={this.handleTaxChange}
                   />
                 </FormGroup>
               </Col>
@@ -534,19 +610,25 @@ class InvoiceForm extends Component {
                 placeholder="Subtotal"
                 onChange={this.handleInputChange}
               />
-              <div>
+              {/* <div>
                 Tax: {this.state.taxRate * 100}%{" "}
                 <Button onClick={() => this.calculateTax()}>
                   {" "}
                   Calculate Tax
                 </Button>
-              </div>
+              </div> */}
+              {/* Testing Tax */}
+              <div>Tax: {(this.state.taxRate * 100).toFixed(2)}% </div>
               <div>Total: {this.state.total} </div>
             </FormGroup>
             <Button type="generate" onClick={this.handleSubmit}>
               Save Invoice
             </Button>
-            <Button className="download-pdf-button" type="generate" onClick={this.createPDF}>
+            <Button
+              className="download-pdf-button"
+              type="generate"
+              onClick={this.createPDF}
+            >
               Download PDF
             </Button>
           </form>

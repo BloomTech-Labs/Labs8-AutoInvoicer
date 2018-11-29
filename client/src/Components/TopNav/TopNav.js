@@ -35,7 +35,7 @@ class TopNav extends Component {
               <NavLink className="home" to="/" exact>
                 Home
               </NavLink>
-              <p>></p>
+              <p className="breadcrumb-spacing">></p>
               <p>
                 {this.findMounted() ? (
                   <p>{this.findMounted()}</p>
@@ -44,14 +44,14 @@ class TopNav extends Component {
                 )}
               </p>
             </div>
-            <div>
-              {this.subbed ? (
-                <p>Unlimited</p>
-              ) : (
-                <p>Credits: {this.credits}</p>
-              )}
-            </div>
             <div className="signout-container">
+              <div className="credits">
+                {this.subbed ? (
+                  <p>Unlimited</p>
+                ) : (
+                  <p>Credits: {this.credits}</p>
+                )}
+              </div>
               <a href={process.env.REACT_APP_LOGOUT}>Sign Out</a>
             </div>
           </nav>

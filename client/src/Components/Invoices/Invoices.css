@@ -1,5 +1,5 @@
 .container {
-  margin: 0 auto;
+  margin: 56px auto 0;
   display: flex;
   justify-content: center;
 }
@@ -8,25 +8,31 @@
   display: flex;
   width: 100%;
   flex-wrap:wrap;
+  overflow: visible;
+  justify-content: center;
 }
 
 .invoice {
   border: solid 1px #d3d3d3;
   border-radius: 5px;
   padding: 4%;
-  Margin: 1%;
+  Margin: 0.5%;
   display: flex;
   flex-direction: column;
+  width: 266px;
+  max-height: 295px;
 }
 
 .create-new-invoice {
   border: solid 1px #d3d3d3;
   border-radius: 5px;
   padding: 4%;
-  Margin: 1%;
+  Margin: 0.5%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 266px;
+  max-height: 295px;
 }
 
 .create-new-invoice p {
@@ -40,17 +46,61 @@
   border: none;
   color: white;
   background: #007bff;
-  padding: 25% 30% 25%;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   margin: 4px 2px;
   cursor: pointer;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   font-size: 20px;
 }
 
 .create-new-invoice button:hover{
   color: black;
-  background: #d3d3d3;
+  background: #6bc3f9;
+}
+
+@media (min-width: 50px) {
+  .container {
+    margin: 178px auto 0;
+  }
+}
+
+@media (min-width: 400px) {
+
+  .invoice {
+    width: 362px;
+    max-width: 362px;
+    min-width: 150px;
+  }
+
+  .create-new-invoice {
+    max-width: 266px;
+    min-width: 150px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    margin-left: 45px;
+    margin-top: 52px;
+  }
+
+  .invoice {
+    min-width: 150px;
+    max-width: 266px;
+  }
+
+  .create-new-invoice {
+    min-width: 150px;
+    max-width: 266px;
+  }
+}
+
+@media (min-width: 992px) {
+  .invoice {
+    width: 266px;
+  }
 }

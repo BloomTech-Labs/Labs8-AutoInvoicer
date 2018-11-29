@@ -11,7 +11,7 @@ class Invoice extends Component {
 
   async componentDidMount() {
     const { match: { params } } = this.props;
-    const invoice = (await axios.get(`http://localhost:8000/invoices/${params.invoiceId}`)).data;
+    const invoice = (await axios.get(`http://localhost:8000/api/invoices/${params.id}`)).data;
     this.setState({
       invoice,
     });
@@ -19,20 +19,15 @@ class Invoice extends Component {
 
   render() {
     const {invoice} = this.state;
-    if (invoice === null) return <p>Loading ...</p>;
+    if (this.state.invoice === null) return <p>Loading ...</p>;
     return (
       <div className="container">
         <div className="">
           <div className="">
-            <h1 className="">{invoice.title}</h1>
-            <p className="">{invoice.description}</p>
-            <hr className="" />
-            <p>Items:</p>
-            {
-              invoice.items.map((item, idx) => (
-                <p className="" key={idx}>{item.item}</p>
-              ))
-            }
+            <h1 className="">From: {invoice.company_name}</h1>
+            <p className="">Date:{invoice.date}</p> 
+            <p className="">Due Date: {invoice.due_date}</p>
+            <p className="">Item: {invoice.item}</p>
           </div>
         </div>
       </div>

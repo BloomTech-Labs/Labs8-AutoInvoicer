@@ -14,7 +14,6 @@ export default class Invoices extends Component {
 
   async componentDidMount(){
     const invoices = (await axios.get('http://localhost:8000/api/invoices')).data;
-    console.log(invoices)
     this.setState({
       invoices,
     });
@@ -27,7 +26,7 @@ export default class Invoices extends Component {
          {this.state.invoices === null && <p>Loading invoices...</p>}
         {this.state.invoices && this.state.invoices.map(invoice => (
             <div key={invoice._id} className="invoice">
-              <Link to={`/invoices/${invoice.id}`}>
+              <Link to={`/invoices/${invoice._id}`}>
                   <h4>#{invoice.invoice_number}</h4>
                   <p> Date: {invoice.date}</p>
                   <p> Company: {invoice.company_name}</p>

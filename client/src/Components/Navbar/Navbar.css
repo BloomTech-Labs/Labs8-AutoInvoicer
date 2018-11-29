@@ -3,10 +3,13 @@
 }
 
 .side-nav {
-  height: 600px;
+  height: 100%;
   width: 200px;
   /* margin-left: 15px; */
   /* margin-top: 25px; */
+  position: fixed;
+  top: 46px;
+  left: 0px;
   padding-top: 15px;
   padding-left: 15px;
   display: flex;
@@ -14,6 +17,7 @@
   font-weight: bold;
   text-align: left;
   background-color: #CCFFCC;
+  overflow: hidden;
 }
 
 /* unvisited link */
@@ -61,4 +65,28 @@
   text-decoration-line: none;
   font-size: 18px;
   font: black;
+}
+
+@media (max-width: 768px) {
+  .NavBar {
+    display: block;
+    position: absolute;
+    top: 0;
+    height: 130px;
+    margin-top: 46px;
+    width: 100%;
+  }
+  
+  .side-nav {
+      height: 130px;
+      padding-left: 15px;
+      display: flex;
+      flex-direction: column;
+      font-weight: 700;
+      text-align: left;
+      background-color: #cfc;
+      overflow: hidden;
+      width: 100%;
+      align-items: center;
+  }
 }

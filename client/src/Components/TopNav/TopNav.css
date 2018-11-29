@@ -2,22 +2,26 @@
   width: 100%;
   display: flex;
   flex-flow: row wrap;
+  position: fixed;
 }
 
 .nav-container > * {
   flex: 1 100%; /* We tell all items to be 100% width, via flex-basis */
 }
 
+.breadcrumb-spacing {
+  margin-left: 10px;
+  margin-right: 10px; 
+}
+
 .topNav-container {
-  flex: 1 100%;
-  max-width: 880px;
   display: flex;
-  padding-left: 12px;
-  margin: 15px auto;
+  background-color: #6AEF9C;
+  padding: 15px 15px 15px 15px;
 }
 
 .signout-container {
-  width: 80px;
+  width: 180px;
   display: flex;
   margin-top: 15px;
   position: absolute;
@@ -32,4 +36,8 @@
   flex-flow: row wrap;
   justify-content: flex-end;
   position: absolute;
+}
+
+.credits {
+  margin-right: 16px;
 }

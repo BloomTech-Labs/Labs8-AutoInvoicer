@@ -6,6 +6,7 @@ import axios from "axios";
 import LandingPage from "./Landing/Landing";
 import Settings from "./Settings/Settings";
 import Invoices from "./Invoices/Invoices";
+import Invoice from "./Invoices/Invoice/Invoice";
 import InvoiceForm from "./InvoiceForm/InvoiceForm";
 import NavBar from "./Navbar/Navbar";
 import TopNav from "./TopNav/TopNav";
@@ -51,38 +52,42 @@ class App extends Component {
 
     if (this.state.user && !this.state.user.error) {
       let routes = [
-        <Route
-          key={this.routeKey()}
-          path="/"
-          render={props => (
-            <TopNav
-              credits={this.state.user.credits}
-              subbed={this.state.user.subscribed_member}
+        <div className="top-nav-app-container">
+          <Route
+            key={this.routeKey()}
+            path="/"
+            render={props => (
+              <TopNav
+                credits={this.state.user.credits}
+                subbed={this.state.user.subscribed_member}
+              />
+            )}
+          />
+          <div className="app-container">
+            <Route key={this.routeKey()} path="/" component={NavBar} />
+            <Route
+              key={this.routeKey()}
+              path="/billing"
+              render={props => (
+                <Billing user={this.state.user} fetchUser={this.fetchUser} />
+              )}
             />
-          )}
-        />,
-        <Route key={this.routeKey()} path="/" component={NavBar} />,
-        <Route
-          key={this.routeKey()}
-          path="/billing"
-          render={props => (
-            <Billing user={this.state.user} fetchUser={this.fetchUser} />
-          )}
-        />,
-        <Route key={this.routeKey()} path="/settings" component={Settings} />,
-        <Route
-          key={this.routeKey()}
-          path="/create_invoice"
-          component={InvoiceForm}
-        />,
-        <Route key={this.routeKey()} exact path="/" component={Invoices} />,
-        <Route key={this.routeKey()} path="/invoices" component={Invoices} />,
-        <Route
-          key={this.routeKey()}
-          path="/empty_invoice"
-          component={AddInvoice}
-        />,
-        <Route key={this.routeKey()} path="/pdf_invoice" component={PrintPdf} />
+            <Route key={this.routeKey()} path="/settings" component={Settings} />
+            <Route
+              key={this.routeKey()}
+              path="/create_invoice"
+              component={InvoiceForm}
+            />
+            <Route key={this.routeKey()} exact path="/" component={Invoices} />
+            <Route key={this.routeKey()} path="/invoices" component={Invoices} />
+            <Route
+              key={this.routeKey()}
+              path="/empty_invoice"
+              component={AddInvoice}
+            />
+            <Route key={this.routeKey()} path="/pdf_invoice" component={PrintPdf} />
+          </div>
+        </div>
       ];
       this.setState({ routes });
     }
