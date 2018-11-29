@@ -24,11 +24,12 @@ class InvoiceForm extends Component {
   constructor(props) {
     super(props);
     this.auth0_userID = this.props.auth0_userID;
+    this.mongo_id = this.props.mongo_id;
     this.logo = null;
     this.logoRaw = null;
   }
   state = {
-    invoice_number: "",
+    invoice_number: this.props.invoice_num,
     date: "",
     due_date: "",
     balance_due: "",
@@ -70,62 +71,6 @@ class InvoiceForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    // const {
-    //   invoice_number,
-    //   date,
-    //   due_date,
-    //   balance_due,
-    //   company_name,
-    //   invoiceTo,
-    //   address,
-    //   zipcode,
-    //   city,
-    //   state,
-    //   item,
-    //   quantity,
-    //   rate,
-    //   amount,
-    //   subtotal,
-    //   discount,
-    //   tax,
-    //   taxRate,
-    //   shipping,
-    //   total,
-    //   amount_paid,
-    //   notes,
-    //   terms
-    // } = { ...this.state };
-
-    // const newInvoice = {
-    //   auth0_userID: this.auth0_userID,
-    //   invoice_number,
-    //   date,
-    //   due_date,
-    //   balance_due,
-    //   company_name,
-    //   invoiceTo,
-    //   address,
-    //   zipcode,
-    //   city,
-    //   state,
-    //   item,
-    //   quantity,
-    //   rate,
-    //   amount,
-    //   subtotal,
-    //   discount,
-    //   tax,
-    //   taxRate,
-    //   shipping,
-    //   total,
-    //   amount_paid,
-    //   notes,
-    //   terms
-    // };
-
-    // newInvoice.logo = new FormData();
-    // newInvoice.logo.append('logo', this.state.logo, this.state.logo.name);
-
     const newInvoice = new FormData();
     newInvoice.append("auth0_userID", this.auth0_userID);
     newInvoice.append("logo", this.logo, this.logo.name);
@@ -139,9 +84,13 @@ class InvoiceForm extends Component {
     axios
       .post(process.env.REACT_APP_NEW_INVOICE, newInvoice)
       .then(res => {
-        console.log(res, "Invoice added!");
-        console.log("NEW INVOICE: ", newInvoice);
-        console.log("Invoice from: ", this.state.company_name);
+        let invoice_num = this.props.invoice_num;
+        axios
+          .put(`/api/users/${this.mongo_id}`, {
+            invoice_num: (invoice_num += 1)
+          })
+          .then(res => console.log("invoice added, number incremented"))
+          .catch(err => console.log(err));
       })
       .catch(err => {
         console.log("ERROR", err);
@@ -176,11 +125,12 @@ class InvoiceForm extends Component {
 
   createPDF = event => {
     event.preventDefault();
+    console.log(this.logoRaw);
     const pdf = new jsPDF({
       unit: "in",
       format: [8.5, 11]
     });
-    pdf.addImage(this.logoRaw, "JPEG", 0.5, 0.3, 1.5, 1.5, "MEDIUM", 0);
+    pdf.addImage(this.logoRaw, "JPG", 0.5, 0.3, 1.5, 1.5, "MEDIUM", 0);
     pdf.text(`Invoice Number: ${this.state.invoice_number}`, 0.5, 0.8);
     pdf.text(`Date: ${this.state.date}`, 0.5, 1.1);
     pdf.text(`Due Date: ${this.state.due_date}`, 0.5, 1.4);
@@ -489,7 +439,7 @@ class InvoiceForm extends Component {
                     />
                   </td>
                   <td>
-                    <Input  
+                    <Input
                       value={this.state.rate}
                       type="currency"
                       name="rate"
@@ -498,9 +448,7 @@ class InvoiceForm extends Component {
                       onChange={this.handleInputChange}
                     />
                   </td>
-                  <td>
-                    ${this.state.quantity * this.state.rate}{" "}
-                  </td>
+                  <td>${this.state.quantity * this.state.rate} </td>
                 </tr>
               </tbody>
             </Table>
@@ -508,7 +456,6 @@ class InvoiceForm extends Component {
             <div>
               <button>Add Line Item +</button>
             </div>
-
 
             {/* Item, Quantity, Rate, Amount - using Reacstrap FormGroup  */}
             {/* <Row form>
@@ -552,14 +499,14 @@ class InvoiceForm extends Component {
                 </FormGroup>
               </Col> */}
 
-              {/* Amount */}
-              {/* <div>
+            {/* Amount */}
+            {/* <div>
                 <Label for="amount">Amount</Label>
                 ${this.state.quantity * this.state.rate}{" "}
               </div> */}
 
-              {/* Amount */}
-              {/* <Col md={2}>
+            {/* Amount */}
+            {/* <Col md={2}>
                 <FormGroup>
                   <Label for="amount">Amount</Label>
                   <Input
@@ -573,8 +520,8 @@ class InvoiceForm extends Component {
                 </FormGroup>
               </Col> */}
 
-              {/* Add Line Item */}
-              {/* <button>Add Line Item +</button> */}
+            {/* Add Line Item */}
+            {/* <button>Add Line Item +</button> */}
             {/* </Row> */}
 
             {/* Notes, Tax, Terms */}
