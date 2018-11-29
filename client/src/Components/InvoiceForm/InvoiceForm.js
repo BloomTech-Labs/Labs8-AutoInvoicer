@@ -14,7 +14,8 @@ import {
   Input,
   FormText,
   ListGroup,
-  ListGroupItem
+  ListGroupItem,
+  Table
 } from "reactstrap";
 
 import "./InvoiceForm.css";
@@ -453,8 +454,64 @@ class InvoiceForm extends Component {
               </Col>
             </Row>
 
-            {/* Items and Cost */}
-            <Row form>
+            {/* Item, Quantity, Rate, Amount - Using Reacstrap Table */}
+            <Table striped>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Item</th>
+                  <th>Quantity</th>
+                  <th>Rate</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>
+                    <Input
+                      value={this.state.item}
+                      type="text"
+                      name="item"
+                      id="item"
+                      placeholder="Add Item Here"
+                      onChange={this.handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <Input
+                      value={this.state.quantity}
+                      type="number"
+                      name="quantity"
+                      id="quantity"
+                      placeholder="1"
+                      onChange={this.handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <Input  
+                      value={this.state.rate}
+                      type="currency"
+                      name="rate"
+                      id="rate"
+                      placeholder="$ 0.00"
+                      onChange={this.handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    ${this.state.quantity * this.state.rate}{" "}
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
+
+            <div>
+              <button>Add Line Item +</button>
+            </div>
+
+
+            {/* Item, Quantity, Rate, Amount - using Reacstrap FormGroup  */}
+            {/* <Row form>
               <Col md={6}>
                 <FormGroup>
                   <Label for="item">Item</Label>
@@ -470,7 +527,7 @@ class InvoiceForm extends Component {
               </Col>
               <Col md={2}>
                 <FormGroup>
-                  <Label for="quanity">Quantity</Label>
+                  <Label for="quantity">Quantity</Label>
                   <Input
                     value={this.state.quantity}
                     type="number"
@@ -486,15 +543,23 @@ class InvoiceForm extends Component {
                   <Label for="rate">Rate</Label>
                   <Input
                     value={this.state.rate}
-                    type="number"
+                    type="currency"
                     name="rate"
                     id="rate"
                     placeholder="$ 0.00"
                     onChange={this.handleInputChange}
                   />
                 </FormGroup>
-              </Col>
-              <Col md={2}>
+              </Col> */}
+
+              {/* Amount */}
+              {/* <div>
+                <Label for="amount">Amount</Label>
+                ${this.state.quantity * this.state.rate}{" "}
+              </div> */}
+
+              {/* Amount */}
+              {/* <Col md={2}>
                 <FormGroup>
                   <Label for="amount">Amount</Label>
                   <Input
@@ -506,13 +571,13 @@ class InvoiceForm extends Component {
                     onChange={this.handleInputChange}
                   />
                 </FormGroup>
-              </Col>
-              <button>Add Line Item +</button>
-            </Row>
+              </Col> */}
 
-            <FormGroup />
+              {/* Add Line Item */}
+              {/* <button>Add Line Item +</button> */}
+            {/* </Row> */}
 
-            {/* Notes and Terms */}
+            {/* Notes, Tax, Terms */}
             <FormGroup>
               <Label for="notes">Notes</Label>
               <Input
