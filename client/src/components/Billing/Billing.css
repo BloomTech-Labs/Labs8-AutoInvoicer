@@ -10,3 +10,11 @@
 .checkout-wrapper h2 {
   margin-bottom: 15px;
 }
+
+@media (max-width: 768px) {
+  .checkout-wrapper {
+    margin: 194px auto 0;
+  }
+
+
+}

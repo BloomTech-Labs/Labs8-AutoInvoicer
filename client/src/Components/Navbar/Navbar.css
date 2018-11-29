@@ -66,3 +66,27 @@
   font-size: 18px;
   font: black;
 }
+
+@media (max-width: 768px) {
+  .NavBar {
+    display: block;
+    position: absolute;
+    top: 0;
+    height: 130px;
+    margin-top: 46px;
+    width: 100%;
+  }
+  
+  .side-nav {
+      height: 130px;
+      padding-left: 15px;
+      display: flex;
+      flex-direction: column;
+      font-weight: 700;
+      text-align: left;
+      background-color: #cfc;
+      overflow: hidden;
+      width: 100%;
+      align-items: center;
+  }
+}

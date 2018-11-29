@@ -8,6 +8,8 @@
   display: flex;
   width: 100%;
   flex-wrap:wrap;
+  overflow: visible;
+  justify-content: center;
 }
 
 .invoice {
@@ -58,4 +60,47 @@
 .create-new-invoice button:hover{
   color: black;
   background: #6bc3f9;
+}
+
+@media (min-width: 50px) {
+  .container {
+    margin: 178px auto 0;
+  }
+}
+
+@media (min-width: 400px) {
+
+  .invoice {
+    width: 362px;
+    max-width: 362px;
+    min-width: 150px;
+  }
+
+  .create-new-invoice {
+    max-width: 266px;
+    min-width: 150px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    margin-left: 45px;
+    margin-top: 52px;
+  }
+
+  .invoice {
+    min-width: 150px;
+    max-width: 266px;
+  }
+
+  .create-new-invoice {
+    min-width: 150px;
+    max-width: 266px;
+  }
+}
+
+@media (min-width: 992px) {
+  .invoice {
+    width: 266px;
+  }
 }
