@@ -35,6 +35,10 @@ const UserSchema = new Schema({
     type: Number,
     default: 3
   },
+  invoice_num: {
+    type: Number,
+    default: 1
+  },
   invoices: [{type: Schema.Types.ObjectId, ref: 'invoice'}],
   billings: [{type: Schema.Types.ObjectId, ref: 'billing'}]
 });

@@ -72,20 +72,38 @@ class App extends Component {
                 <Billing user={this.state.user} fetchUser={this.fetchUser} />
               )}
             />
-            <Route key={this.routeKey()} path="/settings" component={Settings} />
+            <Route
+              key={this.routeKey()}
+              path="/settings"
+              component={Settings}
+            />
             <Route
               key={this.routeKey()}
               path="/create_invoice"
-              component={InvoiceForm}
+              render={props => (
+                <InvoiceForm
+                  auth0_userID={this.state.user.auth0_userID}
+                  invoice_num={this.state.user.invoice_num}
+                  mongo_id={this.state.user._id}
+                />
+              )}
             />
             <Route key={this.routeKey()} exact path="/" component={Invoices} />
-            <Route key={this.routeKey()} path="/invoices" component={Invoices} />
+            <Route
+              key={this.routeKey()}
+              path="/invoices"
+              component={Invoices}
+            />
             <Route
               key={this.routeKey()}
               path="/empty_invoice"
               component={AddInvoice}
             />
-            <Route key={this.routeKey()} path="/pdf_invoice" component={PrintPdf} />
+            <Route
+              key={this.routeKey()}
+              path="/pdf_invoice"
+              component={PrintPdf}
+            />
           </div>
         </div>
       ];
