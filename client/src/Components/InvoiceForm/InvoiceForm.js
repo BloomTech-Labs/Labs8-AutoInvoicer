@@ -180,7 +180,7 @@ class InvoiceForm extends Component {
       unit: "in",
       format: [8.5, 11]
     });
-    pdf.addImage(this.logoRaw, "JPEG", 0.5, 0.3, 1.5, 1.5, "MEDIUM", 0);
+    pdf.addImage(this.logoRaw, "JPEG", 6.5, 0.5, 1.5, 1.5, "MEDIUM", 0);
     pdf.text(`Invoice Number: ${this.state.invoice_number}`, 0.5, 0.8);
     pdf.text(`Date: ${this.state.date}`, 0.5, 1.1);
     pdf.text(`Due Date: ${this.state.due_date}`, 0.5, 1.4);
