@@ -3,6 +3,7 @@
   display: flex;
   flex-flow: row wrap;
   position: fixed;
+  z-index: 2;
 }
 
 .nav-container > * {
