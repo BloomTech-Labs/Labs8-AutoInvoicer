@@ -14,7 +14,8 @@ import {
   Input,
   FormText,
   ListGroup,
-  ListGroupItem
+  ListGroupItem,
+  Table
 } from "reactstrap";
 
 import "./InvoiceForm.css";
@@ -57,15 +58,15 @@ class InvoiceForm extends Component {
   };
 
   handleImageChange = event => {
-    event.preventDefault()
+    event.preventDefault();
     const reader = new FileReader();
     const logo = event.target.files[0];
     reader.onloadend = () => {
       this.logo = logo;
       this.logoRaw = reader.result;
-    }
-    reader.readAsDataURL(logo)
-  }
+    };
+    reader.readAsDataURL(logo);
+  };
 
   handleSubmit = event => {
     event.preventDefault();
@@ -126,13 +127,13 @@ class InvoiceForm extends Component {
     // newInvoice.logo.append('logo', this.state.logo, this.state.logo.name);
 
     const newInvoice = new FormData();
-    newInvoice.append('auth0_userID', this.auth0_userID);
-    newInvoice.append('logo', this.logo, this.logo.name);
+    newInvoice.append("auth0_userID", this.auth0_userID);
+    newInvoice.append("logo", this.logo, this.logo.name);
 
     const data = this.state;
 
     for (const prop in data) {
-      newInvoice.append(`${prop}`, `${data[prop]}`)
+      newInvoice.append(`${prop}`, `${data[prop]}`);
     }
 
     axios
@@ -179,7 +180,7 @@ class InvoiceForm extends Component {
       unit: "in",
       format: [8.5, 11]
     });
-    pdf.addImage(this.logoRaw, "JPEG", 0.5, 0.3, 1.5, 1.5, "MEDIUM", 0)
+    pdf.addImage(this.logoRaw, "JPEG", 0.5, 0.3, 1.5, 1.5, "MEDIUM", 0);
     pdf.text(`Invoice Number: ${this.state.invoice_number}`, 0.5, 0.8);
     pdf.text(`Date: ${this.state.date}`, 0.5, 1.1);
     pdf.text(`Due Date: ${this.state.due_date}`, 0.5, 1.4);
@@ -246,12 +247,20 @@ class InvoiceForm extends Component {
       });
   }
 
-  // Handle Zip Change
-  handleZipChange = event => {
+  // Handle Tax
+  handleTaxChange = event => {
     this.setState(
       { [event.target.name]: event.target.value },
-      this.getCityState
+      this.calculateTax
     );
+  };
+
+  // Handle Zip Change
+  handleZipChange = event => {
+    this.setState({ [event.target.name]: event.target.value }, () => {
+      this.calculateTax();
+      this.getCityState();
+    });
   };
 
   // Get City State by Zip
@@ -426,7 +435,7 @@ class InvoiceForm extends Component {
                     name="city"
                     id="city"
                     placeholder="City"
-                    onChange={this.handleInputChange}
+                    onChange={this.handleTaxChange}
                   />
                 </FormGroup>
               </Col>
@@ -439,14 +448,70 @@ class InvoiceForm extends Component {
                     name="state"
                     id="state"
                     placeholder="State"
-                    onChange={this.handleInputChange}
+                    onChange={this.handleTaxChange}
                   />
                 </FormGroup>
               </Col>
             </Row>
 
-            {/* Items and Cost */}
-            <Row form>
+            {/* Item, Quantity, Rate, Amount - Using Reacstrap Table */}
+            <Table striped>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Item</th>
+                  <th>Quantity</th>
+                  <th>Rate</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">1</th>
+                  <td>
+                    <Input
+                      value={this.state.item}
+                      type="text"
+                      name="item"
+                      id="item"
+                      placeholder="Add Item Here"
+                      onChange={this.handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <Input
+                      value={this.state.quantity}
+                      type="number"
+                      name="quantity"
+                      id="quantity"
+                      placeholder="1"
+                      onChange={this.handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    <Input  
+                      value={this.state.rate}
+                      type="currency"
+                      name="rate"
+                      id="rate"
+                      placeholder="$ 0.00"
+                      onChange={this.handleInputChange}
+                    />
+                  </td>
+                  <td>
+                    ${this.state.quantity * this.state.rate}{" "}
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
+
+            <div>
+              <button>Add Line Item +</button>
+            </div>
+
+
+            {/* Item, Quantity, Rate, Amount - using Reacstrap FormGroup  */}
+            {/* <Row form>
               <Col md={6}>
                 <FormGroup>
                   <Label for="item">Item</Label>
@@ -462,7 +527,7 @@ class InvoiceForm extends Component {
               </Col>
               <Col md={2}>
                 <FormGroup>
-                  <Label for="quanity">Quantity</Label>
+                  <Label for="quantity">Quantity</Label>
                   <Input
                     value={this.state.quantity}
                     type="number"
@@ -478,15 +543,23 @@ class InvoiceForm extends Component {
                   <Label for="rate">Rate</Label>
                   <Input
                     value={this.state.rate}
-                    type="number"
+                    type="currency"
                     name="rate"
                     id="rate"
                     placeholder="$ 0.00"
                     onChange={this.handleInputChange}
                   />
                 </FormGroup>
-              </Col>
-              <Col md={2}>
+              </Col> */}
+
+              {/* Amount */}
+              {/* <div>
+                <Label for="amount">Amount</Label>
+                ${this.state.quantity * this.state.rate}{" "}
+              </div> */}
+
+              {/* Amount */}
+              {/* <Col md={2}>
                 <FormGroup>
                   <Label for="amount">Amount</Label>
                   <Input
@@ -498,13 +571,13 @@ class InvoiceForm extends Component {
                     onChange={this.handleInputChange}
                   />
                 </FormGroup>
-              </Col>
-              <button>Add Line Item +</button>
-            </Row>
+              </Col> */}
 
-            <FormGroup />
+              {/* Add Line Item */}
+              {/* <button>Add Line Item +</button> */}
+            {/* </Row> */}
 
-            {/* Notes and Terms */}
+            {/* Notes, Tax, Terms */}
             <FormGroup>
               <Label for="notes">Notes</Label>
               <Input
@@ -537,13 +610,15 @@ class InvoiceForm extends Component {
                 placeholder="Subtotal"
                 onChange={this.handleInputChange}
               />
-              <div>
+              {/* <div>
                 Tax: {this.state.taxRate * 100}%{" "}
                 <Button onClick={() => this.calculateTax()}>
                   {" "}
                   Calculate Tax
                 </Button>
-              </div>
+              </div> */}
+              {/* Testing Tax */}
+              <div>Tax: {(this.state.taxRate * 100).toFixed(2)}% </div>
               <div>Total: {this.state.total} </div>
             </FormGroup>
             <Button type="generate" onClick={this.handleSubmit}>
