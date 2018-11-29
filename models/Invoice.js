@@ -7,6 +7,10 @@ const InvoiceSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "users"
   },
+  logo: {
+    type: String,
+    required: false
+  },
   invoice_number: {
     type: Number,
     required: false

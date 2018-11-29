@@ -1,8 +1,15 @@
 const router = require("express").Router();
+const multer = require('multer')
+const fs = require('fs')
+const cloudinary = require('cloudinary')
+const os = require('os')
 
 // Load Invoice model
 const Invoice = require("../../models/Invoice");
 const User = require("../../models/User");
+
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage})
 
 //Get the list of all invoices from a user
 router.get("/api/invoices", (req, res) => {
@@ -44,43 +51,57 @@ router.get("/api/invoices/:_id", (req, res) => {
       })
 })
 
-router.post("/api/invoices", (req, res) => {
+router.post("/", upload.single('logo'), (req, res) => {
   // for creating new invoices
+  console.log("File: ", req.file);
+  console.log(req.body);
+  const auth0_userID = req.body.auth0_userID;
+  const ext = req.file.originalname.split('.')[1]
+  const tmp = os.tmpdir() + '/deleteme.' + ext
+  fs.writeFileSync(tmp, req.file.buffer)
 
-  const auth0_userID = req.user._json.sub.split("|")[1];
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET
+  })
 
-  const newInvoice = new Invoice({
-    invoice_number: req.body.invoice_number,
-    date: req.body.date,
-    due_date: req.body.due_date,
-    balance_due: req.body.balance_due,
-    address: req.body.address,
-    zipcode: req.body.zipcode,
-    city: req.body.city,
-    state: req.body.state,
-    company_name: req.body.company_name,
-    item: req.body.item,
-    quantity: req.body.quantity,
-    rate: req.body.rate,
-    amount: req.body.amount,
-    subtotal: req.body.subtotal,
-    discount: req.body.discount,
-    tax: req.body.tax,
-    shipping: req.body.shipping,
-    total: req.body.total,
-    amount_paid: req.body.amount_paid,
-    notes: req.body.notes,
-    terms: req.body.terms
-  });
+  cloudinary.v2.uploader.upload(tmp, {public_id: `auto-invoicer/${Date.now()}`}, (error, result) => {
+    const newInvoice = new Invoice({
+      logo: result.secure_url,
+      invoice_number: Number(req.body.invoice_number),
+      date: req.body.date,
+      due_date: req.body.due_date,
+      balance_due: Number(req.body.balance_due),
+      address: req.body.address,
+      zipcode: req.body.zipcode,
+      city: req.body.city,
+      state: req.body.state,
+      company_name: req.body.company_name,
+      item: req.body.item,
+      quantity: Number(req.body.quantity),
+      rate: Number(req.body.rate),
+      amount: Number(req.body.amount),
+      subtotal: Number(req.body.subtotal),
+      discount: Number(req.body.discount),
+      tax: Number(req.body.tax),
+      shipping: Number(req.body.shipping),
+      total: Number(req.body.total),
+      amount_paid: Number(req.body.amount_paid),
+      notes: req.body.notes,
+      terms: req.body.terms
+    });
+    
+    User.findOne({auth0_userID}).then(user => {
+      newInvoice.save().then(invoice => {
+          user.invoices.push(invoice._id);
+          user.save().then(() => {
+            res.send("Success!");
+          })
+      }).catch(err => console.log(err))
+    });
+  })
 
-  User.findOne({auth0_userID}).then(user => {
-    newInvoice.save().then(invoice => {
-        user.invoices.push(invoice._id);
-        user.save().then(() => {
-          res.send("Success!");
-        })
-    }).catch(err => console.log(err))
-  });
 });
 
 router.put("/:_id", (req, res) => {

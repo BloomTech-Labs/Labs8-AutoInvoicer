@@ -52,16 +52,16 @@ class App extends Component {
     if (this.state.user && !this.state.user.error) {
       let routes = [
         <div className="top-nav-app-container">
-        <Route
-          key={this.routeKey()}
-          path="/"
-          render={props => (
-            <TopNav
-              credits={this.state.user.credits}
-              subbed={this.state.user.subscribed_member}
-            />
-          )}
-        />
+          <Route
+            key={this.routeKey()}
+            path="/"
+            render={props => (
+              <TopNav
+                credits={this.state.user.credits}
+                subbed={this.state.user.subscribed_member}
+              />
+            )}
+          />
           <div className="app-container">
             <Route key={this.routeKey()} path="/" component={NavBar} />
             <Route
