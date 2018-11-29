@@ -12,7 +12,6 @@ class Invoice extends Component {
   async componentDidMount() {
     const { match: { params } } = this.props;
     const invoice = (await axios.get(`http://localhost:8000/api/invoices/${params.id}`)).data;
-    console.log(invoice);
     this.setState({
       invoice,
     });

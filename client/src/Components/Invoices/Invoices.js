@@ -14,7 +14,6 @@ export default class Invoices extends Component {
 
   async componentDidMount(){
     const invoices = (await axios.get('http://localhost:8000/api/invoices')).data;
-    console.log(invoices)
     this.setState({
       invoices,
     });
