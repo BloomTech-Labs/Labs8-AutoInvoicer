@@ -85,11 +85,24 @@ class App extends Component {
                   auth0_userID={this.state.user.auth0_userID}
                   invoice_num={this.state.user.invoice_num}
                   mongo_id={this.state.user._id}
+                  path={props.match.path}
+                  params={props.match.params}
                 />
               )}
             />
             <Route key={this.routeKey()} exact path="/" component={Invoices} />
-            <Route key={this.routeKey()} path="/invoices/:id" component={InvoiceForm} />
+            <Route key={this.routeKey()} 
+              path="/invoices/:id" 
+              render={props => (
+                <InvoiceForm
+                  auth0_userID={this.state.user.auth0_userID}
+                  invoice_num={this.state.user.invoice_num}
+                  mongo_id={this.state.user._id}
+                  path={props.match.path}
+                  params={props.match.params}
+                />
+              )}
+            />
             <Route
               key={this.routeKey()}
               path="/empty_invoice"
