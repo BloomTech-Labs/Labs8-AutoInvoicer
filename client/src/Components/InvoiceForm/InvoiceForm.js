@@ -443,9 +443,9 @@ class InvoiceForm extends Component {
                     <LineItems
                       key={index}
                       rowNumber={index + 1}
-                      item={this.state.lineItems[index].item}
-                      quantity={this.state.lineItems[index].quantity}
-                      rate={this.state.lineItems[index].rate}
+                      item={row.item}
+                      quantity={row.quantity}
+                      rate={row.rate}
                       handleLineItemChange={this.handleLineItemChange}
                     />
                   );
