@@ -84,7 +84,12 @@ class InvoiceForm extends Component {
     const data = this.state;
 
     for (const prop in data) {
-      newInvoice.append(`${prop}`, `${data[prop]}`);
+      if (prop === 'lineItems') {
+        newInvoice.append(`${prop}`, JSON.stringify(data[prop]))
+      } else {
+        newInvoice.append(`${prop}`, `${data[prop]}`);
+      }
+      
     }
 
     axios
