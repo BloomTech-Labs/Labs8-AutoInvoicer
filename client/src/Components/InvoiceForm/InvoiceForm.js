@@ -27,6 +27,7 @@ class InvoiceForm extends Component {
     this.mongo_id = this.props.mongo_id;
     this.logo = null;
     this.logoRaw = null;
+    this.edit = false;
   }
   state = {
     invoice_number: this.props.invoice_num,
@@ -51,8 +52,22 @@ class InvoiceForm extends Component {
     total: "",
     amount_paid: "",
     notes: "",
-    terms: ""
+    terms: "",
+    edit: false
   };
+
+  async componentDidMount() {
+    const path = this.props.path;
+
+    if(path === "/invoices/:id"){
+      const params = this.props.params;
+      this.edit = true;
+      const invoice = (await axios.get(process.env.REACT_APP_NEW_INVOICE + `/${params.id}`)).data;
+      for(const item in invoice){
+        this.setState({[item]: invoice[item]})
+      }
+    }
+  }
 
   handleInputChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -123,6 +138,30 @@ class InvoiceForm extends Component {
     // });
   };
 
+  handleUpdate = event => {
+    event.preventDefault();
+    const newInvoice = new FormData();
+    newInvoice.append("auth0_userID", this.auth0_userID);
+    if(this.logo)
+      newInvoice.append("logo", this.logo, this.logo.name);
+
+    const params = this.props.params;
+    const data = this.state;
+
+    for (const prop in data) {
+      newInvoice.append(`${prop}`, `${data[prop]}`);
+    }
+    console.log(newInvoice);
+    axios
+      .put(process.env.REACT_APP_NEW_INVOICE + `/${params.id}`, newInvoice)
+      .then(res => {
+        console.log(res);   
+      })
+      .catch(err => {
+        console.log("ERROR", err);
+      });
+  }
+
   createPDF = event => {
     event.preventDefault();
     console.log(this.logoRaw);
@@ -173,7 +212,7 @@ class InvoiceForm extends Component {
       postalCode: this.state.zipcode,
       country: "US" //Only works in US for free version
     });
-
+  
     axios({
       method: "get",
       url: `https://rest.avatax.com/api/v2/taxrates/byaddress?${query}`,
@@ -629,11 +668,16 @@ class InvoiceForm extends Component {
               {/* Testing Tax */}
               <div>Tax: {(this.state.taxRate * 100).toFixed(2)}% </div>
               <div>Total: {this.state.total} </div>
-            {/* </FormGroup> */}
-
+            ({/*</FormGroup> */}
+            {this.edit ?
+            <Button type="generate" onClick={this.handleUpdate}>
+              Update Invoice
+            </Button>
+            :
             <Button type="generate" onClick={this.handleSubmit}>
               Save Invoice
             </Button>
+            }
             <Button
               className="download-pdf-button"
               type="generate"
