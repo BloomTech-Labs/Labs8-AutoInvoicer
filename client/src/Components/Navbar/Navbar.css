@@ -22,7 +22,7 @@
 
 /* unvisited link */
 .side-nav a:link {
-  color: #000000;
+  color: green;
 }
 
 /* visited link */
@@ -88,5 +88,6 @@
       overflow: hidden;
       width: 100%;
       align-items: center;
+      z-index: 2;
   }
 }

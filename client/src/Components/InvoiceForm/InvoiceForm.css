@@ -56,6 +56,6 @@
         top: 190px;
         left: 17%;
         margin: 0 auto 75px;
-        z-index: -1;
+        z-index: 1;
     }
 }
