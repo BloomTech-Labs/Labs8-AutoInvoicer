@@ -79,6 +79,13 @@ router.post("/", upload.single('logo'), (req, res) => {
     api_secret: process.env.CLOUDINARY_SECRET
   })
 
+  const lineItems = JSON.parse(req.body.lineItems);
+
+  lineItems.forEach(row => {
+    row.quantity = Number(row.quantity);
+    row.rate = Number(row.rate);
+  })
+
   cloudinary.v2.uploader.upload(tmp, {public_id: `auto-invoicer/${Date.now()}`}, (error, result) => {
     const newInvoice = new Invoice({
       logo: result.secure_url,
@@ -91,9 +98,10 @@ router.post("/", upload.single('logo'), (req, res) => {
       city: req.body.city,
       state: req.body.state,
       company_name: req.body.company_name,
-      item: req.body.item,
-      quantity: Number(req.body.quantity),
-      rate: Number(req.body.rate),
+      // item: req.body.item,
+      // quantity: Number(req.body.quantity),
+      // rate: Number(req.body.rate),
+      line_items: lineItems,
       amount: Number(req.body.amount),
       subtotal: Number(req.body.subtotal),
       discount: Number(req.body.discount),
