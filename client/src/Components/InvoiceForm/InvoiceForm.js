@@ -285,7 +285,7 @@ class InvoiceForm extends Component {
         });
     }
   }
-
+  
   render() {
     return (
       <div>
@@ -491,11 +491,13 @@ class InvoiceForm extends Component {
               </tbody>
             </Table>
 
+            {/* Add Line Item */}
             <div>
               <button>Add Line Item +</button>
             </div>
 
-            {/* Item, Quantity, Rate, Amount - using Reacstrap FormGroup  */}
+            {/* Commented out the following lines below while testing the compatibility of the Reactstrap Table.  */}
+            {/* Item, Quantity, Rate, Amount - using Reacstrap FormGroup */}
             {/* <Row form>
               <Col md={6}>
                 <FormGroup>
@@ -535,34 +537,41 @@ class InvoiceForm extends Component {
                     onChange={this.handleInputChange}
                   />
                 </FormGroup>
-              </Col> */}
+              </Col>
+            </Row> */}
 
             {/* Amount */}
             {/* <div>
                 <Label for="amount">Amount</Label>
                 ${this.state.quantity * this.state.rate}{" "}
-              </div> */}
+            </div> */}
 
             {/* Amount */}
             {/* <Col md={2}>
-                <FormGroup>
-                  <Label for="amount">Amount</Label>
-                  <Input
-                    value={this.state.amount}
-                    type="number"
-                    name="amount"
-                    id="amount"
-                    placeholder="$ 0.00"
-                    onChange={this.handleInputChange}
-                  />
-                </FormGroup>
-              </Col> */}
+              <FormGroup>
+                <Label for="amount">Amount</Label>
+                <Input
+                  value={this.state.amount}
+                  type="number"
+                  name="amount"
+                  id="amount"
+                  placeholder="$ 0.00"
+                  onChange={this.handleInputChange}
+                />
+              </FormGroup>
+            </Col> */}
 
             {/* Add Line Item */}
             {/* <button>Add Line Item +</button> */}
-            {/* </Row> */}
+            {/* </Row>
 
-            {/* Notes, Tax, Terms */}
+            {/* Subtotal*/}
+            {/* <div classname="subtotal">
+            Subtotal: $
+            </div> */}
+
+            
+            {/* Notes & Terms*/}
             <FormGroup>
               <Label for="notes">Notes</Label>
               <Input
@@ -585,7 +594,58 @@ class InvoiceForm extends Component {
                 onChange={this.handleInputChange}
               />
             </FormGroup>
-            <FormGroup>
+
+            {/* Discount */}
+            <FormGroup row>
+              <Label for="discount" sm={2}>
+                Discount
+              </Label>
+              <Col sm="2">
+                <Input
+                  value={this.state.subtotal * (1 - this.state.discount / 100)}
+                  type="percent"
+                  name="discount"
+                  id="discount"
+                  placeholder="0 %"
+                />
+              </Col>
+            </FormGroup>
+            
+            {/* Shipping */}   
+            <FormGroup row>
+              <Label for="shipping" sm={2}>
+                Shipping 
+              </Label>
+              <Col sm="2">
+              {/* <Col sm={10}> */}
+                <Input
+                  value={this.state.shipping}
+                  type="number"
+                  name="discount"
+                  id="discount"
+                  placeholder="$ 0.00"
+                />
+              </Col>
+            </FormGroup>
+
+            {/* Subtotal */}
+            <FormGroup row>
+              <Label for="subtotal" sm={2}>
+                Subtotal 
+              </Label>
+              <Col sm="2">
+                <Input
+                  value={this.state.subtotal}
+                  type="number"
+                  name="subtotal"
+                  id="subtotal"
+                  placeholder="$ 0.00"
+                  onChange={this.handleInputChange}
+                />
+              </Col>
+            </FormGroup>
+            
+            {/* <FormGroup>
               <Label for="terms">Subtotal </Label>
               <Input
                 value={this.state.subtotal}
@@ -594,7 +654,9 @@ class InvoiceForm extends Component {
                 id="subtotal"
                 placeholder="Subtotal"
                 onChange={this.handleInputChange}
-              />
+              /> */}
+
+              {/* Tax with generate tax button */}
               {/* <div>
                 Tax: {this.state.taxRate * 100}%{" "}
                 <Button onClick={() => this.calculateTax()}>
@@ -602,10 +664,11 @@ class InvoiceForm extends Component {
                   Calculate Tax
                 </Button>
               </div> */}
+
               {/* Testing Tax */}
               <div>Tax: {(this.state.taxRate * 100).toFixed(2)}% </div>
               <div>Total: {this.state.total} </div>
-            </FormGroup>
+            ({/*</FormGroup> */}
             {this.edit ?
             <Button type="generate" onClick={this.handleUpdate}>
               Update Invoice
