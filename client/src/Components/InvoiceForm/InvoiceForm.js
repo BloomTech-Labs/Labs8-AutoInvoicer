@@ -18,6 +18,8 @@ import {
   Table
 } from "reactstrap";
 
+import LineItems from "./LineItems/LineItems";
+
 import "./InvoiceForm.css";
 
 class InvoiceForm extends Component {
@@ -40,9 +42,6 @@ class InvoiceForm extends Component {
     zipcode: "",
     city: "",
     state: "",
-    item: "",
-    quantity: "",
-    rate: "",
     amount: "",
     subtotal: "",
     discount: "",
@@ -53,6 +52,13 @@ class InvoiceForm extends Component {
     amount_paid: "",
     notes: "",
     terms: "",
+    lineItems: [
+      {
+        item: "",
+        quantity: 0,
+        rate: 0
+      }
+    ],
     edit: false
   };
 
@@ -93,7 +99,12 @@ class InvoiceForm extends Component {
     const data = this.state;
 
     for (const prop in data) {
-      newInvoice.append(`${prop}`, `${data[prop]}`);
+      if (prop === 'lineItems') {
+        newInvoice.append(`${prop}`, JSON.stringify(data[prop]))
+      } else {
+        newInvoice.append(`${prop}`, `${data[prop]}`);
+      }
+      
     }
 
     axios
@@ -285,7 +296,23 @@ class InvoiceForm extends Component {
         });
     }
   }
-  
+
+  addLineItem = event => {
+    event.preventDefault()
+    const newLineItem = {
+      item: "",
+      quantity: 0,
+      rate: 0
+    }
+    this.setState({ lineItems: [...this.state.lineItems, newLineItem] })
+  }
+
+  handleLineItemChange = (event, index, item) => {
+    let lineItems = [...this.state.lineItems];
+    lineItems[index][item] = event.target.value;
+    this.setState({ lineItems });
+  };
+
   render() {
     return (
       <div>
@@ -454,7 +481,19 @@ class InvoiceForm extends Component {
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                {this.state.lineItems.map((row, index) => {
+                  return (
+                    <LineItems
+                      key={index}
+                      rowNumber={index + 1}
+                      item={row.item}
+                      quantity={row.quantity}
+                      rate={row.rate}
+                      handleLineItemChange={this.handleLineItemChange}
+                    />
+                  );
+                })}
+                {/* <tr>
                   <th scope="row">1</th>
                   <td>
                     <Input
@@ -487,13 +526,13 @@ class InvoiceForm extends Component {
                     />
                   </td>
                   <td>${this.state.quantity * this.state.rate} </td>
-                </tr>
+                </tr> */}
               </tbody>
             </Table>
 
             {/* Add Line Item */}
             <div>
-              <button>Add Line Item +</button>
+              <button onClick={this.addLineItem}>Add Line Item +</button>
             </div>
 
             {/* Commented out the following lines below while testing the compatibility of the Reactstrap Table.  */}
