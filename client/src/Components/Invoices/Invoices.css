@@ -15,12 +15,24 @@
 .invoice {
   border: solid 1px #d3d3d3;
   border-radius: 5px;
-  padding: 4%;
+  padding: 3%;
   Margin: 0.5%;
   display: flex;
   flex-direction: column;
   width: 266px;
   max-height: 295px;
+}
+
+.paid {
+  background: #a0ffa0;
+}
+
+.unpaid {
+  background: #fff3a0;
+}
+
+.late {
+  font-weight: 700;
 }
 
 .create-new-invoice {

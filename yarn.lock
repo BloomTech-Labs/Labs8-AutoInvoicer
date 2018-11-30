@@ -2002,6 +2002,7 @@ ms@^2.0.0, ms@^2.1.1:
 multer@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/multer/-/multer-1.4.1.tgz#24b12a416a22fec2ade810539184bf138720159e"
+  integrity sha512-zzOLNRxzszwd+61JFuAo0fxdQfvku12aNJgnla0AQ+hHxFmfc/B7jBVuPr5Rmvu46Jze/iJrFpSOsD7afO8SDw==
   dependencies:
     append-field "^1.0.0"
     busboy "^0.2.11"

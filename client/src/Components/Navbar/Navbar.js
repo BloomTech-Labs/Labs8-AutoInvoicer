@@ -16,8 +16,8 @@ class Navbar extends Component {
             <NavLink className="billing" to="/billing" exact>
               Billing
             </NavLink>
-            <NavLink className="settings" to="/settings" exact>
-              Settings
+            <NavLink className="create-invoice" to="/create_invoice" exact>
+              Create New Invoice
             </NavLink>
           </div>
         </div>
