@@ -1,70 +1,102 @@
-.landing-page-container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: -webkit-fill-available;
+/* .jumbotron {
+  height: 100vh;
 }
 
-.login-bar-container{
-    display: flex;
-    width: 20%;
-    justify-content: center;
-    align-self: flex-end;
-    border: solid 2px black;
-    padding: 0.5%;
-    margin-right: 5%;
+.display-4 {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
+.lead {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
 
-.login-bar-container a{
-    margin: 0 5%;
+body {
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.centerpiece-container{
-    width: 25%;
-    display: flex;
-    flex-direction: column;
-    margin: 15% 0 0 0;
-
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 700;
 }
 
-.buy-button{
-    width: 35%;
-    align-self: center;
-    background: white;
-    border: solid 1px black;
-    padding: 1% 1%;
-    margin-top: 25px;
+header.masthead {
+  position: relative;
+  background-color: #343a40;
+  background: url("../../static/img/invoices.jpg") no-repeat center center;
+  background-size: cover;
+  height: 100vh;
 }
 
-/*MOBILE STYLING*/
-@media (max-width:400px){
-    .login-bar-container{
-        width: 45%;
-        height: 40px;
-        align-items: center;
-    }
-
-    .centerpiece-container{
-        width: 45%;
-    }
-
-    .buy-button{
-        width: 65%;
-        padding: 5%;
-    }
-
+header.masthead .overlay {
+  position: absolute;
+  background-color: #212529;
+  height: 100vh;
+  width: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.3;
 }
 
-/*TABLET STYLING*/
-@media (min-width: 401px) and (max-width: 768px){
-    .login-bar-container{
-        width: 25%;
-    }
+header.masthead h1 {
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    .buy-button{
-        width: 65%;
-        padding: 5% 10% 5% 10%;
-    }    
+header.masthead a {
+  background-color: #6dc7e9;
+  border-color: #6dc7e9;
+}
 
+header.masthead a:hover {
+  background-color: #befa6f;
+  border-color: #befa6f;
+}
+
+/* nav {
+  background-color: #212529;
+  opacity: 0.3;
+} */
+
+.nav-link {
+  background-color: #6dc7e9;
+  margin-left: 1rem;
+  border: 1px solid #6dc7e9;
+}
+
+.nav-link a {
+  border-color: 1px solid red;
+}
+
+.nav-link:hover {
+  background-color: #befa6f;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: white;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+  color: white;
+}
+
+@media (min-width: 768px) {
+  header.masthead {
+    padding-top: 12rem;
+    padding-bottom: 12rem;
+  }
+  header.masthead h1 {
+    font-size: 3rem;
+  }
 }
