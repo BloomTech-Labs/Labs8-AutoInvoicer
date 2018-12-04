@@ -103,44 +103,56 @@ class InvoiceForm extends Component {
       return;
     }
 
-    for(const prop in data) {
-      if(data[prop] === '' || data[prop] === 'null'){
-        this.invalidForm = true;
-        this.errMessage = `Please fill in the ${prop} field.`
-        this.setState({});
-        return;
+    const formErrorValues = {
+      date : "Date",
+      due_date: "Due Date",
+      balance_due: "Balance Due",
+      company_name: "Invoice From",
+      invoiceTo: "Invoice To",
+      address: "Address",
+      zipcode: "Zip",
+      city: "City",
+      state: "State",
+    }
+
+    for(const item in formErrorValues) {
+      if(data[item] === '' || data[item] === 'null'){
+          this.invalidForm = true;
+          this.errMessage = `Please fill in the ${formErrorValues[item]} field.`
+          this.setState({});
+          this.invalidForm = false;
+          return;
       }
     }
     
+    const newInvoice = new FormData();
+    newInvoice.append("auth0_userID", this.auth0_userID);
+    newInvoice.append("logo", this.logo, this.logo.name);
+   
 
-    
-      const newInvoice = new FormData();
-      newInvoice.append("auth0_userID", this.auth0_userID);
-      newInvoice.append("logo", this.logo, this.logo.name);
-
-      for (const prop in data) {
-        if (prop === 'lineItems') {
-          newInvoice.append(`${prop}`, JSON.stringify(data[prop]))
-        } else {
-          newInvoice.append(`${prop}`, `${data[prop]}`);
-        }
-        
+    for (const prop in data) {
+      if (prop === 'lineItems') {
+        newInvoice.append(`${prop}`, JSON.stringify(data[prop]))
+      } else {
+        newInvoice.append(`${prop}`, `${data[prop]}`);
       }
 
-      axios
-        .post(process.env.REACT_APP_NEW_INVOICE, newInvoice)
-        .then(res => {
-          let invoice_num = this.props.invoice_num;
-          axios
-            .put(`/api/users/${this.mongo_id}`, {
-              invoice_num: (invoice_num += 1)
-            })
-            .then(res => console.log("invoice added, number incremented"))
-            .catch(err => console.log(err));
-        })
-        .catch(err => {
-          console.log("ERROR", err);
-        });
+    }
+
+    axios
+      .post(process.env.REACT_APP_NEW_INVOICE, newInvoice)
+      .then(res => {
+        let invoice_num = this.props.invoice_num;
+        axios
+          .put(`/api/users/${this.mongo_id}`, {
+            invoice_num: (invoice_num += 1)
+          })
+          .then(res => console.log("invoice added, number incremented"))
+          .catch(err => console.log(err));
+      })
+      .catch(err => {
+        console.log("ERROR", err);
+      });
       
 
 
@@ -174,13 +186,42 @@ class InvoiceForm extends Component {
 
   handleUpdate = event => {
     event.preventDefault();
+
+    const data = this.state;
+
+    if(!this.logo){
+      this.invalidForm = true;
+      this.errMessage = "Please submit a valid logo file."
+      this.setState({});
+      return;
+    }
+
+    const formErrorValues = {
+      date : "Date",
+      due_date: "Due Date",
+      balance_due: "Balance Due",
+      company_name: "Invoice From",
+      invoiceTo: "Invoice To",
+      address: "Address",
+      zipcode: "Zip",
+      city: "City",
+      state: "State",
+    }
+
+    for(const item in formErrorValues) {
+      if(data[item] === '' || data[item] === 'null'){
+          this.invalidForm = true;
+          this.errMessage = `Please fill in the ${formErrorValues[item]} field.`
+          this.setState({});
+          this.invalidForm = false;
+          return;
+      }
+    }
     const newInvoice = new FormData();
     newInvoice.append("auth0_userID", this.auth0_userID);
-    if(this.logo)
-      newInvoice.append("logo", this.logo, this.logo.name);
+    newInvoice.append("logo", this.logo, this.logo.name);
 
     const params = this.props.params;
-    const data = this.state;
 
     for (const prop in data) {
       newInvoice.append(`${prop}`, `${data[prop]}`);
