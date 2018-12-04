@@ -32,6 +32,7 @@ class InvoiceForm extends Component {
     this.invalidForm = false;
     this.edit = false;
     this.errMessage = '';
+    this.y_position = 8;
   }
   state = {
     invoice_number: this.props.invoice_num,
@@ -100,6 +101,7 @@ class InvoiceForm extends Component {
       this.invalidForm = true;
       this.errMessage = "Please submit a valid logo file."
       this.setState({});
+      this.invalidForm = false;
       return;
     }
 
@@ -123,6 +125,14 @@ class InvoiceForm extends Component {
           this.invalidForm = false;
           return;
       }
+    }
+
+    if(isNaN(data.total)){
+      this.invalidForm = true;
+      this.errMessage = "Please add at least one item."
+      this.setState({});
+      this.invalidForm = false;
+      return;
     }
     
     const newInvoice = new FormData();
@@ -149,6 +159,7 @@ class InvoiceForm extends Component {
           })
           .then(res => console.log("invoice added, number incremented"))
           .catch(err => console.log(err));
+          this.setState({});
       })
       .catch(err => {
         console.log("ERROR", err);
@@ -193,6 +204,7 @@ class InvoiceForm extends Component {
       this.invalidForm = true;
       this.errMessage = "Please submit a valid logo file."
       this.setState({});
+      this.invalidForm = false;
       return;
     }
 
@@ -217,6 +229,15 @@ class InvoiceForm extends Component {
           return;
       }
     }
+
+    if(isNaN(data.total)){
+      this.invalidForm = true;
+      this.errMessage = "Please add at least one item."
+      this.setState({});
+      this.invalidForm = false;
+      return;
+    }
+
     const newInvoice = new FormData();
     newInvoice.append("auth0_userID", this.auth0_userID);
     newInvoice.append("logo", this.logo, this.logo.name);
@@ -255,21 +276,25 @@ class InvoiceForm extends Component {
     pdf.text(`Zip: ${this.state.zipcode}`, 0.5, 3.1);
     pdf.text(`City: ${this.state.city}`, 0.5, 3.4);
     pdf.text(`State: ${this.state.state}`, 0.5, 3.7);
-    pdf.text(`Item: ${this.state.item}`, 0.5, 4.1);
-    pdf.text(`Quantity: ${this.state.quantity}`, 0.5, 4.4);
-    pdf.text(`Rate: ${this.state.rate}`, 0.5, 4.7);
-    pdf.text(`Amount: $${this.state.amount}`, 0.5, 5.1);
-    pdf.text(`Subtotal: $${this.state.subtotal}`, 0.5, 5.4);
-    pdf.text(`Discount: ${this.state.discount}`, 0.5, 5.7);
-    pdf.text(`Tax: $${this.state.tax}`, 0.5, 6.1);
-    pdf.text(`Tax Rate: ${this.state.taxRate * 100}%`, 0.5, 6.4);
-    pdf.text(`Shipping: ${this.state.shipping}`, 0.5, 6.7);
-    pdf.text(`Total: $${this.state.total}`, 0.5, 7.1);
-    pdf.text(`Amount Paid: $${this.state.amount_paid}`, 0.5, 7.4);
-    pdf.text(`Notes: ${this.state.notes}`, 0.5, 7.7);
-    pdf.text(`Terms: ${this.state.terms}`, 0.5, 8.1);
+    this.state.lineItems.map(row => {
+      pdf.text(`Item: ${row.item}`, 0.5, `${(this.y_position / 2) + 0.1}`);
+      pdf.text(`Quantity: ${row.quantity}`, 2, `${(this.y_position / 2) + 0.1}`);
+      pdf.text(`Rate: ${row.rate}`, 3.5, `${(this.y_position / 2) + 0.1}`);
+      pdf.text(`Amount: $${row.quantity * row.rate}`, 4.5, `${(this.y_position / 2) + 0.1}`);
+      ++this.y_position
+    })
+    pdf.text(`Subtotal: $${this.state.subtotal}`, 0.5, `${(this.y_position / 2) + 0.4}`);
+    pdf.text(`Discount: ${this.state.discount}`, 0.5, `${(this.y_position / 2) + 0.7}`);
+    pdf.text(`Tax: $${this.state.tax}`, 0.5, `${(this.y_position / 2) + 1.1}`);
+    pdf.text(`Tax Rate: ${this.state.taxRate * 100}%`, 0.5, `${(this.y_position / 2) + 1.4}`);
+    pdf.text(`Shipping: ${this.state.shipping}`, 0.5, `${(this.y_position / 2) + 1.7}`);
+    pdf.text(`Total: $${this.state.total}`, 0.5, `${(this.y_position / 2) + 2.1}`);
+    pdf.text(`Amount Paid: $${this.state.amount_paid}`, 0.5, `${(this.y_position / 2) + 2.4}`);
+    pdf.text(`Notes: ${this.state.notes}`, 0.5, `${(this.y_position / 2) + 2.7}`);
+    pdf.text(`Terms: ${this.state.terms}`, 0.5, `${(this.y_position / 2) + 3.1}`);
 
     pdf.save(`${this.state.invoiceTo}`);
+    this.y_position = 4;
   };
 
   calculateTax() {
@@ -534,7 +559,7 @@ class InvoiceForm extends Component {
             </Row>
 
             {/* Item, Quantity, Rate, Amount - Using Reacstrap Table */}
-            <Table striped>
+            <Table striped id="line-items-table">
               <thead>
                 <tr>
                   <th>#</th>

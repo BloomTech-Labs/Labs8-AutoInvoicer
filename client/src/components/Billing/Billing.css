@@ -7,6 +7,19 @@
   margin-top: 100px;
 }
 
+.options label {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.options label input {
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;   
+}
+
 .checkout-wrapper h2 {
   margin-bottom: 15px;
 }
