@@ -70,9 +70,20 @@ class InvoiceForm extends Component {
       const params = this.props.params;
       this.edit = true;
       const invoice = (await axios.get(process.env.REACT_APP_NEW_INVOICE + `/${params.id}`)).data;
+      console.log(invoice);
       for(const item in invoice){
-        this.setState({[item]: invoice[item]})
+        if(item === 'line_items'){
+          let copyArray = [];
+          invoice[item].forEach(lineItem => {
+            copyArray.push(lineItem);
+          })
+          console.log(copyArray);
+          this.setState({lineItems: copyArray});
+        }
+        else
+          this.setState({[item]: invoice[item]})
       }
+      console.log(this.state.lineItems);
     }
   }
 
@@ -161,7 +172,10 @@ class InvoiceForm extends Component {
     const data = this.state;
 
     for (const prop in data) {
-      newInvoice.append(`${prop}`, `${data[prop]}`);
+      if (prop === 'lineItems') 
+        newInvoice.append(`${prop}`, JSON.stringify(data[prop]))
+      else
+        newInvoice.append(`${prop}`, `${data[prop]}`);
     }
     console.log(newInvoice);
     axios
