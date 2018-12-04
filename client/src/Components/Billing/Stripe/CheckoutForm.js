@@ -52,7 +52,7 @@ class CheckoutForm extends Component {
     return (
       <div className="checkout">
         <div className="card-wrapper">
-          <CardElement />
+          <CardElement className="card-element-class" />
         </div>
         <form className="options">
           <label>
