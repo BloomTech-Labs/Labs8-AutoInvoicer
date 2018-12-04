@@ -70,20 +70,17 @@ class InvoiceForm extends Component {
       const params = this.props.params;
       this.edit = true;
       const invoice = (await axios.get(process.env.REACT_APP_NEW_INVOICE + `/${params.id}`)).data;
-      console.log(invoice);
       for(const item in invoice){
         if(item === 'line_items'){
           let copyArray = [];
           invoice[item].forEach(lineItem => {
             copyArray.push(lineItem);
           })
-          console.log(copyArray);
           this.setState({lineItems: copyArray});
         }
         else
           this.setState({[item]: invoice[item]})
       }
-      console.log(this.state.lineItems);
     }
   }
 
