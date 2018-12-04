@@ -101,6 +101,7 @@ router.post("/", upload.single('logo'), (req, res) => {
       // item: req.body.item,
       // quantity: Number(req.body.quantity),
       // rate: Number(req.body.rate),
+      invoiceTo: req.body.invoiceTo,
       line_items: lineItems,
       amount: Number(req.body.amount),
       subtotal: Number(req.body.subtotal),
@@ -133,7 +134,7 @@ router.put("/api/invoices/:_id", upload.single('logo'), (req, res) => {
 
   const invoice_number = req.params._id;
   let single_invoice;
-  const { _raw, _json, ...userProfile } = req.user;
+  const { _json, ...userProfile } = req.user;
   const auth0_userID = req.user._json.sub.split("|")[1];
   const ext = req.file.originalname.split('.')[1]
   const tmp = os.tmpdir() + '/deleteme.' + ext
@@ -143,6 +144,13 @@ router.put("/api/invoices/:_id", upload.single('logo'), (req, res) => {
     cloud_name: process.env.CLOUDINARY_NAME,
     api_key: process.env.CLOUDINARY_KEY,
     api_secret: process.env.CLOUDINARY_SECRET
+  })
+
+  const lineItems = JSON.parse(req.body.lineItems);
+
+  lineItems.forEach(row => {
+    row.quantity = Number(row.quantity);
+    row.rate = Number(row.rate);
   })
 
   cloudinary.v2.uploader.upload(tmp, {public_id: `auto-invoicer/${Date.now()}`}, (error, result) => {
@@ -157,9 +165,11 @@ router.put("/api/invoices/:_id", upload.single('logo'), (req, res) => {
       city: req.body.city,
       state: req.body.state,
       company_name: req.body.company_name,
-      item: req.body.item,
-      quantity: Number(req.body.quantity),
-      rate: Number(req.body.rate),
+      invoiceTo: req.body.invoiceTo,
+      line_items: lineItems,
+      // item: req.body.item,
+      // quantity: Number(req.body.quantity),
+      // rate: Number(req.body.rate),
       amount: Number(req.body.amount),
       subtotal: Number(req.body.subtotal),
       discount: Number(req.body.discount),
@@ -178,9 +188,6 @@ router.put("/api/invoices/:_id", upload.single('logo'), (req, res) => {
           if(invoice._id == invoice_number)
             single_invoice = invoice._id;
         })
-        
-        edit.total = 0;//Update can't occur if the total is null or NaN
-                       //Need to add logic to front end to prevent this
 
         Invoice.updateOne({ _id: single_invoice}, edit)
           .then(invoice =>{
