@@ -352,7 +352,6 @@ class InvoiceForm extends Component {
 
   render() {
     if (this.state.toDashboard === true) {
-      window.alert("You will now be redirected to the Dashboard");
       return <Redirect to="/" />;
     }
 
