@@ -29,7 +29,9 @@ class InvoiceForm extends Component {
     this.mongo_id = this.props.mongo_id;
     this.logo = null;
     this.logoRaw = null;
+    this.invalidForm = false;
     this.edit = false;
+    this.errMessage = '';
   }
   state = {
     invoice_number: this.props.invoice_num,
@@ -59,7 +61,6 @@ class InvoiceForm extends Component {
         rate: 0
       }
     ],
-    edit: false
   };
 
   async componentDidMount() {
@@ -92,35 +93,57 @@ class InvoiceForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const newInvoice = new FormData();
-    newInvoice.append("auth0_userID", this.auth0_userID);
-    newInvoice.append("logo", this.logo, this.logo.name);
 
     const data = this.state;
 
-    for (const prop in data) {
-      if (prop === 'lineItems') {
-        newInvoice.append(`${prop}`, JSON.stringify(data[prop]))
-      } else {
-        newInvoice.append(`${prop}`, `${data[prop]}`);
-      }
-      
+    if(!this.logo){
+      this.invalidForm = true;
+      this.errMessage = "Please submit a valid logo file."
+      this.setState({});
+      return;
     }
 
-    axios
-      .post(process.env.REACT_APP_NEW_INVOICE, newInvoice)
-      .then(res => {
-        let invoice_num = this.props.invoice_num;
-        axios
-          .put(`/api/users/${this.mongo_id}`, {
-            invoice_num: (invoice_num += 1)
-          })
-          .then(res => console.log("invoice added, number incremented"))
-          .catch(err => console.log(err));
-      })
-      .catch(err => {
-        console.log("ERROR", err);
-      });
+    for(const prop in data) {
+      if(data[prop] === '' || data[prop] === 'null'){
+        this.invalidForm = true;
+        this.errMessage = `Please fill in the ${prop} field.`
+        this.setState({});
+        return;
+      }
+    }
+    
+
+    
+      const newInvoice = new FormData();
+      newInvoice.append("auth0_userID", this.auth0_userID);
+      newInvoice.append("logo", this.logo, this.logo.name);
+
+      for (const prop in data) {
+        if (prop === 'lineItems') {
+          newInvoice.append(`${prop}`, JSON.stringify(data[prop]))
+        } else {
+          newInvoice.append(`${prop}`, `${data[prop]}`);
+        }
+        
+      }
+
+      axios
+        .post(process.env.REACT_APP_NEW_INVOICE, newInvoice)
+        .then(res => {
+          let invoice_num = this.props.invoice_num;
+          axios
+            .put(`/api/users/${this.mongo_id}`, {
+              invoice_num: (invoice_num += 1)
+            })
+            .then(res => console.log("invoice added, number incremented"))
+            .catch(err => console.log(err));
+        })
+        .catch(err => {
+          console.log("ERROR", err);
+        });
+      
+
+
     // COMMENTED OUT this is meant to reset the form to blank, but since we're creating two separate buttons for Saving the Invoice and Downloading the PDF, the form data needs to persist
     // TODO this means that we should finish full CRUD for the invoices (we still have yet to make routes for UPDATE and DELETE)
     // this.setState({
@@ -707,7 +730,7 @@ class InvoiceForm extends Component {
               {/* Testing Tax */}
               <div>Tax: {(this.state.taxRate * 100).toFixed(2)}% </div>
               <div>Total: {this.state.total} </div>
-            ({/*</FormGroup> */}
+            {/*</FormGroup> */}
             {this.edit ?
             <Button type="generate" onClick={this.handleUpdate}>
               Update Invoice
@@ -724,6 +747,7 @@ class InvoiceForm extends Component {
             >
               Download PDF
             </Button>
+            <div className='form-error'>{this.errMessage}</div>
           </form>
         </div>
       </div>
