@@ -75,17 +75,17 @@ class InvoiceForm extends Component {
     if (path === "/invoices/:id") {
       const params = this.props.params;
       this.edit = true;
-      const invoice = (await axios.get(process.env.REACT_APP_NEW_INVOICE + `/${params.id}`)).data;
-      for(const item in invoice){
-        if(item === 'line_items'){
+      const invoice = (await axios.get(
+        process.env.REACT_APP_NEW_INVOICE + `/${params.id}`
+      )).data;
+      for (const item in invoice) {
+        if (item === "line_items") {
           let copyArray = [];
           invoice[item].forEach(lineItem => {
             copyArray.push(lineItem);
-          })
-          this.setState({lineItems: copyArray});
-        }
-        else
-          this.setState({[item]: invoice[item]})
+          });
+          this.setState({ lineItems: copyArray });
+        } else this.setState({ [item]: invoice[item] });
       }
     }
   }
@@ -116,16 +116,16 @@ class InvoiceForm extends Component {
 
     const data = this.state;
 
-    if(!this.logo){
+    if (!this.logo) {
       this.invalidForm = true;
-      this.errMessage = "Please submit a valid logo file."
+      this.errMessage = "Please submit a valid logo file.";
       this.setState({});
       this.invalidForm = false;
       return;
     }
 
     const formErrorValues = {
-      date : "Date",
+      date: "Date",
       due_date: "Due Date",
       balance_due: "Balance Due",
       company_name: "Invoice From",
@@ -133,31 +133,30 @@ class InvoiceForm extends Component {
       address: "Address",
       zipcode: "Zip",
       city: "City",
-      state: "State",
-    }
+      state: "State"
+    };
 
-    for(const item in formErrorValues) {
-      if(data[item] === '' || data[item] === 'null'){
-          this.invalidForm = true;
-          this.errMessage = `Please fill in the ${formErrorValues[item]} field.`
-          this.setState({});
-          this.invalidForm = false;
-          return;
+    for (const item in formErrorValues) {
+      if (data[item] === "" || data[item] === "null") {
+        this.invalidForm = true;
+        this.errMessage = `Please fill in the ${formErrorValues[item]} field.`;
+        this.setState({});
+        this.invalidForm = false;
+        return;
       }
     }
 
-    if(isNaN(data.total)){
+    if (isNaN(data.total)) {
       this.invalidForm = true;
-      this.errMessage = "Please add at least one item."
+      this.errMessage = "Please add at least one item.";
       this.setState({});
       this.invalidForm = false;
       return;
     }
-    
+
     const newInvoice = new FormData();
     newInvoice.append("auth0_userID", this.auth0_userID);
     newInvoice.append("logo", this.logo, this.logo.name);
-   
 
     for (const prop in data) {
       if (prop === "lineItems") {
@@ -179,13 +178,11 @@ class InvoiceForm extends Component {
           })
           .then(res => console.log("invoice added, number incremented"))
           .catch(err => console.log(err));
-          this.setState({});
+        this.setState({});
       })
       .catch(err => {
         console.log("ERROR", err);
       });
-      
-
 
     // COMMENTED OUT this is meant to reset the form to blank, but since we're creating two separate buttons for Saving the Invoice and Downloading the PDF, the form data needs to persist
     // TODO this means that we should finish full CRUD for the invoices (we still have yet to make routes for UPDATE and DELETE)
@@ -220,16 +217,16 @@ class InvoiceForm extends Component {
 
     const data = this.state;
 
-    if(!this.logo){
+    if (!this.logo) {
       this.invalidForm = true;
-      this.errMessage = "Please submit a valid logo file."
+      this.errMessage = "Please submit a valid logo file.";
       this.setState({});
       this.invalidForm = false;
       return;
     }
 
     const formErrorValues = {
-      date : "Date",
+      date: "Date",
       due_date: "Due Date",
       balance_due: "Balance Due",
       company_name: "Invoice From",
@@ -237,22 +234,22 @@ class InvoiceForm extends Component {
       address: "Address",
       zipcode: "Zip",
       city: "City",
-      state: "State",
-    }
+      state: "State"
+    };
 
-    for(const item in formErrorValues) {
-      if(data[item] === '' || data[item] === 'null'){
-          this.invalidForm = true;
-          this.errMessage = `Please fill in the ${formErrorValues[item]} field.`
-          this.setState({});
-          this.invalidForm = false;
-          return;
+    for (const item in formErrorValues) {
+      if (data[item] === "" || data[item] === "null") {
+        this.invalidForm = true;
+        this.errMessage = `Please fill in the ${formErrorValues[item]} field.`;
+        this.setState({});
+        this.invalidForm = false;
+        return;
       }
     }
 
-    if(isNaN(data.total)){
+    if (isNaN(data.total)) {
       this.invalidForm = true;
-      this.errMessage = "Please add at least one item."
+      this.errMessage = "Please add at least one item.";
       this.setState({});
       this.invalidForm = false;
       return;
@@ -265,10 +262,9 @@ class InvoiceForm extends Component {
     const params = this.props.params;
 
     for (const prop in data) {
-      if (prop === 'lineItems') 
-        newInvoice.append(`${prop}`, JSON.stringify(data[prop]))
-      else
-        newInvoice.append(`${prop}`, `${data[prop]}`);
+      if (prop === "lineItems")
+        newInvoice.append(`${prop}`, JSON.stringify(data[prop]));
+      else newInvoice.append(`${prop}`, `${data[prop]}`);
     }
     console.log(newInvoice);
     axios
@@ -283,21 +279,25 @@ class InvoiceForm extends Component {
 
   createPDF = event => {
     event.preventDefault();
-    const pdf = new jsPDF('p', 'pt');
+    const pdf = new jsPDF("p", "pt");
     pdf.setFontSize(12);
     const columns = [
-      {title: "#", dataKey: "#"},
-      {title: "Item", dataKey: "item"},
-      {title: "Quantity", dataKey: "quantity"},
-      {title: "Rate", dataKey: "rate"},
-      {title: "Amount", dataKey: "amount"},
+      { title: "#", dataKey: "#" },
+      { title: "Item", dataKey: "item" },
+      { title: "Quantity", dataKey: "quantity" },
+      { title: "Rate", dataKey: "rate" },
+      { title: "Amount", dataKey: "amount" }
     ];
     const rows = [];
     this.state.lineItems.map((row, index) => {
-      rows.push(
-        {"#": index + 1, "item": row.item, "quantity": row.quantity, "rate": `$${row.rate}`, "amount": `$${row.quantity * row.rate}`}
-      )
-    })
+      rows.push({
+        "#": index + 1,
+        item: row.item,
+        quantity: row.quantity,
+        rate: `$${row.rate}`,
+        amount: `$${row.quantity * row.rate}`
+      });
+    });
 
     pdf.addImage(this.logoRef.current, 'JPEG', 30, 15, 75, 75, "MEDIUM", 0);
     pdf.text(this.state.company_name, 30, 105);
@@ -306,12 +306,16 @@ class InvoiceForm extends Component {
     pdf.text("Invoice Number:", 391, 65);
     pdf.text(`${this.state.invoice_number}`, 500, 65);
     pdf.text("Due Date:", 425, 80);
-    pdf.text(this.state.due_date, 500, 80)
+    pdf.text(this.state.due_date, 500, 80);
     pdf.text("Bill to:", 30, 155);
     pdf.text(this.state.invoiceTo, 30, 170);
     pdf.text(this.state.address, 30, 185);
-    pdf.text(`${this.state.city}, ${this.state.state} ${this.state.zipcode}`, 30, 200);
-    pdf.autoTable(columns, rows, {margin: {top: 300}});
+    pdf.text(
+      `${this.state.city}, ${this.state.state} ${this.state.zipcode}`,
+      30,
+      200
+    );
+    pdf.autoTable(columns, rows, { margin: { top: 300 } });
     pdf.text("Discount:", 414, 670);
     pdf.text(this.state.discount, 500, 670);
     pdf.text("Shipping:", 414, 685);
@@ -516,10 +520,34 @@ class InvoiceForm extends Component {
     this.setState({ lineItems }, this.calculateSubtotal(), this.calculateTotal());
   };
 
+  // dcha - Decrements credit when a user creates an invoice.
+  decrementCredits = () => {
+    axios
+      .get(`/api/users/${this.mongo_id}`)
+      .then(res => {
+        let credits = res.data.credits;
+        console.log(credits);
+        axios
+          .put(`/api/users/${this.mongo_id}`, {
+            credits: (credits -= 1)
+          })
+          .then(res => {
+            this.props.fetchUser();
+          });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   render() {
+    // dcha - Redirects users to dashboard after invoice has been created
     if (this.state.toDashboard === true) {
+      this.decrementCredits();
       return <Redirect to="/" />;
     }
+
+    console.log(this.props.credits);
 
     console.log(this.state.toDashboard);
 
@@ -932,7 +960,7 @@ class InvoiceForm extends Component {
             >
               Download PDF
             </Button>
-            <div className='form-error'>{this.errMessage}</div>
+            <div className="form-error">{this.errMessage}</div>
           </form>
         </div>
       </div>
