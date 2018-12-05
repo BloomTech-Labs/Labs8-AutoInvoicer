@@ -3,7 +3,8 @@ import { Route, Redirect } from "react-router-dom";
 import axios from "axios";
 import qs from "qs";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import accounting from "accounting";
+import 'jspdf-autotable';
 
 import {
   Row,
@@ -33,27 +34,28 @@ class InvoiceForm extends Component {
     this.logoRaw = null;
     this.invalidForm = false;
     this.edit = false;
-    this.errMessage = "";
+    this.errMessage = '';
+    this.logoRef = React.createRef();
   }
   state = {
     invoice_number: this.props.invoice_num,
     date: "",
     due_date: "",
-    balance_due: "",
+    balance_due: 0,
     company_name: "",
     invoiceTo: "",
     address: "",
     zipcode: "",
     city: "",
     state: "",
-    amount: "",
-    subtotal: "",
-    discount: "",
-    tax: "",
-    taxRate: "",
-    shipping: "",
+    amount: 0,
+    subtotal: 0,
+    discount: 0,
+    tax: 0,
+    taxRate: 0,
+    shipping: 0,
     total: "",
-    amount_paid: "",
+    amount_paid: 0,
     notes: "",
     terms: "",
     lineItems: [
@@ -90,17 +92,23 @@ class InvoiceForm extends Component {
 
   handleInputChange = event => {
     this.setState({ [event.target.name]: event.target.value });
+    if (event.target.name === "shipping" || event.target.name === "discount" || event.target.name === "discount" ) {
+      this.calculateTotal();
+    }
   };
 
   handleImageChange = event => {
     event.preventDefault();
     const reader = new FileReader();
-    const logo = event.target.files[0];
-    reader.onloadend = () => {
-      this.logo = logo;
-      this.logoRaw = reader.result;
-    };
-    reader.readAsDataURL(logo);
+    this.logo = event.target.files[0];
+    this.logoRef.current.src = window.URL.createObjectURL(this.logo);
+  //   reader.onloadend = () => {
+  //     this.logo = new Image();
+  //     this.logo.src = reader.result;
+  //     this.logoRaw = reader.result;
+  //     console.log(logo);
+  //   };
+  //   reader.readAsDataURL(logo);
   };
 
   handleSubmit = event => {
@@ -271,7 +279,6 @@ class InvoiceForm extends Component {
 
   createPDF = event => {
     event.preventDefault();
-    console.log(this.logoRaw);
     const pdf = new jsPDF("p", "pt");
     pdf.setFontSize(12);
     const columns = [
@@ -291,7 +298,8 @@ class InvoiceForm extends Component {
         amount: `$${row.quantity * row.rate}`
       });
     });
-    pdf.addImage(this.logoRaw, "JPEG", 30, 15, 75, 75, "MEDIUM", 0);
+
+    pdf.addImage(this.logoRef.current, 'JPEG', 30, 15, 75, 75, "MEDIUM", 0);
     pdf.text(this.state.company_name, 30, 105);
     pdf.text("Date:", 450, 50);
     pdf.text(this.state.date, 500, 50);
@@ -322,33 +330,6 @@ class InvoiceForm extends Component {
     pdf.text(this.state.notes, 75, 745);
     pdf.text("Terms -", 30, 760);
     pdf.text(this.state.terms, 75, 760);
-    // pdf.text(`Invoice Number: ${this.state.invoice_number}`, 13, 0.8);
-    // pdf.text(`Date: ${this.state.date}`, 13, 1.1);
-    // pdf.text(`Due Date: ${this.state.due_date}`, 13, 1.4);
-    // pdf.text(`Balance Due: ${this.state.balance_due}`, 13, 1.7);
-    // pdf.text(`Company Name: ${this.state.company_name}`, 13, 2.1);
-    // pdf.text(`Invoice To: ${this.state.invoiceTo}`, 13, 2.4);
-    // pdf.text(`Address: ${this.state.address}`, 13, 2.7);
-    // pdf.text(`Zip: ${this.state.zipcode}`, 13, 3.1);
-    // pdf.text(`City: ${this.state.city}`, 13, 3.4);
-    // pdf.text(`State: ${this.state.state}`, 13, 3.7);
-    // pdf.autoTable(columns, rows);
-    // // this.state.lineItems.map(row => {
-    // //   pdf.text(`Item: ${row.item}`, 13, `${(this.y_position / 2) + 2.54}`);
-    // //   pdf.text(`Quantity: ${row.quantity}`, 2, `${(this.y_position / 2) + 2.54}`);
-    // //   pdf.text(`Rate: ${row.rate}`, 3.5, `${(this.y_position / 2) + 2.54}`);
-    // //   pdf.text(`Amount: $${row.quantity * row.rate}`, 4.5, `${(this.y_position / 2) + 2.54}`);
-    // //   ++this.y_position
-    // // })
-    // pdf.text(`Subtotal: $${this.state.subtotal}`, 13, `${(this.y_position / 2) + 0.4}`);
-    // pdf.text(`Discount: ${this.state.discount}`, 13, `${(this.y_position / 2) + 0.7}`);
-    // pdf.text(`Tax: $${this.state.tax}`, 13, `${(this.y_position / 2) + 1.1}`);
-    // pdf.text(`Tax Rate: ${this.state.taxRate * 100}%`, 13, `${(this.y_position / 2) + 1.4}`);
-    // pdf.text(`Shipping: ${this.state.shipping}`, 13, `${(this.y_position / 2) + 1.7}`);
-    // pdf.text(`Total: $${this.state.total}`, 13, `${(this.y_position / 2) + 2.1}`);
-    // pdf.text(`Amount Paid: $${this.state.amount_paid}`, 13, `${(this.y_position / 2) + 2.4}`);
-    // pdf.text(`Notes: ${this.state.notes}`, 13, `${(this.y_position / 2) + 2.7}`);
-    // pdf.text(`Terms: ${this.state.terms}`, 13, `${(this.y_position / 2) + 3.1}`);
 
     pdf.save(`Invoice${this.state.invoice_number}`);
   };
@@ -369,14 +350,15 @@ class InvoiceForm extends Component {
       country: "US" //Only works in US for free version
     });
 
-    axios({
-      method: "get",
-      url: `https://rest.avatax.com/api/v2/taxrates/byaddress?${query}`,
-      headers: {
-        Accept: "application/json",
-        Authorization: process.env.REACT_APP_TAX_AUTH
-      }
-    })
+    if(this.state.zipcode.length === 5) {
+      axios({
+        method: "get",
+        url: `https://rest.avatax.com/api/v2/taxrates/byaddress?${query}`,
+        headers: {
+          Accept: "application/json",
+          Authorization: process.env.REACT_APP_TAX_AUTH
+        }
+      })
       .then(res => {
         this.setState({
           tax: this.state.subtotal * res.data.totalRate,
@@ -389,21 +371,93 @@ class InvoiceForm extends Component {
       .catch(error => {
         console.log(error);
       });
+    }
   }
 
   // Handle Tax
   handleTaxChange = event => {
     this.setState(
+      { [event.target.name]: event.target.value }, () => {
+        this.calculateTax();
+      });
+  };
+
+  calculateSubtotal() {
+    let tempSubtotal = 0;
+
+    for (let i = 0; i < this.state.lineItems.length; i++) {
+      if(this.state.lineItems[i].quantity >= 0 && this.state.lineItems[i].rate >= 0)
+      tempSubtotal += this.state.lineItems[i].quantity * this.state.lineItems[i].rate
+    }
+    
+    this.setState({ subtotal : tempSubtotal });
+  }
+
+  calculateTotal() {
+    //Calculates the tax rate of the invoice total by using an external tax API.
+    //Calculated using the address
+
+    //Turn our data into a querystring
+    console.log(this.state);
+    const query = qs.stringify({
+      line1: this.state.address, //Line 1,2,3 are used for addresses. 2 and 3 are optional
+      line2: "",
+      line3: "",
+      // city: this.state.city,
+      // region: this.state.state,
+      postalCode: this.state.zipcode,
+      country: "US" //Only works in US for free version
+    });
+  
+    if(this.state.zipcode.length === 5) {
+      axios({
+        method: "get",
+        url: `https://rest.avatax.com/api/v2/taxrates/byaddress?${query}`,
+        headers: {
+          Accept: "application/json",
+          Authorization: process.env.REACT_APP_TAX_AUTH
+        }
+      })
+        .then(res => {
+          this.setState({
+            tax: this.state.subtotal * res.data.totalRate,
+            taxRate: res.data.totalRate
+          }); //Our tax is the subtotal * tax rate returned by API
+          //FOR SHOWCASE PURPOSES
+          if(this.state.discount === "") {
+            this.setState({ discount : 0 });
+          }
+          else if(this.state.shipping == "") {
+            this.setState({ shipping: 0 });
+          }
+          let nuTotal = parseFloat(this.state.subtotal) * (1 - this.state.discount/100) + parseFloat(this.state.tax) + parseFloat(this.state.shipping);
+          this.setState({ total: nuTotal });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
+
+  handleSubtotalChange = event => {
+    this.setState(
       { [event.target.name]: event.target.value },
-      this.calculateTax
+      this.calculateSubtotal()
+    );
+  };
+
+  handleTotalChange = event => {
+    this.setState(
+      { [event.target.name]: event.target.value },
+      this.calculateTotal()
     );
   };
 
   // Handle Zip Change
   handleZipChange = event => {
     this.setState({ [event.target.name]: event.target.value }, () => {
-      this.calculateTax();
       this.getCityState();
+      this.calculateTotal();
     });
   };
 
@@ -422,18 +476,26 @@ class InvoiceForm extends Component {
         })
         .then(res => {
           console.log(res);
-          let city = res.data.results[0].address_components[1].short_name;
-          // let state = res.data.results[0].address_components[2].short_name;
-          let state = () => {
-            return res.data.results[0].formatted_address
-              .split(",")[1]
-              .split(" ")[1];
-          };
-          console.log(`STATE: ${state()}`);
+          let city = "";
+          let state = "";
+          if (res.data.status !== "OK") {
+            return;
+          } else {
+            res.data.results[0].address_components.map(item => {
+                if (item.types[0] === "locality") {
+                  city = item.long_name;
+              } else if (item.types[0] === "administrative_area_level_1") {
+                  state = item.short_name;
+              } else {
+                  return;
+              }
+            })
+          }
+          console.log(`STATE: ${state}`);
           console.log(`CITY: ${city}`);
           this.setState({
             city: city,
-            state: state()
+            state: state
           });
         })
         .catch(err => {
@@ -455,7 +517,7 @@ class InvoiceForm extends Component {
   handleLineItemChange = (event, index, item) => {
     let lineItems = [...this.state.lineItems];
     lineItems[index][item] = event.target.value;
-    this.setState({ lineItems });
+    this.setState({ lineItems }, this.calculateSubtotal(), this.calculateTotal());
   };
 
   // dcha - Decrements credit when a user creates an invoice.
@@ -509,6 +571,7 @@ class InvoiceForm extends Component {
                 Browse file to add your company logo.
               </FormText>
             </FormGroup>
+            <img ref={this.logoRef} />
             {/* Invoice Header Rigth Side */}
             <FormGroup row classname="right-indent">
               {/* <Label for="invoice_number" sm={2}>
@@ -797,53 +860,7 @@ class InvoiceForm extends Component {
                 onChange={this.handleInputChange}
               />
             </FormGroup>
-            {/* Discount */}
-            <FormGroup row>
-              <Label for="discount" sm={2}>
-                Discount
-              </Label>
-              <Col sm="2">
-                <Input
-                  value={this.state.subtotal * (1 - this.state.discount / 100)}
-                  type="percent"
-                  name="discount"
-                  id="discount"
-                  placeholder="0 %"
-                />
-              </Col>
-            </FormGroup>
-            {/* Shipping */}
-            <FormGroup row>
-              <Label for="shipping" sm={2}>
-                Shipping
-              </Label>
-              <Col sm="2">
-                {/* <Col sm={10}> */}
-                <Input
-                  value={this.state.shipping}
-                  type="number"
-                  name="discount"
-                  id="discount"
-                  placeholder="$ 0.00"
-                />
-              </Col>
-            </FormGroup>
-            {/* Subtotal */}
-            <FormGroup row>
-              <Label for="subtotal" sm={2}>
-                Subtotal
-              </Label>
-              <Col sm="2">
-                <Input
-                  value={this.state.subtotal}
-                  type="number"
-                  name="subtotal"
-                  id="subtotal"
-                  placeholder="$ 0.00"
-                  onChange={this.handleInputChange}
-                />
-              </Col>
-            </FormGroup>
+
             {/* <FormGroup>
               <Label for="terms">Subtotal </Label>
               <Input
@@ -854,8 +871,48 @@ class InvoiceForm extends Component {
                 placeholder="Subtotal"
                 onChange={this.handleInputChange}
               /> */}
+            {/* Subtotal */}
+
+            <FormGroup row>
+              <Label for="subtotal" sm={2}>
+                Subtotal 
+              </Label>
+              <Col sm="2">
+                {/* <Input
+                  value={this.state.subtotal}
+                  type="number"
+                  name="subtotal"
+                  id="subtotal"
+                  placeholder="$ 0.00"
+                  onChange={this.handleSubtotalChange}
+                /> */}
+                <div>
+                  {accounting.formatMoney(this.state.subtotal)}
+                </div>
+              </Col>
+            </FormGroup>
+
+            {/* Discount */}
+            <FormGroup row>
+              <Label for="discount" sm={2}>
+                Discount
+              </Label>
+              <Col sm="2">
+                <Input
+                  value={this.state.discount}
+
+                  type="percent"
+                  name="discount"
+                  id="discount"
+                  placeholder="0 %"
+                  onChange={this.handleInputChange}
+                />
+                <span>%</span>
+              </Col>
+            </FormGroup>
+
             {/* Tax with generate tax button */}
-            {/* <div>
+              {/* <div>
                 Tax: {this.state.taxRate * 100}%{" "}
                 <Button onClick={() => this.calculateTax()}>
                   {" "}
@@ -863,17 +920,39 @@ class InvoiceForm extends Component {
                 </Button>
               </div> */}
             {/* Testing Tax */}
-            <div>Tax: {(this.state.taxRate * 100).toFixed(2)}% </div>
-            <div>Total: {this.state.total} </div>({/*</FormGroup> */}
-            {this.edit ? (
-              <Button type="generate" onClick={this.handleUpdate}>
-                Update Invoice
-              </Button>
-            ) : (
-              <Button type="generate" onClick={this.handleSubmit}>
-                Save Invoice
-              </Button>
-            )}
+
+            <div>Tax: {parseFloat((this.state.taxRate * 100).toFixed(2))}% </div>
+
+            {/* Shipping */}   
+
+            <FormGroup row>
+              <Label for="shipping" sm={2}>
+                Shipping
+              </Label>
+              <Col sm="2">
+                {/* <Col sm={10}> */}
+                <Input
+                  value={this.state.shipping}
+                  type="number"
+                  name="shipping"
+                  id="shipping"
+                  placeholder="$ 0.00"
+                  onChange={this.handleInputChange}
+                />
+              </Col>
+            </FormGroup>
+
+            <div>Total: {accounting.formatMoney(this.state.total)} </div>
+            {/*</FormGroup> */}
+            {this.edit ?
+            <Button type="generate" onClick={this.handleUpdate}>
+              Update Invoice
+            </Button>
+            :
+            <Button type="generate" onClick={this.handleSubmit}>
+              Save Invoice
+            </Button>
+            }
             <Button
               className="download-pdf-button"
               type="generate"
