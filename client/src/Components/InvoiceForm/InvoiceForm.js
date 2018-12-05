@@ -418,18 +418,28 @@ class InvoiceForm extends Component {
         })
         .then(res => {
           console.log(res);
-          let city = res.data.results[0].address_components[1].short_name;
-          // let state = res.data.results[0].address_components[2].short_name;
-          let state = () => {
-            return res.data.results[0].formatted_address
-              .split(",")[1]
-              .split(" ")[1];
-          };
-          console.log(`STATE: ${state()}`);
+          // let city = res.data.results[0].formatted_address.split(",")[0];
+          // let state = res.data.results[0].formatted_address.split(",")[1].split(" ")[1];
+          let city = "";
+          let state = "";
+          if (res.data.status !== "OK") {
+            return;
+          } else {
+            res.data.results[0].address_components.map(item => {
+                if (item.types[0] === "locality") {
+                  city = item.long_name;
+              } else if (item.types[0] === "administrative_area_level_1") {
+                  state = item.short_name;
+              } else {
+                  return;
+              }
+            })
+          }
+          console.log(`STATE: ${state}`);
           console.log(`CITY: ${city}`);
           this.setState({
             city: city,
-            state: state()
+            state: state
           });
         })
         .catch(err => {
