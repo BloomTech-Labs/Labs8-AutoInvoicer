@@ -3,6 +3,7 @@ import { Route } from "react-router-dom";
 import axios from "axios";
 import qs from "qs";
 import jsPDF from "jspdf";
+import accounting from "accounting";
 
 import {
   Row,
@@ -35,21 +36,21 @@ class InvoiceForm extends Component {
     invoice_number: this.props.invoice_num,
     date: "",
     due_date: "",
-    balance_due: "",
+    balance_due: 0,
     company_name: "",
     invoiceTo: "",
     address: "",
     zipcode: "",
     city: "",
     state: "",
-    amount: "",
-    subtotal: "",
-    discount: "",
-    tax: "",
-    taxRate: "",
-    shipping: "",
+    amount: 0,
+    subtotal: 0,
+    discount: 0,
+    tax: 0,
+    taxRate: 0,
+    shipping: 0,
     total: "",
-    amount_paid: "",
+    amount_paid: 0,
     notes: "",
     terms: "",
     lineItems: [
@@ -77,6 +78,9 @@ class InvoiceForm extends Component {
 
   handleInputChange = event => {
     this.setState({ [event.target.name]: event.target.value });
+    if (event.target.name === "shipping" || event.target.name === "discount" || event.target.name === "discount" ) {
+      this.calculateTotal();
+    }
   };
 
   handleImageChange = event => {
@@ -223,15 +227,16 @@ class InvoiceForm extends Component {
       postalCode: this.state.zipcode,
       country: "US" //Only works in US for free version
     });
-  
-    axios({
-      method: "get",
-      url: `https://rest.avatax.com/api/v2/taxrates/byaddress?${query}`,
-      headers: {
-        Accept: "application/json",
-        Authorization: process.env.REACT_APP_TAX_AUTH
-      }
-    })
+
+    if(this.state.zipcode.length === 5) {
+      axios({
+        method: "get",
+        url: `https://rest.avatax.com/api/v2/taxrates/byaddress?${query}`,
+        headers: {
+          Accept: "application/json",
+          Authorization: process.env.REACT_APP_TAX_AUTH
+        }
+      })
       .then(res => {
         this.setState({
           tax: this.state.subtotal * res.data.totalRate,
@@ -244,21 +249,93 @@ class InvoiceForm extends Component {
       .catch(error => {
         console.log(error);
       });
+    }
   }
 
   // Handle Tax
   handleTaxChange = event => {
     this.setState(
+      { [event.target.name]: event.target.value }, () => {
+        this.calculateTax();
+      });
+  };
+
+  calculateSubtotal() {
+    let tempSubtotal = 0;
+
+    for (let i = 0; i < this.state.lineItems.length; i++) {
+      if(this.state.lineItems[i].quantity >= 0 && this.state.lineItems[i].rate >= 0)
+      tempSubtotal += this.state.lineItems[i].quantity * this.state.lineItems[i].rate
+    }
+    
+    this.setState({ subtotal : tempSubtotal });
+  }
+
+  calculateTotal() {
+    //Calculates the tax rate of the invoice total by using an external tax API.
+    //Calculated using the address
+
+    //Turn our data into a querystring
+    console.log(this.state);
+    const query = qs.stringify({
+      line1: this.state.address, //Line 1,2,3 are used for addresses. 2 and 3 are optional
+      line2: "",
+      line3: "",
+      // city: this.state.city,
+      // region: this.state.state,
+      postalCode: this.state.zipcode,
+      country: "US" //Only works in US for free version
+    });
+  
+    if(this.state.zipcode.length === 5) {
+      axios({
+        method: "get",
+        url: `https://rest.avatax.com/api/v2/taxrates/byaddress?${query}`,
+        headers: {
+          Accept: "application/json",
+          Authorization: process.env.REACT_APP_TAX_AUTH
+        }
+      })
+        .then(res => {
+          this.setState({
+            tax: this.state.subtotal * res.data.totalRate,
+            taxRate: res.data.totalRate
+          }); //Our tax is the subtotal * tax rate returned by API
+          //FOR SHOWCASE PURPOSES
+          if(this.state.discount === "") {
+            this.setState({ discount : 0 });
+          }
+          else if(this.state.shipping == "") {
+            this.setState({ shipping: 0 });
+          }
+          let nuTotal = parseFloat(this.state.subtotal) * (1 - this.state.discount/100) + parseFloat(this.state.tax) + parseFloat(this.state.shipping);
+          this.setState({ total: nuTotal });
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
+
+  handleSubtotalChange = event => {
+    this.setState(
       { [event.target.name]: event.target.value },
-      this.calculateTax
+      this.calculateSubtotal()
+    );
+  };
+
+  handleTotalChange = event => {
+    this.setState(
+      { [event.target.name]: event.target.value },
+      this.calculateTotal()
     );
   };
 
   // Handle Zip Change
   handleZipChange = event => {
     this.setState({ [event.target.name]: event.target.value }, () => {
-      this.calculateTax();
       this.getCityState();
+      this.calculateTotal();
     });
   };
 
@@ -310,7 +387,7 @@ class InvoiceForm extends Component {
   handleLineItemChange = (event, index, item) => {
     let lineItems = [...this.state.lineItems];
     lineItems[index][item] = event.target.value;
-    this.setState({ lineItems });
+    this.setState({ lineItems }, this.calculateSubtotal(), this.calculateTotal());
   };
 
   render() {
@@ -634,56 +711,6 @@ class InvoiceForm extends Component {
               />
             </FormGroup>
 
-            {/* Discount */}
-            <FormGroup row>
-              <Label for="discount" sm={2}>
-                Discount
-              </Label>
-              <Col sm="2">
-                <Input
-                  value={this.state.subtotal * (1 - this.state.discount / 100)}
-                  type="percent"
-                  name="discount"
-                  id="discount"
-                  placeholder="0 %"
-                />
-              </Col>
-            </FormGroup>
-            
-            {/* Shipping */}   
-            <FormGroup row>
-              <Label for="shipping" sm={2}>
-                Shipping 
-              </Label>
-              <Col sm="2">
-              {/* <Col sm={10}> */}
-                <Input
-                  value={this.state.shipping}
-                  type="number"
-                  name="discount"
-                  id="discount"
-                  placeholder="$ 0.00"
-                />
-              </Col>
-            </FormGroup>
-
-            {/* Subtotal */}
-            <FormGroup row>
-              <Label for="subtotal" sm={2}>
-                Subtotal 
-              </Label>
-              <Col sm="2">
-                <Input
-                  value={this.state.subtotal}
-                  type="number"
-                  name="subtotal"
-                  id="subtotal"
-                  placeholder="$ 0.00"
-                  onChange={this.handleInputChange}
-                />
-              </Col>
-            </FormGroup>
-            
             {/* <FormGroup>
               <Label for="terms">Subtotal </Label>
               <Input
@@ -694,8 +721,46 @@ class InvoiceForm extends Component {
                 placeholder="Subtotal"
                 onChange={this.handleInputChange}
               /> */}
+            {/* Subtotal */}
 
-              {/* Tax with generate tax button */}
+            <FormGroup row>
+              <Label for="subtotal" sm={2}>
+                Subtotal 
+              </Label>
+              <Col sm="2">
+                {/* <Input
+                  value={this.state.subtotal}
+                  type="number"
+                  name="subtotal"
+                  id="subtotal"
+                  placeholder="$ 0.00"
+                  onChange={this.handleSubtotalChange}
+                /> */}
+                <div>
+                  {accounting.formatMoney(this.state.subtotal)}
+                </div>
+              </Col>
+            </FormGroup>
+
+            {/* Discount */}
+            <FormGroup row>
+              <Label for="discount" sm={2}>
+                Discount
+              </Label>
+              <Col sm="2">
+                <Input
+                  value={this.state.discount}
+                  type="number"
+                  name="discount"
+                  id="discount"
+                  placeholder="0"
+                  onChange={this.handleInputChange}
+                />
+                <span>%</span>
+              </Col>
+            </FormGroup>
+
+            {/* Tax with generate tax button */}
               {/* <div>
                 Tax: {this.state.taxRate * 100}%{" "}
                 <Button onClick={() => this.calculateTax()}>
@@ -703,11 +768,30 @@ class InvoiceForm extends Component {
                   Calculate Tax
                 </Button>
               </div> */}
+            {/* Testing Tax */}
 
-              {/* Testing Tax */}
-              <div>Tax: {(this.state.taxRate * 100).toFixed(2)}% </div>
-              <div>Total: {this.state.total} </div>
-            ({/*</FormGroup> */}
+            <div>Tax: {parseFloat((this.state.taxRate * 100).toFixed(2))}% </div>
+
+            {/* Shipping */}   
+            <FormGroup row>
+              <Label for="shipping" sm={2}>
+                Shipping 
+              </Label>
+              <Col sm="2">
+              {/* <Col sm={10}> */}
+                <Input
+                  value={this.state.shipping}
+                  type="number"
+                  name="shipping"
+                  id="shipping"
+                  placeholder="$ 0.00"
+                  onChange={this.handleInputChange}
+                />
+              </Col>
+            </FormGroup>
+
+            <div>Total: {accounting.formatMoney(this.state.total)} </div>
+            {/*</FormGroup> */}
             {this.edit ?
             <Button type="generate" onClick={this.handleUpdate}>
               Update Invoice
