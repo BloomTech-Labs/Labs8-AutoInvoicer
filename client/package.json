@@ -12,6 +12,7 @@
     "enzyme-to-json": "^3.3.4",
     "fs": "^0.0.1-security",
     "jspdf": "^1.4.1",
+    "jspdf-autotable": "^2.3.5",
     "qs": "^6.6.0",
     "react": "^16.6.1",
     "react-bootstrap": "^0.32.4",

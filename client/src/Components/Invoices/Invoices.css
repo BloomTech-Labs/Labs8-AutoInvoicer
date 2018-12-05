@@ -45,6 +45,7 @@
   align-items: center;
   width: 266px;
   max-height: 295px;
+  background: #fff;
 }
 
 .create-new-invoice p {
