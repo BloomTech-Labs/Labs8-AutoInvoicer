@@ -21,14 +21,38 @@
   flex-direction: column;
   width: 266px;
   max-height: 295px;
+  background: #fff;
+}
+
+.invoice h4 {
+  font-family: "Teko", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.invoice p {
+  font-family: "Teko", sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+}
+
+.status-circle-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.status-circle {
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
 }
 
 .paid {
-  background: #a0ffa0;
+  background: #6AEF9C;
 }
 
 .unpaid {
-  background: #fff3a0;
+  background: #efdd43;
 }
 
 .late {
