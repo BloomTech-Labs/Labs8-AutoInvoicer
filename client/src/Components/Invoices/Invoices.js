@@ -1,18 +1,18 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import './Invoices.css'
+import "./Invoices.css";
 
 export default class Invoices extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      invoices: null,
+      invoices: null
     };
   }
 
-  async componentDidMount(){
+  async componentDidMount() {
     const invoices = (await axios.get(process.env.REACT_APP_NEW_INVOICE)).data;
     this.setState({
       invoices
@@ -23,7 +23,7 @@ export default class Invoices extends Component {
     return (
       <div className="container">
         <div className="invoices">
-         {this.state.invoices === null && <p>Loading invoices...</p>}
+        {this.state.invoices === null && <p>Loading invoices...</p>}
         {this.state.invoices && this.state.invoices.map(invoice => (
             <div key={invoice._id} className="invoice">
               <div className="status-circle-container">
@@ -43,11 +43,11 @@ export default class Invoices extends Component {
         <div className="create-new-invoice">
             <p> New Invoices </p>
             <Link to="/create_invoice" exact>
-              <button> + </button> 
-              </Link>
+              <button> + </button>
+            </Link>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
