@@ -5109,6 +5109,7 @@ jsonify@~0.0.0:
 jspdf-autotable@^2.3.5:
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/jspdf-autotable/-/jspdf-autotable-2.3.5.tgz#6af23c191c00af86555bc0f91a21c7f6148288dc"
+  integrity sha512-QQzqTKBAC20VfuMjrOyqHArFAxKJx1oikWL8qeH+c6aF32F1H2jI8LNPVUWFcYGB0/XBlBKTT2NSQZBS9TNu2A==
 
 jspdf@^1.4.1:
   version "1.4.1"
