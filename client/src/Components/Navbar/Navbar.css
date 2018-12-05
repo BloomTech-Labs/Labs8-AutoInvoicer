@@ -22,26 +22,26 @@
 
 /* unvisited link */
 .side-nav a:link {
-  color: darken(#6DC7E9, 30%);
+  color: #005abb;
   text-decoration: none;
 }
 
 /* visited link */
 .side-nav a:visited {
-  color: darken(#6DC7E9, 30%);
+  color: #005abb;
   text-decoration: none;
 }
 
 /* mouse over link */
 .side-nav a:hover {
-  color: lighten(#6DC7E9, 30%);
-  text-decoration: none;
+  color: #fff;
+  text-decoration: underline;
 }
 
 /* selected link */
 .side-nav a:active {
-  color: white;
-  text-decoration: none;
+  color: #fff;
+  text-decoration: underline;
 }
 
 .invoices1 {
