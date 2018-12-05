@@ -1,0 +1,70 @@
+.landing-page-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: -webkit-fill-available;
+}
+
+.login-bar-container{
+    display: flex;
+    width: 20%;
+    justify-content: center;
+    align-self: flex-end;
+    border: solid 2px black;
+    padding: 0.5%;
+    margin-right: 5%;
+}
+
+
+.login-bar-container a{
+    margin: 0 5%;
+}
+
+.centerpiece-container{
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    margin: 15% 0 0 0;
+
+}
+
+.buy-button{
+    width: 35%;
+    align-self: center;
+    background: white;
+    border: solid 1px black;
+    padding: 1% 1%;
+    margin-top: 25px;
+}
+
+/*MOBILE STYLING*/
+@media (max-width:400px){
+    .login-bar-container{
+        width: 45%;
+        height: 40px;
+        align-items: center;
+    }
+
+    .centerpiece-container{
+        width: 45%;
+    }
+
+    .buy-button{
+        width: 65%;
+        padding: 5%;
+    }
+
+}
+
+/*TABLET STYLING*/
+@media (min-width: 401px) and (max-width: 768px){
+    .login-bar-container{
+        width: 25%;
+    }
+
+    .buy-button{
+        width: 65%;
+        padding: 5% 10% 5% 10%;
+    }    
+
+}

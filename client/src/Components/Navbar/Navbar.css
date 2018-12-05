@@ -16,28 +16,32 @@
   flex-direction: column;
   font-weight: bold;
   text-align: left;
-  background-color: #CCFFCC;
+  background-color: #6DC7E9;
   overflow: hidden;
 }
 
 /* unvisited link */
 .side-nav a:link {
-  color: green;
+  color: darken(#6DC7E9, 30%);
+  text-decoration: none;
 }
 
 /* visited link */
 .side-nav a:visited {
-  color: green;
+  color: darken(#6DC7E9, 30%);
+  text-decoration: none;
 }
 
 /* mouse over link */
 .side-nav a:hover {
-  color: hotpink;
+  color: lighten(#6DC7E9, 30%);
+  text-decoration: none;
 }
 
 /* selected link */
 .side-nav a:active {
-  color: blue;
+  color: white;
+  text-decoration: none;
 }
 
 .invoices1 {
@@ -84,7 +88,6 @@
       flex-direction: column;
       font-weight: 700;
       text-align: left;
-      background-color: #cfc;
       overflow: hidden;
       width: 100%;
       align-items: center;

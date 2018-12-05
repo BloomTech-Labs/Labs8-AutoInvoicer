@@ -32,6 +32,14 @@
   text-align: center;
 }
 
+.signout-container a {
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #fff;
+  position: relative;
+  top: -5px;
+}
+
 .signout {
   display: flex;
   flex-flow: row wrap;

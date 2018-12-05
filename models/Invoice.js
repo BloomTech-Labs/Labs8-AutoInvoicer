@@ -51,18 +51,23 @@ const InvoiceSchema = new Schema({
     type: String,
     required: false // TODO - set back to true
   },
-  item: {
-    type: String,
-    required: false // TODO - set back to true
-  },
-  quantity: {
-    type: Number,
-    required: false // TODO - set back to true
-  },
-  rate: {
-    type: Number,
-    required: false // TODO - set back to true
-  },
+  // item: {
+  //   type: String,
+  //   required: false // TODO - set back to true
+  // },
+  // quantity: {
+  //   type: Number,
+  //   required: false // TODO - set back to true
+  // },
+  // rate: {
+  //   type: Number,
+  //   required: false // TODO - set back to true
+  // },
+  line_items: [{
+    item: String,
+    quantity: Number,
+    rate: Number
+  }],
   amount: {
     type: Number,
     required: false // TODO - set back to true
