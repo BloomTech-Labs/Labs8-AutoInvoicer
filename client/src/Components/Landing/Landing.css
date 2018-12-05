@@ -16,7 +16,8 @@
 } */
 
 body {
-  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif; */
+  font-family: "Teko", sans-serif;
 }
 
 h1,
@@ -25,8 +26,10 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Teko", sans-serif;
+  /* font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif; */
   font-weight: 700;
+  font-size: 5rem;
 }
 
 header.masthead {
@@ -48,7 +51,7 @@ header.masthead .overlay {
 }
 
 header.masthead h1 {
-  font-size: 2rem;
+  font-size: 4rem !important;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -60,8 +63,8 @@ header.masthead a {
 }
 
 header.masthead a:hover {
-  background-color: #befa6f;
-  border-color: #befa6f;
+  background-color: #94d2e9;
+  border-color: #94d2e9;
 }
 
 /* nav {
@@ -71,8 +74,9 @@ header.masthead a:hover {
 
 .nav-link {
   background-color: #6dc7e9;
-  margin-left: 1rem;
+  margin-right: 1rem;
   border: 1px solid #6dc7e9;
+  padding: 1rem 0 1rem 0;
 }
 
 .nav-link a {
@@ -80,7 +84,7 @@ header.masthead a:hover {
 }
 
 .nav-link:hover {
-  background-color: #befa6f;
+  background-color: #94d2e9;
 }
 
 .navbar-light .navbar-nav .nav-link {

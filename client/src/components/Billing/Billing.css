@@ -8,16 +8,17 @@
 }
 
 .options label {
-  font-size: 20px;
+  font-size: 18px;
   display: flex;
-  align-items: center;
+  align-items: end;
   margin-top: 10px;
+  padding: 10px;
 }
 
 .options label input {
-  width: 35px;
-  height: 35px;
-  margin-right: 10px;   
+  width: 22px;
+  height: 22px;
+  margin-right: 5px;   
 }
 
 .checkout-wrapper h2 {
@@ -40,19 +41,22 @@
   }
 
   .options label {
-    font-size: 20px;
+    font-size: 18px;
     display: flex;
     align-items: center;
     margin-top: 10px;
+    padding: 10px;
   }
   
   .options label input {
-    width: 35px;
-    height: 35px;
-    margin-right: 10px; 
+    width: 22px;
+    height: 22px;
+    margin-right: 5px; 
   }
 
   .checkout-button {
     margin-top: 15px;
   }
 }
+
+/* made changes after UX meeting */
