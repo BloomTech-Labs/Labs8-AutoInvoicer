@@ -29,7 +29,9 @@ class InvoiceForm extends Component {
     this.mongo_id = this.props.mongo_id;
     this.logo = null;
     this.logoRaw = null;
+    this.invalidForm = false;
     this.edit = false;
+    this.errMessage = '';
     this.y_position = 8;
   }
   state = {
@@ -60,7 +62,6 @@ class InvoiceForm extends Component {
         rate: 0
       }
     ],
-    edit: false
   };
 
   async componentDidMount() {
@@ -93,11 +94,51 @@ class InvoiceForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
+
+    const data = this.state;
+
+    if(!this.logo){
+      this.invalidForm = true;
+      this.errMessage = "Please submit a valid logo file."
+      this.setState({});
+      this.invalidForm = false;
+      return;
+    }
+
+    const formErrorValues = {
+      date : "Date",
+      due_date: "Due Date",
+      balance_due: "Balance Due",
+      company_name: "Invoice From",
+      invoiceTo: "Invoice To",
+      address: "Address",
+      zipcode: "Zip",
+      city: "City",
+      state: "State",
+    }
+
+    for(const item in formErrorValues) {
+      if(data[item] === '' || data[item] === 'null'){
+          this.invalidForm = true;
+          this.errMessage = `Please fill in the ${formErrorValues[item]} field.`
+          this.setState({});
+          this.invalidForm = false;
+          return;
+      }
+    }
+
+    if(isNaN(data.total)){
+      this.invalidForm = true;
+      this.errMessage = "Please add at least one item."
+      this.setState({});
+      this.invalidForm = false;
+      return;
+    }
+    
     const newInvoice = new FormData();
     newInvoice.append("auth0_userID", this.auth0_userID);
     newInvoice.append("logo", this.logo, this.logo.name);
-
-    const data = this.state;
+   
 
     for (const prop in data) {
       if (prop === 'lineItems') {
@@ -105,7 +146,7 @@ class InvoiceForm extends Component {
       } else {
         newInvoice.append(`${prop}`, `${data[prop]}`);
       }
-      
+
     }
 
     axios
@@ -118,10 +159,14 @@ class InvoiceForm extends Component {
           })
           .then(res => console.log("invoice added, number incremented"))
           .catch(err => console.log(err));
+          this.setState({});
       })
       .catch(err => {
         console.log("ERROR", err);
       });
+      
+
+
     // COMMENTED OUT this is meant to reset the form to blank, but since we're creating two separate buttons for Saving the Invoice and Downloading the PDF, the form data needs to persist
     // TODO this means that we should finish full CRUD for the invoices (we still have yet to make routes for UPDATE and DELETE)
     // this.setState({
@@ -152,13 +197,52 @@ class InvoiceForm extends Component {
 
   handleUpdate = event => {
     event.preventDefault();
+
+    const data = this.state;
+
+    if(!this.logo){
+      this.invalidForm = true;
+      this.errMessage = "Please submit a valid logo file."
+      this.setState({});
+      this.invalidForm = false;
+      return;
+    }
+
+    const formErrorValues = {
+      date : "Date",
+      due_date: "Due Date",
+      balance_due: "Balance Due",
+      company_name: "Invoice From",
+      invoiceTo: "Invoice To",
+      address: "Address",
+      zipcode: "Zip",
+      city: "City",
+      state: "State",
+    }
+
+    for(const item in formErrorValues) {
+      if(data[item] === '' || data[item] === 'null'){
+          this.invalidForm = true;
+          this.errMessage = `Please fill in the ${formErrorValues[item]} field.`
+          this.setState({});
+          this.invalidForm = false;
+          return;
+      }
+    }
+
+    if(isNaN(data.total)){
+      this.invalidForm = true;
+      this.errMessage = "Please add at least one item."
+      this.setState({});
+      this.invalidForm = false;
+      return;
+    }
+
     const newInvoice = new FormData();
     newInvoice.append("auth0_userID", this.auth0_userID);
-    if(this.logo)
-      newInvoice.append("logo", this.logo, this.logo.name);
+    newInvoice.append("logo", this.logo, this.logo.name);
 
     const params = this.props.params;
-    const data = this.state;
 
     for (const prop in data) {
       newInvoice.append(`${prop}`, `${data[prop]}`);
@@ -712,7 +796,7 @@ class InvoiceForm extends Component {
               {/* Testing Tax */}
               <div>Tax: {(this.state.taxRate * 100).toFixed(2)}% </div>
               <div>Total: {this.state.total} </div>
-            ({/*</FormGroup> */}
+            {/*</FormGroup> */}
             {this.edit ?
             <Button type="generate" onClick={this.handleUpdate}>
               Update Invoice
@@ -729,6 +813,7 @@ class InvoiceForm extends Component {
             >
               Download PDF
             </Button>
+            <div className='form-error'>{this.errMessage}</div>
           </form>
         </div>
       </div>
