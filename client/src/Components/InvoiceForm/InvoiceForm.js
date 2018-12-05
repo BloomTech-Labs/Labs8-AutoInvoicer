@@ -3,6 +3,7 @@ import { Route, Redirect } from "react-router-dom";
 import axios from "axios";
 import qs from "qs";
 import jsPDF from "jspdf";
+import 'jspdf-autotable';
 
 import {
   Row,
@@ -33,7 +34,6 @@ class InvoiceForm extends Component {
     this.invalidForm = false;
     this.edit = false;
     this.errMessage = '';
-    this.y_position = 8;
   }
   state = {
     invoice_number: this.props.invoice_num,
@@ -276,68 +276,77 @@ class InvoiceForm extends Component {
   createPDF = event => {
     event.preventDefault();
     console.log(this.logoRaw);
-    const pdf = new jsPDF({
-      unit: "in",
-      format: [8.5, 11]
-    });
-    pdf.addImage(this.logoRaw, "JPEG", 6.5, 0.5, 1.5, 1.5, "MEDIUM", 0);
-    pdf.text(`Invoice Number: ${this.state.invoice_number}`, 0.5, 0.8);
-    pdf.text(`Date: ${this.state.date}`, 0.5, 1.1);
-    pdf.text(`Due Date: ${this.state.due_date}`, 0.5, 1.4);
-    pdf.text(`Balance Due: ${this.state.balance_due}`, 0.5, 1.7);
-    pdf.text(`Company Name: ${this.state.company_name}`, 0.5, 2.1);
-    pdf.text(`Invoice To: ${this.state.invoiceTo}`, 0.5, 2.4);
-    pdf.text(`Address: ${this.state.address}`, 0.5, 2.7);
-    pdf.text(`Zip: ${this.state.zipcode}`, 0.5, 3.1);
-    pdf.text(`City: ${this.state.city}`, 0.5, 3.4);
-    pdf.text(`State: ${this.state.state}`, 0.5, 3.7);
-    this.state.lineItems.map(row => {
-      pdf.text(`Item: ${row.item}`, 0.5, `${this.y_position / 2 + 0.1}`);
-      pdf.text(`Quantity: ${row.quantity}`, 2, `${this.y_position / 2 + 0.1}`);
-      pdf.text(`Rate: ${row.rate}`, 3.5, `${this.y_position / 2 + 0.1}`);
-      pdf.text(
-        `Amount: $${row.quantity * row.rate}`,
-        4.5,
-        `${this.y_position / 2 + 0.1}`
-      );
-      ++this.y_position;
-    });
-    pdf.text(
-      `Subtotal: $${this.state.subtotal}`,
-      0.5,
-      `${this.y_position / 2 + 0.4}`
-    );
-    pdf.text(
-      `Discount: ${this.state.discount}`,
-      0.5,
-      `${this.y_position / 2 + 0.7}`
-    );
-    pdf.text(`Tax: $${this.state.tax}`, 0.5, `${this.y_position / 2 + 1.1}`);
-    pdf.text(
-      `Tax Rate: ${this.state.taxRate * 100}%`,
-      0.5,
-      `${this.y_position / 2 + 1.4}`
-    );
-    pdf.text(
-      `Shipping: ${this.state.shipping}`,
-      0.5,
-      `${this.y_position / 2 + 1.7}`
-    );
-    pdf.text(
-      `Total: $${this.state.total}`,
-      0.5,
-      `${this.y_position / 2 + 2.1}`
-    );
-    pdf.text(
-      `Amount Paid: $${this.state.amount_paid}`,
-      0.5,
-      `${this.y_position / 2 + 2.4}`
-    );
-    pdf.text(`Notes: ${this.state.notes}`, 0.5, `${this.y_position / 2 + 2.7}`);
-    pdf.text(`Terms: ${this.state.terms}`, 0.5, `${this.y_position / 2 + 3.1}`);
+    const pdf = new jsPDF('p', 'pt');
+    pdf.setFontSize(12);
+    const columns = [
+      {title: "#", dataKey: "#"},
+      {title: "Item", dataKey: "item"},
+      {title: "Quantity", dataKey: "quantity"},
+      {title: "Rate", dataKey: "rate"},
+      {title: "Amount", dataKey: "amount"},
+    ];
+    const rows = [];
+    this.state.lineItems.map((row, index) => {
+      rows.push(
+        {"#": index + 1, "item": row.item, "quantity": row.quantity, "rate": `$${row.rate}`, "amount": `$${row.quantity * row.rate}`}
+      )
+    })
+    pdf.addImage(this.logoRaw, "JPEG", 30, 15, 75, 75, "MEDIUM", 0);
+    pdf.text(this.state.company_name, 30, 105);
+    pdf.text("Date:", 450, 50);
+    pdf.text(this.state.date, 500, 50);
+    pdf.text("Invoice Number:", 391, 65);
+    pdf.text(`${this.state.invoice_number}`, 500, 65);
+    pdf.text("Due Date:", 425, 80);
+    pdf.text(this.state.due_date, 500, 80)
+    pdf.text("Bill to:", 30, 155);
+    pdf.text(this.state.invoiceTo, 30, 170);
+    pdf.text(this.state.address, 30, 185);
+    pdf.text(`${this.state.city}, ${this.state.state} ${this.state.zipcode}`, 30, 200);
+    pdf.autoTable(columns, rows, {margin: {top: 300}});
+    pdf.text("Discount:", 414, 670);
+    pdf.text(this.state.discount, 500, 670);
+    pdf.text("Shipping:", 414, 685);
+    pdf.text(`$${this.state.shipping}`, 500, 685);
+    pdf.text("Subtotal:", 417, 700);
+    pdf.text(`$${this.state.subtotal}`, 500, 700);
+    pdf.text("Tax:", 440, 715);
+    pdf.text(`$${this.state.subtotal * this.state.taxRate}`, 500, 715);
+    pdf.text("Balance Due:", 391, 730);
+    pdf.text(`$${this.state.balance_due}`, 500, 730);
+    pdf.text("Notes -", 30, 745);
+    pdf.text(this.state.notes, 75, 745);
+    pdf.text("Terms -", 30, 760);
+    pdf.text(this.state.terms, 75, 760);
+    // pdf.text(`Invoice Number: ${this.state.invoice_number}`, 13, 0.8);
+    // pdf.text(`Date: ${this.state.date}`, 13, 1.1);
+    // pdf.text(`Due Date: ${this.state.due_date}`, 13, 1.4);
+    // pdf.text(`Balance Due: ${this.state.balance_due}`, 13, 1.7);
+    // pdf.text(`Company Name: ${this.state.company_name}`, 13, 2.1);
+    // pdf.text(`Invoice To: ${this.state.invoiceTo}`, 13, 2.4);
+    // pdf.text(`Address: ${this.state.address}`, 13, 2.7);
+    // pdf.text(`Zip: ${this.state.zipcode}`, 13, 3.1);
+    // pdf.text(`City: ${this.state.city}`, 13, 3.4);
+    // pdf.text(`State: ${this.state.state}`, 13, 3.7);
+    // pdf.autoTable(columns, rows);
+    // // this.state.lineItems.map(row => {
+    // //   pdf.text(`Item: ${row.item}`, 13, `${(this.y_position / 2) + 2.54}`);
+    // //   pdf.text(`Quantity: ${row.quantity}`, 2, `${(this.y_position / 2) + 2.54}`);
+    // //   pdf.text(`Rate: ${row.rate}`, 3.5, `${(this.y_position / 2) + 2.54}`);
+    // //   pdf.text(`Amount: $${row.quantity * row.rate}`, 4.5, `${(this.y_position / 2) + 2.54}`);
+    // //   ++this.y_position
+    // // })
+    // pdf.text(`Subtotal: $${this.state.subtotal}`, 13, `${(this.y_position / 2) + 0.4}`);
+    // pdf.text(`Discount: ${this.state.discount}`, 13, `${(this.y_position / 2) + 0.7}`);
+    // pdf.text(`Tax: $${this.state.tax}`, 13, `${(this.y_position / 2) + 1.1}`);
+    // pdf.text(`Tax Rate: ${this.state.taxRate * 100}%`, 13, `${(this.y_position / 2) + 1.4}`);
+    // pdf.text(`Shipping: ${this.state.shipping}`, 13, `${(this.y_position / 2) + 1.7}`);
+    // pdf.text(`Total: $${this.state.total}`, 13, `${(this.y_position / 2) + 2.1}`);
+    // pdf.text(`Amount Paid: $${this.state.amount_paid}`, 13, `${(this.y_position / 2) + 2.4}`);
+    // pdf.text(`Notes: ${this.state.notes}`, 13, `${(this.y_position / 2) + 2.7}`);
+    // pdf.text(`Terms: ${this.state.terms}`, 13, `${(this.y_position / 2) + 3.1}`);
 
-    pdf.save(`${this.state.invoiceTo}`);
-    this.y_position = 4;
+    pdf.save(`Invoice${this.state.invoice_number}`);
   };
 
   calculateTax() {
