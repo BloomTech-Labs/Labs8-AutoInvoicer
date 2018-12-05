@@ -466,7 +466,7 @@ class InvoiceForm extends Component {
         {/* <TopNav /> */}
         {/* <Navbar /> */}
         <div className="form-container1">
-          <form>
+          <Form>
             {/* Add Logo */}
             <FormGroup>
               {/* <Label for="addLogo">Add Your Logo</Label> */}
@@ -483,9 +483,9 @@ class InvoiceForm extends Component {
             </FormGroup>
             {/* Invoice Header Rigth Side */}
             <FormGroup row classname="right-indent">
-              {/* <Label for="invoice_number" sm={2}>
+              <Label for="invoice_number" sm={2}>
                 Invoice Number
-              </Label> */}
+              </Label>
               <Col sm={4}>
                 <Input
                   value={this.state.invoice_number}
@@ -496,9 +496,9 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </Col>
-              {/* <Label for="date" sm={2}>
+              <Label for="date" sm={2}>
                 Date
-              </Label> */}
+              </Label>
               <Col sm={4}>
                 <Input
                   value={this.state.date}
@@ -509,9 +509,9 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </Col>
-              {/* <Label for="due_date" sm={2}>
+              <Label for="due_date" sm={2}>
                 Due Date
-              </Label> */}
+              </Label>
               <Col sm={4}>
                 <Input
                   value={this.state.due_date}
@@ -522,9 +522,9 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </Col>
-              {/* <Label for="balance_due" sm={2}>
+              <Label for="balance_due" sm={2}>
                 Balance Due
-              </Label> */}
+              </Label>
               <Col sm={4}>
                 <Input
                   value={this.state.balance_due}
@@ -538,7 +538,7 @@ class InvoiceForm extends Component {
             </FormGroup>
             {/* Invoice Customer Company Details */}
             <FormGroup>
-              {/* <Label for="company_name">Invoice From</Label> */}
+              <Label for="company_name" hidden>Invoice From</Label>
               <Input
                 value={this.state.company_name}
                 type="text"
@@ -549,7 +549,7 @@ class InvoiceForm extends Component {
               />
             </FormGroup>
             <FormGroup>
-              {/* <Label for="invoiceTo">Invoice To</Label> */}
+              <Label for="invoiceTo" hidden>Invoice To</Label>
               <Input
                 value={this.state.invoiceTo}
                 type="text"
@@ -561,7 +561,7 @@ class InvoiceForm extends Component {
             </FormGroup>
             {/* Address, State, Zip */}
             <FormGroup>
-              {/* <Label for="address">Address</Label> */}
+              <Label for="address" hidden>Address</Label>
               <Input
                 value={this.state.address}
                 type="text"
@@ -574,7 +574,7 @@ class InvoiceForm extends Component {
             <Row form>
               <Col md={2}>
                 <FormGroup>
-                  {/* <Label for="zipcode">Zip</Label> */}
+                  <Label for="zipcode" hidden>Zip</Label>
                   <Input
                     value={this.state.zipcode}
                     type="text"
@@ -587,7 +587,7 @@ class InvoiceForm extends Component {
               </Col>
               <Col md={6}>
                 <FormGroup>
-                  {/* <Label for="city">City</Label> */}
+                  <Label for="city" hidden>City</Label>
                   <Input
                     value={this.state.city}
                     type="text"
@@ -600,7 +600,7 @@ class InvoiceForm extends Component {
               </Col>
               <Col md={4}>
                 <FormGroup>
-                  {/* <Label for="state">State</Label> */}
+                  <Label for="state" hidden>State</Label>
                   <Input
                     value={this.state.state}
                     type="text"
@@ -855,7 +855,7 @@ class InvoiceForm extends Component {
               Download PDF
             </Button>
             <div className='form-error'>{this.errMessage}</div>
-          </form>
+          </Form>
         </div>
       </div>
     );
