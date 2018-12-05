@@ -34,6 +34,7 @@ class InvoiceForm extends Component {
     this.invalidForm = false;
     this.edit = false;
     this.errMessage = '';
+    this.logoRef = React.createRef();
   }
   state = {
     invoice_number: this.props.invoice_num,
@@ -95,12 +96,15 @@ class InvoiceForm extends Component {
   handleImageChange = event => {
     event.preventDefault();
     const reader = new FileReader();
-    const logo = event.target.files[0];
-    reader.onloadend = () => {
-      this.logo = logo;
-      this.logoRaw = reader.result;
-    };
-    reader.readAsDataURL(logo);
+    this.logo = event.target.files[0];
+    this.logoRef.current.src = window.URL.createObjectURL(this.logo);
+  //   reader.onloadend = () => {
+  //     this.logo = new Image();
+  //     this.logo.src = reader.result;
+  //     this.logoRaw = reader.result;
+  //     console.log(logo);
+  //   };
+  //   reader.readAsDataURL(logo);
   };
 
   handleSubmit = event => {
@@ -275,7 +279,6 @@ class InvoiceForm extends Component {
 
   createPDF = event => {
     event.preventDefault();
-    console.log(this.logoRaw);
     const pdf = new jsPDF('p', 'pt');
     pdf.setFontSize(12);
     const columns = [
@@ -291,7 +294,8 @@ class InvoiceForm extends Component {
         {"#": index + 1, "item": row.item, "quantity": row.quantity, "rate": `$${row.rate}`, "amount": `$${row.quantity * row.rate}`}
       )
     })
-    pdf.addImage(this.logoRaw, "JPEG", 30, 15, 75, 75, "MEDIUM", 0);
+
+    pdf.addImage(this.logoRef.current, 'JPEG', 30, 15, 75, 75, "MEDIUM", 0);
     pdf.text(this.state.company_name, 30, 105);
     pdf.text("Date:", 450, 50);
     pdf.text(this.state.date, 500, 50);
@@ -318,33 +322,6 @@ class InvoiceForm extends Component {
     pdf.text(this.state.notes, 75, 745);
     pdf.text("Terms -", 30, 760);
     pdf.text(this.state.terms, 75, 760);
-    // pdf.text(`Invoice Number: ${this.state.invoice_number}`, 13, 0.8);
-    // pdf.text(`Date: ${this.state.date}`, 13, 1.1);
-    // pdf.text(`Due Date: ${this.state.due_date}`, 13, 1.4);
-    // pdf.text(`Balance Due: ${this.state.balance_due}`, 13, 1.7);
-    // pdf.text(`Company Name: ${this.state.company_name}`, 13, 2.1);
-    // pdf.text(`Invoice To: ${this.state.invoiceTo}`, 13, 2.4);
-    // pdf.text(`Address: ${this.state.address}`, 13, 2.7);
-    // pdf.text(`Zip: ${this.state.zipcode}`, 13, 3.1);
-    // pdf.text(`City: ${this.state.city}`, 13, 3.4);
-    // pdf.text(`State: ${this.state.state}`, 13, 3.7);
-    // pdf.autoTable(columns, rows);
-    // // this.state.lineItems.map(row => {
-    // //   pdf.text(`Item: ${row.item}`, 13, `${(this.y_position / 2) + 2.54}`);
-    // //   pdf.text(`Quantity: ${row.quantity}`, 2, `${(this.y_position / 2) + 2.54}`);
-    // //   pdf.text(`Rate: ${row.rate}`, 3.5, `${(this.y_position / 2) + 2.54}`);
-    // //   pdf.text(`Amount: $${row.quantity * row.rate}`, 4.5, `${(this.y_position / 2) + 2.54}`);
-    // //   ++this.y_position
-    // // })
-    // pdf.text(`Subtotal: $${this.state.subtotal}`, 13, `${(this.y_position / 2) + 0.4}`);
-    // pdf.text(`Discount: ${this.state.discount}`, 13, `${(this.y_position / 2) + 0.7}`);
-    // pdf.text(`Tax: $${this.state.tax}`, 13, `${(this.y_position / 2) + 1.1}`);
-    // pdf.text(`Tax Rate: ${this.state.taxRate * 100}%`, 13, `${(this.y_position / 2) + 1.4}`);
-    // pdf.text(`Shipping: ${this.state.shipping}`, 13, `${(this.y_position / 2) + 1.7}`);
-    // pdf.text(`Total: $${this.state.total}`, 13, `${(this.y_position / 2) + 2.1}`);
-    // pdf.text(`Amount Paid: $${this.state.amount_paid}`, 13, `${(this.y_position / 2) + 2.4}`);
-    // pdf.text(`Notes: ${this.state.notes}`, 13, `${(this.y_position / 2) + 2.7}`);
-    // pdf.text(`Terms: ${this.state.terms}`, 13, `${(this.y_position / 2) + 3.1}`);
 
     pdf.save(`Invoice${this.state.invoice_number}`);
   };
@@ -418,18 +395,26 @@ class InvoiceForm extends Component {
         })
         .then(res => {
           console.log(res);
-          let city = res.data.results[0].address_components[1].short_name;
-          // let state = res.data.results[0].address_components[2].short_name;
-          let state = () => {
-            return res.data.results[0].formatted_address
-              .split(",")[1]
-              .split(" ")[1];
-          };
-          console.log(`STATE: ${state()}`);
+          let city = "";
+          let state = "";
+          if (res.data.status !== "OK") {
+            return;
+          } else {
+            res.data.results[0].address_components.map(item => {
+                if (item.types[0] === "locality") {
+                  city = item.long_name;
+              } else if (item.types[0] === "administrative_area_level_1") {
+                  state = item.short_name;
+              } else {
+                  return;
+              }
+            })
+          }
+          console.log(`STATE: ${state}`);
           console.log(`CITY: ${city}`);
           this.setState({
             city: city,
-            state: state()
+            state: state
           });
         })
         .catch(err => {
@@ -481,6 +466,7 @@ class InvoiceForm extends Component {
                 Browse file to add your company logo.
               </FormText>
             </FormGroup>
+            <img ref={this.logoRef} />
             {/* Invoice Header Rigth Side */}
             <FormGroup row classname="right-indent">
               {/* <Label for="invoice_number" sm={2}>
@@ -776,11 +762,12 @@ class InvoiceForm extends Component {
               </Label>
               <Col sm="2">
                 <Input
-                  value={this.state.subtotal * (1 - this.state.discount / 100)}
+                  value={this.state.discount}
                   type="percent"
                   name="discount"
                   id="discount"
                   placeholder="0 %"
+                  onChange={this.handleInputChange}
                 />
               </Col>
             </FormGroup>
