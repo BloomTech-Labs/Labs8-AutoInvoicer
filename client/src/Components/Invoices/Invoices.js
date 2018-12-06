@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import "./Invoices.css";
+import './Invoices.css'
+import accounting from 'accounting';
 
 export default class Invoices extends Component {
   constructor(props) {
@@ -26,31 +27,22 @@ export default class Invoices extends Component {
           {this.state.invoices === null && <p>Loading invoices...</p>}
           {this.state.invoices &&
             this.state.invoices.map(invoice => (
-              <div
-                key={invoice._id}
-                className={
-                  invoice.balance_due - invoice.amount_paid === 0
-                    ? "invoice paid"
-                    : "invoice unpaid"
-                }
-              >
+              <div key={invoice._id} className="invoice">
+                <div className="status-circle-container">
+                  <div className={invoice.balance_due - invoice.amount_paid === 0 ? "status-circle paid"  : "status-circle unpaid" } />
+                </div>
                 <Link to={`/invoices/${invoice._id}`}>
                   <h4>Invoice #{invoice.invoice_number}</h4>
                   <p> Due Date: {invoice.due_date}</p>
                   <p> Company: {invoice.company_name}</p>
                   <p>
-                    {" "}
-                    {invoice.balance_due - invoice.amount_paid === 0
+                    {invoice.balance_due === 0
                       ? "Status: Payment Complete"
-                      : `Remaining Balance: $${invoice.balance_due -
-                          invoice.amount_paid}`}{" "}
+                      : `Remaining Balance: ${accounting.formatMoney(invoice.balance_due)}`
+                    }
                   </p>
                   <p className="late">
-                    {" "}
-                    {invoice.due_date < Date.now() &&
-                    invoice.balance_due - invoice.amount_paid > 0
-                      ? "Status: Overdue"
-                      : ""}
+                    {invoice.due_date < Date.now() && invoice.balance_due - invoice.amount_paid > 0 ? "Status: Overdue" : "" }
                   </p>
                 </Link>
               </div>
