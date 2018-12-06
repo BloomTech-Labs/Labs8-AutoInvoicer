@@ -10,6 +10,7 @@
     "nodemon": "^1.18.4"
   },
   "dependencies": {
+    "accounting": "^0.4.1",
     "body-parser": "^1.18.3",
     "cloudinary": "^1.13.2",
     "concurrently": "^4.1.0",
@@ -23,6 +24,8 @@
     "express-session": "^1.15.6",
     "fs": "^0.0.1-security",
     "helmet": "^3.14.0",
+    "jspdf": "^1.4.1",
+    "jspdf-autotable": "^2.3.5",
     "jwks-rsa": "^1.3.0",
     "mongoose": "^5.3.10",
     "morgan": "^1.9.1",
