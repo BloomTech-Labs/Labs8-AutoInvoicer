@@ -93,6 +93,9 @@ class InvoiceForm extends Component {
         
         else this.setState({ [item]: invoice[item] });
       }
+
+      this.logo = this.state.logo;
+      this.logoRef.current.src = this.logo;
       this.calculateTotal();
     }
   }
@@ -282,6 +285,8 @@ class InvoiceForm extends Component {
       .catch(err => {
         console.log("ERROR", err);
       });
+
+      this.setState({ toDashboard: true });
   };
 
   createPDF = event => {
@@ -577,9 +582,11 @@ class InvoiceForm extends Component {
                 accept="image/png, image/jpeg"
                 onChange={this.handleImageChange}
               />
-              <FormText color="muted">
+              {this.edit ? <FormText color="muted">
+                Browse file to change your company logo.
+              </FormText> : <FormText color="muted">
                 Browse file to add your company logo.
-              </FormText>
+              </FormText>}
             </FormGroup>
             <img ref={this.logoRef} className="logo-img" />
             {/* Invoice Header Rigth Side */}

@@ -48,7 +48,7 @@ export default class Invoices extends Component {
                 <div className="status-circle-container">
                   <div
                     className={
-                      invoice.balance_due - invoice.amount_paid === 0
+                      invoice.balance_due  === 0
                         ? "status-circle paid"
                         : "status-circle unpaid"
                     }
@@ -67,7 +67,7 @@ export default class Invoices extends Component {
                   </p>
                   <p className="late">
                     {invoice.due_date < Date.now() &&
-                    invoice.balance_due - invoice.amount_paid > 0
+                    invoice.balance_due  > 0
                       ? "Status: Overdue"
                       : ""}
                   </p>
