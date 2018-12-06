@@ -837,30 +837,7 @@ class InvoiceForm extends Component {
             {/* <div classname="subtotal">
             Subtotal: $
             </div> */}
-            {/* Notes & Terms*/}
-            <FormGroup>
-              <Label for="notes">Notes</Label>
-              <Input
-                value={this.state.notes}
-                type="text"
-                name="notes"
-                id="notes"
-                placeholder="Add Notes Here"
-                onChange={this.handleInputChange}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="terms">Terms</Label>
-              <Input
-                value={this.state.terms}
-                type="text"
-                name="terms"
-                id="terms"
-                placeholder="Add Terms Here"
-                onChange={this.handleInputChange}
-              />
-            </FormGroup>
-
+            
             {/* <FormGroup>
               <Label for="terms">Subtotal </Label>
               <Input
@@ -943,6 +920,31 @@ class InvoiceForm extends Component {
             </FormGroup>
 
             <div>Total: {accounting.formatMoney(this.state.total)} </div>
+
+            {/* Notes & Terms*/}
+            <FormGroup>
+              <Label for="notes">Notes</Label>
+              <Input
+                value={this.state.notes}
+                type="text"
+                name="notes"
+                id="notes"
+                placeholder="Add Notes Here"
+                onChange={this.handleInputChange}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label for="terms">Terms</Label>
+              <Input
+                value={this.state.terms}
+                type="text"
+                name="terms"
+                id="terms"
+                placeholder="Add Terms Here"
+                onChange={this.handleInputChange}
+              />
+            </FormGroup>
+
             {/*</FormGroup> */}
             {this.edit ?
             <Button type="generate" onClick={this.handleUpdate}>
