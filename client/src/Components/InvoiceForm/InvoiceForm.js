@@ -95,8 +95,8 @@ class InvoiceForm extends Component {
 
   handleInputChange = event => {
     this.setState({ [event.target.name]: event.target.value });
-    if (event.target.name === "shipping" || event.target.name === "discount" || event.target.name === "discount" ) {
-      this.calculateTotal();
+    if (event.target.name === "shipping" || event.target.name === "discount" || event.target.name === "tax" ) {
+      this.calculateSubtotal();
     }
   };
 
@@ -105,24 +105,14 @@ class InvoiceForm extends Component {
     const reader = new FileReader();
     this.logo = event.target.files[0];
     this.logoRef.current.src = window.URL.createObjectURL(this.logo);
-  //   reader.onloadend = () => {
-  //     this.logo = new Image();
-  //     this.logo.src = reader.result;
-  //     this.logoRaw = reader.result;
-  //     console.log(logo);
-  //   };
-  //   reader.readAsDataURL(logo);
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-
+  validateForm = () => {
     const data = this.state;
 
     if (!this.logo) {
       this.invalidForm = true;
       this.errMessage = "Please submit a valid logo file.";
-      this.setState({});
       this.invalidForm = false;
       return;
     }
@@ -141,26 +131,19 @@ class InvoiceForm extends Component {
 
     for (const item in formErrorValues) {
       if (data[item] === "" || data[item] === "null") {
-        this.invalidForm = true;
         this.errMessage = `Please fill in the ${formErrorValues[item]} field.`;
-        this.setState({});
-        this.invalidForm = false;
         return;
       }
     }
 
     if (isNaN(data.total)) {
-      this.invalidForm = true;
       this.errMessage = "Please add at least one item.";
-      this.setState({});
-      this.invalidForm = false;
       return;
     }
 
     const newInvoice = new FormData();
     newInvoice.append("auth0_userID", this.auth0_userID);
     newInvoice.append("logo", this.logo, this.logo.name);
-
     for (const prop in data) {
       if (prop === "lineItems") {
         newInvoice.append(`${prop}`, JSON.stringify(data[prop]));
@@ -168,116 +151,52 @@ class InvoiceForm extends Component {
         newInvoice.append(`${prop}`, `${data[prop]}`);
       }
     }
+    return newInvoice;
+  }
 
-    this.setState({ toDashboard: true });
+  handleSubmit = event => {
+    event.preventDefault();
+    const newInvoice = this.validateForm();
 
-    axios
-      .post(process.env.REACT_APP_NEW_INVOICE, newInvoice)
-      .then(res => {
-        let invoice_num = this.props.invoice_num;
-        axios
-          .put(`/api/users/${this.mongo_id}`, {
-            invoice_num: (invoice_num += 1)
-          })
-          .then(res => console.log("invoice added, number incremented"))
-          .catch(err => console.log(err));
-        this.setState({});
-      })
-      .catch(err => {
-        console.log("ERROR", err);
-      });
-
-    // COMMENTED OUT this is meant to reset the form to blank, but since we're creating two separate buttons for Saving the Invoice and Downloading the PDF, the form data needs to persist
-    // TODO this means that we should finish full CRUD for the invoices (we still have yet to make routes for UPDATE and DELETE)
-    // this.setState({
-    //   invoice_number: "",
-    //   date: "",
-    //   due_date: "",
-    //   balance_due: "",
-    //   company_name: "",
-    //   invoiceTo: "",
-    //   address: "",
-    //   zipcode: "",
-    //   city: "",
-    //   state: "",
-    //   item: "",
-    //   quantity: "",
-    //   rate: "",
-    //   amount: "",
-    //   subtotal: "",
-    //   discount: "",
-    //   tax: "",
-    //   shipping: "",
-    //   total: "",
-    //   amount_paid: "",
-    //   notes: "",
-    //   terms: ""
-    // });
+    if (newInvoice) {
+      axios
+        .post(process.env.REACT_APP_NEW_INVOICE, newInvoice)
+        .then(res => {
+          let invoice_num = this.props.invoice_num;
+          axios
+            .put(`/api/users/${this.mongo_id}`, {
+              invoice_num: (invoice_num += 1)
+            })
+            .then(res => {
+              console.log("invoice added, number incremented")
+              this.setState({ toDashboard: true });
+            })
+            .catch(err => console.log(err));
+          this.setState({});
+        })
+        .catch(err => {
+          console.log("ERROR", err);
+        });
+    }
   };
 
   handleUpdate = event => {
     event.preventDefault();
-
-    const data = this.state;
-
-    if (!this.logo) {
-      this.invalidForm = true;
-      this.errMessage = "Please submit a valid logo file.";
-      this.setState({});
-      this.invalidForm = false;
-      return;
-    }
-
-    const formErrorValues = {
-      date: "Date",
-      due_date: "Due Date",
-      balance_due: "Balance Due",
-      company_name: "Invoice From",
-      invoiceTo: "Invoice To",
-      address: "Address",
-      zipcode: "Zip",
-      city: "City",
-      state: "State"
-    };
-
-    for (const item in formErrorValues) {
-      if (data[item] === "" || data[item] === "null") {
-        this.invalidForm = true;
-        this.errMessage = `Please fill in the ${formErrorValues[item]} field.`;
-        this.setState({});
-        this.invalidForm = false;
-        return;
-      }
-    }
-
-    if(isNaN(data.total) || data.total === 0){
-      this.invalidForm = true;
-      this.errMessage = "Please add at least one item.";
-      this.setState({});
-      this.invalidForm = false;
-      return;
-    }
-
-    const newInvoice = new FormData();
-    newInvoice.append("auth0_userID", this.auth0_userID);
-    newInvoice.append("logo", this.logo, this.logo.name);
+    const newInvoice = this.validateForm();
 
     const params = this.props.params;
 
-    for (const prop in data) {
-      if (prop === "lineItems")
-        newInvoice.append(`${prop}`, JSON.stringify(data[prop]));
-      else newInvoice.append(`${prop}`, `${data[prop]}`);
-    }
     console.log(newInvoice);
-    axios
-      .put(process.env.REACT_APP_NEW_INVOICE + `/${params.id}`, newInvoice)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log("ERROR", err);
-      });
+    if (newInvoice) {
+      axios
+        .put(process.env.REACT_APP_NEW_INVOICE + `/${params.id}`, newInvoice)
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log("ERROR", err);
+        });
+    }
   };
 
   createPDF = event => {
@@ -337,54 +256,6 @@ class InvoiceForm extends Component {
     pdf.save(`Invoice${this.state.invoice_number}`);
   };
 
-  calculateTax() {
-    //Calculates the tax rate of the invoice total by using an external tax API.
-    //Calculated using the address
-
-    //Turn our data into a querystring
-    console.log(this.state);
-    const query = qs.stringify({
-      line1: this.state.address, //Line 1,2,3 are used for addresses. 2 and 3 are optional
-      line2: "",
-      line3: "",
-      city: this.state.city,
-      region: this.state.state,
-      postalCode: this.state.zipcode,
-      country: "US" //Only works in US for free version
-    });
-
-    if(this.state.zipcode.length === 5) {
-      axios({
-        method: "get",
-        url: `https://rest.avatax.com/api/v2/taxrates/byaddress?${query}`,
-        headers: {
-          Accept: "application/json",
-          Authorization: process.env.REACT_APP_TAX_AUTH
-        }
-      })
-      .then(res => {
-        this.setState({
-          tax: this.state.subtotal * res.data.totalRate,
-          taxRate: res.data.totalRate
-        }); //Our tax is the subtotal * tax rate returned by API
-        //FOR SHOWCASE PURPOSES
-        let nuTotal = parseInt(this.state.subtotal) + this.state.tax;
-        this.setState({ total: nuTotal });
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    }
-  }
-
-  // Handle Tax
-  handleTaxChange = event => {
-    this.setState(
-      { [event.target.name]: event.target.value }, () => {
-        this.calculateTax();
-      });
-  };
-
   calculateSubtotal() {
     let tempSubtotal = 0;
 
@@ -393,25 +264,33 @@ class InvoiceForm extends Component {
       tempSubtotal += this.state.lineItems[i].quantity * this.state.lineItems[i].rate
     }
     
-    this.setState({ subtotal : tempSubtotal });
+    this.setState({ subtotal : tempSubtotal }, this.calculateTotal);
   }
 
   calculateTotal() {
     //Calculates the tax rate of the invoice total by using an external tax API.
-    //Calculated using the address
+    //Calculated using the zipcode
 
     //Turn our data into a querystring
     console.log(this.state);
     const query = qs.stringify({
-      line1: this.state.address, //Line 1,2,3 are used for addresses. 2 and 3 are optional
-      line2: "",
-      line3: "",
+      // line1: this.state.address, //Line 1,2,3 are used for addresses. 2 and 3 are optional
+      // line2: "",
+      // line3: "",
       // city: this.state.city,
       // region: this.state.state,
       postalCode: this.state.zipcode,
       country: "US" //Only works in US for free version
     });
   
+    let discount = this.state.discount;
+    let shipping = this.state.shipping;
+    let subtotal = this.state.subtotal;
+    let amount_paid = this.state.amount_paid;
+    discount = discount || 0;
+    shipping = shipping || 0;
+    amount_paid = amount_paid || 0;
+
     if(this.state.zipcode.length === 5) {
       axios({
         method: "get",
@@ -422,23 +301,32 @@ class InvoiceForm extends Component {
         }
       })
         .then(res => {
-          this.setState({
-            tax: this.state.subtotal * res.data.totalRate,
-            taxRate: res.data.totalRate
-          }); //Our tax is the subtotal * tax rate returned by API
+          const tax = subtotal * res.data.totalRate;
+          const taxRate = res.data.totalRate;
+
+          //Our tax is the subtotal * tax rate returned by API
           //FOR SHOWCASE PURPOSES
-          if(this.state.discount === "") {
-            this.setState({ discount : 0 });
-          }
-          else if(this.state.shipping == "") {
-            this.setState({ shipping: 0 });
-          }
-          let nuTotal = parseFloat(this.state.subtotal) * (1 - this.state.discount/100) + parseFloat(this.state.tax) + parseFloat(this.state.shipping);
-          this.setState({ total: nuTotal, balance_due: nuTotal - this.state.amount_paid})
+
+          let newTotal = parseFloat(subtotal) * (1 - discount/100) + parseFloat(tax) + parseFloat(shipping);
+          this.setState({ 
+            total: newTotal, 
+            balance_due: newTotal - amount_paid,
+            tax,
+            taxRate
+          })
         })
         .catch(error => {
           console.log(error);
         });
+    } else {
+        const tax = subtotal * this.state.taxRate;
+
+        let total = parseFloat(subtotal) * (1 - discount/100) + parseFloat(tax) + parseFloat(shipping);
+        this.setState({ 
+          total: total, 
+          balance_due: total - amount_paid,
+          tax
+    });
     }
   }
 
@@ -457,24 +345,20 @@ class InvoiceForm extends Component {
   };
 
   handleBalanceChange = event => {
-    this.setState({[event.target.name]: parseFloat(event.target.value)})
-    this.calculateTotal();
-    this.setState({ balance_due: this.state.total - this.state.amount_paid})
-
+    this.setState({[event.target.name]: parseFloat(event.target.value)});
+    this.setState({ balance_due: this.state.total - this.state.amount_paid}, this.calculateTotal);
   }
 
   // Handle Zip Change
   handleZipChange = event => {
-    this.setState({ [event.target.name]: event.target.value }, () => {
-      this.getCityState();
-      this.calculateTotal();
-    });
+    this.setState({ [event.target.name]: event.target.value }, this.getCityState);
   };
 
   // Get City State by Zip
   getCityState() {
     let zipcode = this.state.zipcode;
     if (zipcode.toString().length < 5) {
+      this.setState({taxRate: 0}, this.calculateTotal);
       return;
     } else {
       axios
@@ -506,7 +390,9 @@ class InvoiceForm extends Component {
           this.setState({
             city: city,
             state: state
-          });
+          },
+          this.calculateTotal
+          );
         })
         .catch(err => {
           console.log(err);
@@ -527,7 +413,7 @@ class InvoiceForm extends Component {
   handleLineItemChange = (event, index, item) => {
     let lineItems = [...this.state.lineItems];
     lineItems[index][item] = event.target.value;
-    this.setState({ lineItems }, this.calculateSubtotal(), this.calculateTotal());
+    this.setState({ lineItems }, this.calculateSubtotal);
   };
 
   // dcha - Decrements credit when a user creates an invoice.
@@ -563,8 +449,6 @@ class InvoiceForm extends Component {
 
     return (
       <div>
-        {/* <TopNav /> */}
-        {/* <Navbar /> */}
         <div className="form-container1">
           <Form>
             {/* Add Logo */}
@@ -878,7 +762,7 @@ class InvoiceForm extends Component {
                 /> */}
                 <Input
                   value={accounting.formatMoney(this.state.subtotal)}
-                  type="amount"
+                  type="string"
                   name="subtotal"
                   id="subtotal"
                 />
@@ -897,10 +781,12 @@ class InvoiceForm extends Component {
                 <InputGroup>
                   <Input
                     value={this.state.discount}
-                    type="percent"
+                    type="number"
+                    min="0"
+                    max="100"
                     name="discount"
                     id="discount"
-                    placeholder="0 %"
+                    placeholder="0"
                     onChange={this.handleInputChange}
                   />
                   <InputGroupAddon addonType="append">%</InputGroupAddon>
@@ -909,15 +795,6 @@ class InvoiceForm extends Component {
               </Col>
             </FormGroup>
 
-            {/* Tax with generate tax button */}
-              {/* <div>
-                Tax: {this.state.taxRate * 100}%{" "}
-                <Button onClick={() => this.calculateTax()}>
-                  {" "}
-                  Calculate Tax
-                </Button>
-              </div> */}
-            {/* Testing Tax */}
             <FormGroup row>
               <Label for="tax" sm={2}>
                 Tax
@@ -946,11 +823,12 @@ class InvoiceForm extends Component {
                 Shipping
               </Label>
               <Col sm="2">
-                {/* <Col sm={10}> */}
                 <Input
                   value={this.state.shipping}
                   // value={accounting.formatMoney(this.state.shipping)}
-                  type="amount"
+                  type="number" 
+                  min="0" 
+                  max="99999" 
                   name="shipping"
                   id="shipping"
                   placeholder="$ 0.00"
@@ -973,8 +851,6 @@ class InvoiceForm extends Component {
                 />
               </Col>
             </FormGroup>
-
-            {/* <div>Total: {accounting.formatMoney(this.state.total)} </div> */}
 
             <FormGroup row>
               <Label for="amount-paid" sm={2}>
@@ -1016,7 +892,6 @@ class InvoiceForm extends Component {
               />
             </FormGroup>
             
-            {/*</FormGroup> */}
             {this.edit ?
             <Button type="generate" onClick={this.handleUpdate}>
               Update Invoice
