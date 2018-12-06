@@ -34,7 +34,6 @@ const LineItems = props => {
       </td>
       <td>
         <Input
-          // value={accounting.formatMoney(props.rate)}
           value={props.rate}
           type="amount"
           name="rate"

@@ -610,30 +610,6 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </Col>
-              {/* <Label for="due_date" sm={2}>
-                Due Date
-              </Label>
-              <Col sm={4}>
-                <Input
-                  value={this.state.due_date}
-                  type="date
-                  name="due_date"
-                  id="due_date"
-                  placeholder="Due Date"
-                  onChange={this.handleInputChange}
-                />
-              </Col> */}
-              {/* <Label for="balance_due" sm={2}>
-                Balance Due
-              </Label>
-              <Col sm={4}>
-                <Input
-                  value={accounting.formatMoney(this.state.balance_due)}
-                  type="text"
-                  name="balance_due"
-                  id="balance_due"
-                />
-              </Col> */}
             </FormGroup>
             {/* Invoice Customer Company Details */}
             <FormGroup row>
