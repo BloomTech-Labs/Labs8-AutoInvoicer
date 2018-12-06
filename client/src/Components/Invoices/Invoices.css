@@ -48,6 +48,12 @@
   border-radius: 100%;
 }
 
+/* .status-circle .unpaid {
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+} */
+
 .paid {
   background: #6AEF9C;
 }

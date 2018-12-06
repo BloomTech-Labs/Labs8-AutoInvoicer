@@ -48,7 +48,7 @@ export default class Invoices extends Component {
                 <div className="status-circle-container">
                   <div
                     className={
-                      invoice.balance_due - invoice.amount_paid === 0
+                      invoice.balance_due === 0
                         ? "status-circle paid"
                         : "status-circle unpaid"
                     }
