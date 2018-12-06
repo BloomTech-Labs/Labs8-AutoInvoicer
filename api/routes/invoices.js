@@ -136,21 +136,24 @@ router.put("/api/invoices/:_id", upload.single('logo'), (req, res) => {
   let single_invoice;
   const { _json, ...userProfile } = req.user;
   const auth0_userID = req.user._json.sub.split("|")[1];
-  const ext = req.file.originalname.split('.')[1]
-  const tmp = os.tmpdir() + '/deleteme.' + ext
-  fs.writeFileSync(tmp, req.file.buffer)
-
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_KEY,
-    api_secret: process.env.CLOUDINARY_SECRET
-  })
 
   const lineItems = JSON.parse(req.body.lineItems);
 
   lineItems.forEach(row => {
     row.quantity = Number(row.quantity);
     row.rate = Number(row.rate);
+  })
+  
+  if(req.file){
+  const ext = req.file.originalname.split('.')[1]
+  const tmp = os.tmpdir() + '/deleteme.' + ext
+  fs.writeFileSync(tmp, req.file.buffer)
+  
+
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET
   })
 
   cloudinary.v2.uploader.upload(tmp, {public_id: `auto-invoicer/${Date.now()}`}, (error, result) => {
@@ -180,6 +183,8 @@ router.put("/api/invoices/:_id", upload.single('logo'), (req, res) => {
       notes: req.body.notes,
       terms: req.body.terms
     };
+  
+
 
   User.findOne({auth0_userID})
       .populate('invoices')
@@ -203,6 +208,57 @@ router.put("/api/invoices/:_id", upload.single('logo'), (req, res) => {
         console.log(err, "Unable to look up user for invoice ID.");
       })
     })
+  }
+
+  else{
+    const edit = {
+      invoice_number: Number(req.body.invoice_number),
+      date: req.body.date,
+      due_date: req.body.due_date,
+      balance_due: Number(req.body.balance_due),
+      address: req.body.address,
+      zipcode: req.body.zipcode,
+      city: req.body.city,
+      state: req.body.state,
+      company_name: req.body.company_name,
+      invoiceTo: req.body.invoiceTo,
+      line_items: lineItems,
+      // item: req.body.item,
+      // quantity: Number(req.body.quantity),
+      // rate: Number(req.body.rate),
+      amount: Number(req.body.amount),
+      subtotal: Number(req.body.subtotal),
+      discount: Number(req.body.discount),
+      tax: Number(req.body.tax),
+      shipping: Number(req.body.shipping),
+      total: Number(req.body.total),
+      amount_paid: Number(req.body.amount_paid),
+      notes: req.body.notes,
+      terms: req.body.terms
+    }
+
+    User.findOne({auth0_userID})
+      .populate('invoices')
+      .then(user => {
+        user.invoices.forEach( invoice => {
+          if(invoice._id == invoice_number)
+            single_invoice = invoice._id;
+        })
+
+        Invoice.updateOne({ _id: single_invoice}, edit)
+          .then(invoice =>{
+            res.status(200).send(invoice);
+        })
+          .catch(err =>{
+            res.status(500);
+            console.log(err, "User look up successful but unable to find invoice with that ID");
+          })
+      })
+      .catch(err => {
+        res.status(500);
+        console.log(err, "Unable to look up user for invoice ID.");
+      })
+  }
 });
 
 router.delete("/:_id", (req, res) => {
