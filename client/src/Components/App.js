@@ -91,7 +91,12 @@ class App extends Component {
                 />
               )}
             />
-            <Route key={this.routeKey()} exact path="/" component={Invoices} />
+            <Route
+              key={this.routeKey()}
+              exact
+              path="/"
+              render={props => <Invoices credits={this.state.user.credits} />}
+            />
             <Route
               key={this.routeKey()}
               path="/invoices/:id"

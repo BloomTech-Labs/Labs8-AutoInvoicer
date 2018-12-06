@@ -15,14 +15,27 @@
 
 .form-container1 > * {
     flex: 1 100%; /* We tell all items to be 100% width, via flex-basis */
-  }
+}
+
+.logo {
+    margin-top: 30px; 
+}
 
 .side-nav {
     height: 800px;
 }
 
+.striped-table {
+    margin-top: 30px;
+}
+
+.button-line-items{
+    margin-bottom: 50px;
+}
+
 .download-pdf-button {
     margin-left: 20px;
+    margin-bottom: 50px; 
 }
 
 .subtotal {
@@ -34,10 +47,37 @@
     color: red;
 }
 
+
 .logo-img {
   /* max-width: 200px; */
   height: 200px;
 }
+
+.notes {
+    margin-top: 40px;
+}
+
+.notes-label {
+    margin-bottom: 20px; 
+}
+
+.terms {
+    margin-top: 30px;
+    margin-bottom: 40px; 
+}
+
+.terms-label {
+    margin-bottom: 20px;
+}
+
+.update-button {
+    margin-bottom: 50px;
+}
+
+.save-button {
+    margin-bottom: 50px;
+}
+
 
 /* .form-container2 {
     flex: 1 100%;
@@ -48,11 +88,6 @@
     text-align: right;
     background-color: cadetblue;
 } */
-
-.float-right {
-    float: right !important; 
-}
-
 
 /* .invoice-number { */
     /* display: flex; */
