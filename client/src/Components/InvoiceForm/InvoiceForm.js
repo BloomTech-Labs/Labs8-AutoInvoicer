@@ -891,7 +891,7 @@ class InvoiceForm extends Component {
               <Label for="subtotal" sm={2}>
                 Subtotal 
               </Label>
-              <Col sm="2">
+              <Col sm={2}>
                 {/* <Input
                   value={this.state.subtotal}
                   type="number"
@@ -900,9 +900,15 @@ class InvoiceForm extends Component {
                   placeholder="$ 0.00"
                   onChange={this.handleSubtotalChange}
                 /> */}
-                <div>
+                <Input
+                  value={accounting.formatMoney(this.state.subtotal)}
+                  type="amount"
+                  name="subtotal"
+                  id="subtotal"
+                />
+                {/* <div>
                   {accounting.formatMoney(this.state.subtotal)}
-                </div>
+                </div> */}
               </Col>
             </FormGroup>
 
@@ -936,8 +942,26 @@ class InvoiceForm extends Component {
                 </Button>
               </div> */}
             {/* Testing Tax */}
-
-            <div>Tax: {parseFloat((this.state.taxRate * 100).toFixed(2))}% </div>
+            <FormGroup row>
+              <Label for="tax" sm={2}>
+                Tax
+              </Label>
+              <Col sm="2">
+                <InputGroup>
+                  <Input 
+                    value={parseFloat((this.state.taxRate * 100).toFixed(2))}
+                    type="percent"
+                    name="tax"
+                    id="tax"
+                    placeholder="0%"
+                  />
+                  <InputGroupAddon addonType="append">%</InputGroupAddon>
+                </InputGroup>
+              
+              </Col>
+            
+            </FormGroup>
+            {/* <div>Tax: {parseFloat((this.state.taxRate * 100).toFixed(2))}% </div> */}
 
             {/* Shipping */}   
 
@@ -949,7 +973,8 @@ class InvoiceForm extends Component {
                 {/* <Col sm={10}> */}
                 <Input
                   value={this.state.shipping}
-                  type="number"
+                  // value={accounting.formatMoney(this.state.shipping)}
+                  type="amount"
                   name="shipping"
                   id="shipping"
                   placeholder="$ 0.00"
@@ -958,7 +983,22 @@ class InvoiceForm extends Component {
               </Col>
             </FormGroup>
 
-            <div>Total: {accounting.formatMoney(this.state.total)} </div>
+            {/* Total */}
+            <FormGroup row>
+              <Label for="total" sm={2}>
+                Total
+              </Label>
+              <Col sm={2}>
+                <Input 
+                  value={accounting.formatMoney(this.state.total)}
+                  type="amount"
+                  name="total"
+                  id="total"
+                />
+              </Col>
+            </FormGroup>
+
+            {/* <div>Total: {accounting.formatMoney(this.state.total)} </div> */}
 
             <FormGroup row>
               <Label for="amount-paid" sm={2}>
