@@ -581,7 +581,7 @@ class InvoiceForm extends Component {
                 Browse file to add your company logo.
               </FormText>
             </FormGroup>
-            <img ref={this.logoRef} />
+            <img ref={this.logoRef} className="logo-img" />
             {/* Invoice Header Rigth Side */}
             <FormGroup row classname="right-indent">
               <Label for="invoice_number" sm={2}>
