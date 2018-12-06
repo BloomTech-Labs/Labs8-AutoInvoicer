@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import './Invoices.css'
 import accounting from 'accounting';
+import moment from "moment";
 
 export default class Invoices extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ export default class Invoices extends Component {
                 </div>
                 <Link to={`/invoices/${invoice._id}`}>
                   <h4>Invoice #{invoice.invoice_number}</h4>
-                  <p> Due Date: {invoice.due_date}</p>
+                  <p> Due Date: {invoice.due_date ? moment(invoice.due_date).format("MMM Do YYYY") : ""}</p>
                   <p> Company: {invoice.company_name}</p>
                   <p>
                     {invoice.balance_due === 0

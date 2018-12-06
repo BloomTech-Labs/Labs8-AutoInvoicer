@@ -1,10 +1,13 @@
 import React from "react";
 import { Input } from "reactstrap";
+import accounting from "accounting";
+
+import "./LineItems.css";
 
 const LineItems = props => {
   return (
-    <tr>
-      <th scope="row">{props.rowNumber}</th>
+    <tr className="table_row">
+      <th scope="row" className="table_header">{props.rowNumber}</th>
       <td>
         <Input
           value={props.item}
@@ -32,7 +35,7 @@ const LineItems = props => {
       <td>
         <Input
           value={props.rate}
-          type="currency"
+          type="amount"
           name="rate"
           id="rate"
           placeholder="$ 0.00"
@@ -41,7 +44,7 @@ const LineItems = props => {
           }}
         />
       </td>
-      <td>${props.quantity * props.rate} </td>
+      <td className="row_amount">${props.quantity * props.rate} </td>
     </tr>
   );
 };
