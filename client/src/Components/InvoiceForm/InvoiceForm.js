@@ -14,6 +14,8 @@ import {
   FormGroup,
   Label,
   Input,
+  InputGroup,
+  InputGroupAddon,
   FormText,
   ListGroup,
   ListGroupItem,
@@ -910,16 +912,18 @@ class InvoiceForm extends Component {
                 Discount
               </Label>
               <Col sm="2">
-                <Input
-                  value={this.state.discount}
-
-                  type="percent"
-                  name="discount"
-                  id="discount"
-                  placeholder="0 %"
-                  onChange={this.handleInputChange}
-                />
-                <span>%</span>
+                <InputGroup>
+                  <Input
+                    value={this.state.discount}
+                    type="percent"
+                    name="discount"
+                    id="discount"
+                    placeholder="0 %"
+                    onChange={this.handleInputChange}
+                  />
+                  <InputGroupAddon addonType="append">%</InputGroupAddon>
+                </InputGroup>
+                {/* <span>%</span> */}
               </Col>
             </FormGroup>
 
