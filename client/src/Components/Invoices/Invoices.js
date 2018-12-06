@@ -29,7 +29,7 @@ export default class Invoices extends Component {
             this.state.invoices.map(invoice => (
               <div key={invoice._id}>
                 <div className="status-circle-container">
-                  <div className={invoice.balance_due - invoice.amount_paid === 0 ? "status-circle paid"  : "status-circle unpaid" }>
+                  <div className={invoice.balance_due - invoice.amount_paid === 0 ? "status-circle paid"  : "status-circle unpaid" } />
                 </div>
                 <Link to={`/invoices/${invoice._id}`}>
                   <h4>Invoice #{invoice.invoice_number}</h4>
