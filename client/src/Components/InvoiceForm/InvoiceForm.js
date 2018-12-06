@@ -87,7 +87,11 @@ class InvoiceForm extends Component {
             copyArray.push(lineItem);
           });
           this.setState({ lineItems: copyArray });
-        } else this.setState({ [item]: invoice[item] });
+        }
+        else if(item === 'date' || item === 'due_date')
+          this.setState({[item]: invoice[item].substring(0,10)})
+        
+        else this.setState({ [item]: invoice[item] });
       }
       this.calculateTotal();
     }
@@ -557,9 +561,7 @@ class InvoiceForm extends Component {
       return <Redirect to="/" />;
     }
 
-    console.log(this.props.credits);
-
-    console.log(this.state.toDashboard);
+    
 
     return (
       <div>
