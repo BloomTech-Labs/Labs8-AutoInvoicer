@@ -186,7 +186,7 @@ class InvoiceForm extends Component {
           .put(`/api/users/${this.mongo_id}`, {
             invoice_num: (invoice_num += 1)
           })
-          .then(res => console.log("invoice added, number incremented"))
+          .then(res => this.props.fetchUser())
           .catch(err => console.log(err));
         this.setState({});
       })
@@ -329,7 +329,7 @@ class InvoiceForm extends Component {
     );
     pdf.autoTable(columns, rows, { margin: { top: 300 } });
     pdf.text("Discount:", 414, 670);
-    pdf.text(this.state.discount, 500, 670);
+    pdf.text(`${this.state.discount}%`, 500, 670);
     pdf.text("Shipping:", 414, 685);
     pdf.text(`$${this.state.shipping}`, 500, 685);
     pdf.text("Subtotal:", 417, 700);
