@@ -87,7 +87,6 @@ class InvoiceForm extends Component {
           this.setState({ lineItems: copyArray });
         } else this.setState({ [item]: invoice[item] });
       }
-      this.calculateTotal();
     }
   }
 
@@ -248,7 +247,7 @@ class InvoiceForm extends Component {
       }
     }
 
-    if(isNaN(data.total) || data.total === 0){
+    if (isNaN(data.total)) {
       this.invalidForm = true;
       this.errMessage = "Please add at least one item.";
       this.setState({});
@@ -432,7 +431,7 @@ class InvoiceForm extends Component {
             this.setState({ shipping: 0 });
           }
           let nuTotal = parseFloat(this.state.subtotal) * (1 - this.state.discount/100) + parseFloat(this.state.tax) + parseFloat(this.state.shipping);
-          this.setState({ total: nuTotal, balance_due: nuTotal - this.state.amount_paid})
+          this.setState({ total: nuTotal });
         })
         .catch(error => {
           console.log(error);
@@ -453,13 +452,6 @@ class InvoiceForm extends Component {
       this.calculateTotal()
     );
   };
-
-  handleBalanceChange = event => {
-    this.setState({[event.target.name]: parseFloat(event.target.value)})
-    this.calculateTotal();
-    this.setState({ balance_due: this.state.total - this.state.amount_paid})
-
-  }
 
   // Handle Zip Change
   handleZipChange = event => {
@@ -626,10 +618,12 @@ class InvoiceForm extends Component {
               </Label> */}
               <Col sm={4}>
                 <Input
-                  value={accounting.formatMoney(this.state.balance_due)}
-                  type="text"
+                  value={this.state.balance_due}
+                  type="number"
                   name="balance_due"
                   id="balance_due"
+                  placeholder="Balance Due"
+                  onChange={this.handleInputChange}
                 />
               </Col>
             </FormGroup>
@@ -949,24 +943,6 @@ class InvoiceForm extends Component {
             </FormGroup>
 
             <div>Total: {accounting.formatMoney(this.state.total)} </div>
-
-            <FormGroup row>
-              <Label for="amount-paid" sm={2}>
-                Amount Paid:
-              </Label>
-              <Col sm="2">
-                <Input
-                  value={this.state.amount_paid}
-                  type="number"
-                  name="amount_paid"
-                  id="amount_paid"
-                  placeholder="$ 0.00"
-                  onChange={this.handleBalanceChange}
-                />
-              </Col>
-            </FormGroup>
-
-            
             {/*</FormGroup> */}
             {this.edit ?
             <Button type="generate" onClick={this.handleUpdate}>
