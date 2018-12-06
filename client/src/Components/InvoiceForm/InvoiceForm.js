@@ -563,12 +563,10 @@ class InvoiceForm extends Component {
 
     return (
       <div>
-        {/* <TopNav /> */}
-        {/* <Navbar /> */}
         <div className="form-container1">
           <Form>
             {/* Add Logo */}
-            <FormGroup>
+            <FormGroup className="logo">
               {/* <Label for="addLogo">Add Your Logo</Label> */}
               <Input
                 type="file"
@@ -717,7 +715,7 @@ class InvoiceForm extends Component {
               </Col>
             </Row>
             {/* Item, Quantity, Rate, Amount - Using Reacstrap Table */}
-            <Table striped id="line-items-table">
+            <Table striped id="line-items-table" className="striped-table">
               <thead>
                 <tr>
                   <th>#</th>
@@ -778,7 +776,7 @@ class InvoiceForm extends Component {
             </Table>
             {/* Add Line Item */}
             <div>
-              <button onClick={this.addLineItem}>Add Line Item +</button>
+              <Button className="button-line-items" color="secondary" onClick={this.addLineItem}>Add Line Item +</Button>
             </div>
             {/* Commented out the following lines below while testing the compatibility of the Reactstrap Table.  */}
             {/* Item, Quantity, Rate, Amount - using Reacstrap FormGroup */}
@@ -993,8 +991,8 @@ class InvoiceForm extends Component {
             </FormGroup>
 
             {/* Notes & Terms*/}
-            <FormGroup>
-              <Label for="notes">Notes</Label>
+            <FormGroup className="notes">
+              <Label for="notes" className="notes-label">Notes</Label>
               <Input
                 value={this.state.notes}
                 type="text"
@@ -1004,8 +1002,8 @@ class InvoiceForm extends Component {
                 onChange={this.handleInputChange}
               />
             </FormGroup>
-            <FormGroup>
-              <Label for="terms">Terms</Label>
+            <FormGroup className="terms">
+              <Label for="terms" className="terms-label">Terms</Label>
               <Input
                 value={this.state.terms}
                 type="text"
@@ -1018,11 +1016,11 @@ class InvoiceForm extends Component {
             
             {/*</FormGroup> */}
             {this.edit ?
-            <Button type="generate" onClick={this.handleUpdate}>
+            <Button type="generate" className="update-button" onClick={this.handleUpdate}>
               Update Invoice
             </Button>
             :
-            <Button type="generate" onClick={this.handleSubmit}>
+            <Button type="generate" className="save-button" onClick={this.handleSubmit}>
               Save Invoice
             </Button>
             }
