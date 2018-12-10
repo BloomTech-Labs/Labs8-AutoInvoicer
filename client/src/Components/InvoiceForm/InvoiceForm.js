@@ -456,8 +456,8 @@ class InvoiceForm extends Component {
       return <Redirect to="/" />;
     }
 
-    
 
+    
     return (
       <div>
         <div className="form-container1">
@@ -759,12 +759,12 @@ class InvoiceForm extends Component {
                 onChange={this.handleInputChange}
               /> */}
             {/* Subtotal */}
-
+            
             <FormGroup row>
               <Label for="subtotal" sm={2}>
                 Subtotal 
               </Label>
-              <Col sm={2}>
+              <Col sm={3}>
                 {/* <Input
                   value={this.state.subtotal}
                   type="number"
@@ -778,6 +778,7 @@ class InvoiceForm extends Component {
                   type="string"
                   name="subtotal"
                   id="subtotal"
+                  disabled
                 />
                 {/* <div>
                   {accounting.formatMoney(this.state.subtotal)}
@@ -835,7 +836,7 @@ class InvoiceForm extends Component {
               <Label for="shipping" sm={2}>
                 Shipping
               </Label>
-              <Col sm="2">
+              <Col sm="3">
                 <Input
                   value={this.state.shipping}
                   // value={accounting.formatMoney(this.state.shipping)}
@@ -855,12 +856,13 @@ class InvoiceForm extends Component {
               <Label for="total" sm={2}>
                 Total
               </Label>
-              <Col sm={2}>
+              <Col sm={3}>
                 <Input 
                   value={accounting.formatMoney(this.state.total)}
                   type="amount"
                   name="total"
                   id="total"
+                  disabled
                 />
               </Col>
             </FormGroup>
@@ -869,7 +871,7 @@ class InvoiceForm extends Component {
               <Label for="amount-paid" sm={2}>
                 Amount Paid:
               </Label>
-              <Col sm="2">
+              <Col sm="3">
                 <Input
                   value={this.state.amount_paid}
                   type="number"

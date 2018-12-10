@@ -44,7 +44,17 @@ const LineItems = props => {
           }}
         />
       </td>
-      <td className="row_amount">${props.quantity * props.rate} </td>
+      <td className="row_amount"> 
+        <Input
+          value={accounting.formatMoney(props.quantity * props.rate)}
+          type="amount"
+          name="row_amount"
+          id="row_amount"
+          placeholder="0.00"
+          disabled
+        />
+      </td>
+      {/* <td className="row_amount">${props.quantity * props.rate} </td> */}
     </tr>
   );
 };
