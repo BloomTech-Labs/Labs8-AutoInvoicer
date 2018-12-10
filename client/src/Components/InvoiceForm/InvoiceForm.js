@@ -95,7 +95,9 @@ class InvoiceForm extends Component {
       }
 
       this.logo = this.state.logo;
-      this.logoRef.current.src = this.logo;
+
+      this.logoRef.current.src = window.URL.createObjectURL((await axios.get(this.logo, { responseType:"blob"})).data);
+  
       this.calculateTotal();
     }
   }
