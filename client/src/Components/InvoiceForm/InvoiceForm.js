@@ -450,8 +450,8 @@ class InvoiceForm extends Component {
       return <Redirect to="/" />;
     }
 
-    
 
+    
     return (
       <div>
         <div className="form-container1">
@@ -753,7 +753,7 @@ class InvoiceForm extends Component {
                 onChange={this.handleInputChange}
               /> */}
             {/* Subtotal */}
-
+            
             <FormGroup row>
               <Label for="subtotal" sm={2}>
                 Subtotal 

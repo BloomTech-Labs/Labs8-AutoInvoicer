@@ -27,6 +27,7 @@
     "jspdf": "^1.4.1",
     "jspdf-autotable": "^2.3.5",
     "jwks-rsa": "^1.3.0",
+    "moment": "^2.22.2",
     "mongoose": "^5.3.10",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
