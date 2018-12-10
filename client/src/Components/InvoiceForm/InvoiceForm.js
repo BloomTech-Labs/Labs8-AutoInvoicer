@@ -151,8 +151,13 @@ class InvoiceForm extends Component {
     }
 
     const newInvoice = new FormData();
+
     newInvoice.append("auth0_userID", this.auth0_userID);
-    newInvoice.append("logo", this.logo, this.logo.name);
+    
+    if (typeof this.logo !== "string") {
+      newInvoice.append("logo", this.logo, this.logo.name);
+    }
+
     for (const prop in data) {
       if (prop === "lineItems") {
         newInvoice.append(`${prop}`, JSON.stringify(data[prop]));
