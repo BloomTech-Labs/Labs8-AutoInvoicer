@@ -8,17 +8,17 @@ export default class LandingPage extends Component {
   render() {
     return (
       <div>
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav className="navbar navbar-expand-lg navbar-light">
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div className="navbar-nav ml-auto">
               <a
-                className="nav-item nav-link btn btm-primary"
+                className="nav-item nav-link btn"
                 href={process.env.REACT_APP_LOGIN}
               >
                 Sign In
               </a>
               <a
-                className="nav-item nav-link btn btn-primary"
+                className="nav-item nav-link btn"
                 href={process.env.REACT_APP_LOGIN}
               >
                 Sign Up
@@ -30,7 +30,7 @@ export default class LandingPage extends Component {
         <header className="masthead text-white text-center">
           <div className="overlay" />
           <div className="">
-            <div className="row">
+            <div className="row-custom-margins">
               <div className="col-xl-9 mx-auto">
                 <h1 className="mb-5">
                   Auto-Invoicer helps small businesses generate high-quality PDF
