@@ -95,6 +95,18 @@ header.masthead a:hover {
   color: white;
 }
 
+.row-custom-margins {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.navbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+}
+
 @media (min-width: 768px) {
   header.masthead {
     padding-top: 12rem;
