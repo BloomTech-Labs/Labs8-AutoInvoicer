@@ -230,7 +230,7 @@ class InvoiceForm extends Component {
 
     pdf.addImage(this.logoRef.current, 'JPEG', 30, 15, 75, 75, "MEDIUM", 0);
     pdf.text(this.state.company_name, 30, 105);
-    pdf.text("Date:", 450, 50);
+    pdf.text("Invoice Date:", 408, 50);
     pdf.text(this.state.date, 500, 50);
     pdf.text("Invoice Number:", 391, 65);
     pdf.text(`${this.state.invoice_number}`, 500, 65);
