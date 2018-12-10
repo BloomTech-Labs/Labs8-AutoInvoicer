@@ -758,7 +758,7 @@ class InvoiceForm extends Component {
               <Label for="subtotal" sm={2}>
                 Subtotal 
               </Label>
-              <Col sm={2}>
+              <Col sm={3}>
                 {/* <Input
                   value={this.state.subtotal}
                   type="number"
@@ -830,7 +830,7 @@ class InvoiceForm extends Component {
               <Label for="shipping" sm={2}>
                 Shipping
               </Label>
-              <Col sm="2">
+              <Col sm="3">
                 <Input
                   value={this.state.shipping}
                   // value={accounting.formatMoney(this.state.shipping)}
@@ -850,7 +850,7 @@ class InvoiceForm extends Component {
               <Label for="total" sm={2}>
                 Total
               </Label>
-              <Col sm={2}>
+              <Col sm={3}>
                 <Input 
                   value={accounting.formatMoney(this.state.total)}
                   type="amount"
@@ -865,7 +865,7 @@ class InvoiceForm extends Component {
               <Label for="amount-paid" sm={2}>
                 Amount Paid:
               </Label>
-              <Col sm="2">
+              <Col sm="3">
                 <Input
                   value={this.state.amount_paid}
                   type="number"
