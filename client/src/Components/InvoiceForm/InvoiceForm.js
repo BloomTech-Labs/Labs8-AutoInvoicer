@@ -772,6 +772,7 @@ class InvoiceForm extends Component {
                   type="string"
                   name="subtotal"
                   id="subtotal"
+                  disabled
                 />
                 {/* <div>
                   {accounting.formatMoney(this.state.subtotal)}
@@ -855,6 +856,7 @@ class InvoiceForm extends Component {
                   type="amount"
                   name="total"
                   id="total"
+                  disabled
                 />
               </Col>
             </FormGroup>
