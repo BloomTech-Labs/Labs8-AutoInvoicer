@@ -121,8 +121,8 @@ class InvoiceForm extends Component {
     const data = this.state;
     const errCache = [];
 
-    if (!this.logo)
-      errCache.push("Please submit a valid logo file.");
+    // if (!this.logo)
+    //   errCache.push("Please submit a valid logo file.");
 
     const formErrorValues = {
       date: "Date",
@@ -162,9 +162,12 @@ class InvoiceForm extends Component {
 
     newInvoice.append("auth0_userID", this.auth0_userID);
     
-    if (typeof this.logo !== "string") {
-      newInvoice.append("logo", this.logo, this.logo.name);
+    if (this.logo) {
+      if (typeof this.logo !== "string") {
+        newInvoice.append("logo", this.logo, this.logo.name);
+      }
     }
+  
 
     for (const prop in data) {
       if (prop === "lineItems") {
