@@ -70,11 +70,6 @@ router.post("/", upload.single("logo"), (req, res) => {
   console.log("File: ", req.file);
   console.log(req.body);
   const auth0_userID = req.body.auth0_userID;
-  if (req.file) {
-    const ext = req.file.originalname.split(".")[1];
-    const tmp = os.tmpdir() + "/deleteme." + ext;
-    fs.writeFileSync(tmp, req.file.buffer);
-  }
 
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -92,6 +87,9 @@ router.post("/", upload.single("logo"), (req, res) => {
   const logo = null;
 
   if (req.file) {
+    const ext = req.file.originalname.split(".")[1];
+    const tmp = os.tmpdir() + "/deleteme." + ext;
+    fs.writeFileSync(tmp, req.file.buffer);
     cloudinary.v2.uploader.upload(
     tmp,
       { public_id: `auto-invoicer/${Date.now()}` },
