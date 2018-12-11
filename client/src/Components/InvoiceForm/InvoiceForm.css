@@ -113,4 +113,51 @@
         margin: 0 auto 75px;
         z-index: 1;
     }
+
+    .date-label {
+        margin-top: 14px;
+        order: 2; 
+    }
+
+    .date {
+        order: 2;
+    }
+
+    .due-date-label {
+        order: 3
+    }
+
+    .due-date {
+        order: 3;
+        /* margin-top: 4px; */
+    }
+
+    .balance-due-label {
+        order: 4;
+    }
+
+    .balance-due {
+        display: flex; 
+        order: 4; 
+    }
+
+    .invoice-from-label {
+        order: 5;
+        margin-top: 10px; 
+    }
+
+    .invoice-from {
+        display: flex;
+        order: 5;
+        margin-top: 24px; 
+    }
+    
+    .invoice-to-label {
+        order: 6;
+    }
+
+    .invoice-to {
+        order: 6;
+        margin-top: 24px; 
+    }    
 }
