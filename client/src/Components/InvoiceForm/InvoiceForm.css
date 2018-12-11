@@ -123,7 +123,7 @@ input::-webkit-inner-spin-button {
 /* } */
 
 .table-outer-container {
-    overflow-x: scroll;
+    overflow-x: hidden;
 }
 
 @media (max-width: 768px) {
@@ -189,12 +189,15 @@ input::-webkit-inner-spin-button {
     }
 
     .table-outer-container {
+        overflow-x: hidden;
         width: 700px;
+        margin-bottom: 15px;
     }    
 }
 
 @media (max-width: 700px) {
     .table-outer-container {
+        overflow-x: scroll;
         width: 600px;
     }
 }
