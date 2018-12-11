@@ -114,6 +114,7 @@ class App extends Component {
                   path={props.match.path}
                   params={props.match.params}
                   subbed={this.state.user.subscribed_member}
+                  fetchUser={this.fetchUser}
                 />
               )}
             />
