@@ -94,6 +94,10 @@ class InvoiceForm extends Component {
 
       this.logo = this.state.logo;
 
+      if (this.logo) {
+        this.setState({ disabled: false })
+      }
+
       this.logoRef.current.src = window.URL.createObjectURL(
         (await axios.get(this.logo, { responseType: "blob" })).data
       );
