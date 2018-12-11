@@ -39,6 +39,9 @@ const UserSchema = new Schema({
     type: Number,
     default: 1
   },
+  subscribed_since: {
+    type: Date
+  },
   invoices: [{type: Schema.Types.ObjectId, ref: 'invoice'}],
   billings: [{type: Schema.Types.ObjectId, ref: 'billing'}]
 });

@@ -4,7 +4,7 @@
     width: 70%;
     display: flex;
     position: absolute;
-    left: 220px;
+    left: 260px;
     top: 70px;
     z-index: 1;
     text-align: left;
@@ -19,6 +19,17 @@
 
 .logo {
     margin-top: 30px; 
+}
+
+.logo-toggle {
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+.logo-toggle input {
+  z-index: 10;
+  margin: -2px;
 }
 
 .side-nav {
@@ -45,12 +56,13 @@
 
 .form-error{
     color: red;
+    margin-bottom: 3px;
 }
 
 
 .logo-img {
-  /* max-width: 200px; */
-  height: 200px;
+  max-height: 200px;
+  margin-bottom: 15px;
 }
 
 .notes {
@@ -84,8 +96,6 @@ input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
-
-
 /* .form-container2 {
     flex: 1 100%;
     height: 50%;
@@ -111,7 +121,10 @@ input::-webkit-inner-spin-button {
     text-align: right; */
     /* background-color: blueviolet; */
 /* } */
-   
+
+.table-outer-container {
+    overflow-x: scroll;
+}
 
 @media (max-width: 768px) {
     .form-container1 {
@@ -173,5 +186,39 @@ input::-webkit-inner-spin-button {
         display: none; /* <- Crashes Chrome on hover */
         -webkit-appearance: none;
         margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+    }
+
+    .table-outer-container {
+        width: 700px;
+    }    
+}
+
+@media (max-width: 700px) {
+    .table-outer-container {
+        width: 600px;
+    }
+}
+
+@media (max-width: 600px) {
+    .table-outer-container {
+        width: 500px;
+    }
+}
+
+@media (max-width: 500px) {
+    .table-outer-container {
+        width: 400px;
+    }
+}
+
+@media (max-width: 400px) {
+    .table-outer-container {
+        width: 300px;
+    }
+}
+
+@media (max-width: 300px) {
+    .table-outer-container {
+        width: 300px;
     }
 }

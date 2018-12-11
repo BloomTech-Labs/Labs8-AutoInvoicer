@@ -4,8 +4,7 @@ import { NavLink, Link, Route } from "react-router-dom";
 // import App from "../App.js";
 import "./Navbar.css";
 
-class Navbar extends Component {
-  render() {
+const NavBar = props => {
     return (
       <div className="NavBar">
         <div className="NavBar-header">
@@ -16,17 +15,13 @@ class Navbar extends Component {
             <NavLink className="billing" to="/billing" exact>
               Billing
             </NavLink>
-            <NavLink className="create-invoice" to="/create_invoice" exact>
+            <NavLink className="create-invoice" to={props.credits <= 0 ? "/billing" : "/create_invoice"} exact>
               Create New Invoice
             </NavLink>
           </div>
         </div>
       </div>
     );
-  }
-  signout = () => {
-    localStorage.removeItem("jwt");
-  };
 }
 
-export default Navbar;
+export default NavBar;
