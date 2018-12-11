@@ -38,6 +38,21 @@ export default class Invoices extends Component {
     }
   };
 
+  invoicePaymentStatus = (invoice) => {
+    //condition for unpaid
+    if((invoice.balance_due == invoice.total && invoice.total > 0) || invoice.amount_paid == 0) {
+      return "unpaid";
+    } 
+    //condition for partial payment
+    else if (invoice.balance_due < invoice.total && invoice.balance_due !== 0) {
+      return "partially-paid";
+    } 
+    // full payment
+    else {
+      return "paid";
+    }
+  }
+
   render() {
     return (
       <div className="container">
@@ -48,11 +63,7 @@ export default class Invoices extends Component {
               <div key={invoice._id} className="invoice">
                 <div className="status-circle-container">
                   <div
-                    className={
-                      invoice.balance_due === 0
-                        ? "status-circle paid"
-                        : "status-circle unpaid"
-                    }
+                    className={this.invoicePaymentStatus(invoice) + " status-circle"}
                   />
                 </div>
                 <Link to={`/invoices/${invoice._id}`}>
