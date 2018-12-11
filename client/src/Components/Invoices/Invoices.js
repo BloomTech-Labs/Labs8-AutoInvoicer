@@ -40,7 +40,7 @@ export default class Invoices extends Component {
 
   invoicePaymentStatus = (invoice) => {
     //condition for unpaid
-    if((invoice.balance_due == invoice.total && invoice.total > 0) || invoice.amount_paid == 0) {
+    if(invoice.balance_due == invoice.total && invoice.total > 0) {
       return "unpaid";
     } 
     //condition for partial payment
