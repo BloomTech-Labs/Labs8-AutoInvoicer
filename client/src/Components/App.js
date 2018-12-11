@@ -88,6 +88,7 @@ class App extends Component {
                   path={props.match.path}
                   params={props.match.params}
                   fetchUser={this.fetchUser}
+                  subbed={this.state.user.subscribed_member}
                 />
               )}
             />
@@ -112,6 +113,7 @@ class App extends Component {
                   mongo_id={this.state.user._id}
                   path={props.match.path}
                   params={props.match.params}
+                  subbed={this.state.user.subscribed_member}
                 />
               )}
             />

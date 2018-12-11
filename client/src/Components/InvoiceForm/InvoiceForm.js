@@ -457,7 +457,9 @@ class InvoiceForm extends Component {
   render() {
     // dcha - Redirects users to dashboard after invoice has been created
     if (this.state.toDashboard === true) {
-      this.decrementCredits();
+      if (!this.props.subbed) {
+        this.decrementCredits();
+      }
       return <Redirect to="/" />;
     }
 
