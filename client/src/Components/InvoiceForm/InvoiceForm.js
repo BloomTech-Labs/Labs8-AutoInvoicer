@@ -125,8 +125,6 @@ class InvoiceForm extends Component {
     const data = this.state;
     const errCache = [];
 
-    if (!this.logo) errCache.push("Please submit a valid logo file.");
-
     const formErrorValues = {
       date: "Date",
       due_date: "Due Date",
@@ -158,8 +156,10 @@ class InvoiceForm extends Component {
 
     newInvoice.append("auth0_userID", this.auth0_userID);
 
-    if (typeof this.logo !== "string") {
-      newInvoice.append("logo", this.logo, this.logo.name);
+    if (this.logo) {
+      if (typeof this.logo !== "string") {
+        newInvoice.append("logo", this.logo, this.logo.name);
+      }
     }
 
     for (const prop in data) {
@@ -687,31 +687,33 @@ class InvoiceForm extends Component {
               </Col>
             </Row>
             {/* Item, Quantity, Rate, Amount - Using Reacstrap Table */}
-            <Table striped id="line-items-table" className="striped-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Item</th>
-                  <th>Quantity</th>
-                  <th>Rate</th>
-                  <th>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.lineItems.map((row, index) => {
-                  return (
-                    <LineItems
-                      key={index}
-                      rowNumber={index + 1}
-                      item={row.item}
-                      quantity={row.quantity}
-                      rate={row.rate}
-                      handleLineItemChange={this.handleLineItemChange}
-                    />
-                  );
-                })}
-              </tbody>
-            </Table>
+            <div className="table-outer-container">
+              <Table striped id="line-items-table" className="striped-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.lineItems.map((row, index) => {
+                    return (
+                      <LineItems
+                        key={index}
+                        rowNumber={index + 1}
+                        item={row.item}
+                        quantity={row.quantity}
+                        rate={row.rate}
+                        handleLineItemChange={this.handleLineItemChange}
+                      />
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </div> {/* table-outer-container */}
             {/* Add Line Item */}
             <div>
               <Button
@@ -780,17 +782,20 @@ class InvoiceForm extends Component {
                 Shipping
               </Label>
               <Col sm="3">
-                <Input
-                  value={this.state.shipping}
-                  // value={accounting.formatMoney(this.state.shipping)}
-                  type="number"
-                  min="0"
-                  max="99999"
-                  name="shipping"
-                  id="shipping"
-                  placeholder="$ 0.00"
-                  onChange={this.handleInputChange}
-                />
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+                  <Input
+                    value={this.state.shipping}
+                    // value={accounting.formatMoney(this.state.shipping)}
+                    type="number" 
+                    min="0" 
+                    max="99999" 
+                    name="shipping"
+                    id="shipping"
+                    placeholder="0.00"
+                    onChange={this.handleInputChange}
+                  />
+                </InputGroup>
               </Col>
             </FormGroup>
             {/* Total */}
@@ -813,14 +818,17 @@ class InvoiceForm extends Component {
                 Amount Paid:
               </Label>
               <Col sm="3">
-                <Input
-                  value={this.state.amount_paid}
-                  type="number"
-                  name="amount_paid"
-                  id="amount_paid"
-                  placeholder="$ 0.00"
-                  onChange={this.handleBalanceChange}
-                />
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+                  <Input
+                    value={this.state.amount_paid}
+                    type="number"
+                    name="amount_paid"
+                    id="amount_paid"
+                    placeholder="$ 0.00"
+                    onChange={this.handleBalanceChange}
+                  />
+                </InputGroup>
               </Col>
             </FormGroup>
             {/* Notes & Terms*/}

@@ -4,6 +4,10 @@
   margin-top: 10px;
 }
 
+td {
+  min-width: 150px;
+}
+
 /* .row_amount {
   display: flex;
   text-align: start;

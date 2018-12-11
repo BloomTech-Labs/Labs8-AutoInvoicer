@@ -64,7 +64,11 @@ class App extends Component {
             )}
           />
           <div className="app-container">
-            <Route key={this.routeKey()} path="/" component={NavBar} />
+            <Route key={this.routeKey()} path="/" render={props => (
+              <NavBar
+                credits={this.state.user.credits}
+              />
+            )} />
             <Route
               key={this.routeKey()}
               path="/billing"
@@ -114,6 +118,7 @@ class App extends Component {
                   path={props.match.path}
                   params={props.match.params}
                   subbed={this.state.user.subscribed_member}
+                  fetchUser={this.fetchUser}
                 />
               )}
             />
