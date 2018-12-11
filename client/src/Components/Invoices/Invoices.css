@@ -1,7 +1,7 @@
 .container {
   margin: 56px auto 0;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .invoices {
@@ -9,7 +9,7 @@
   width: 100%;
   flex-wrap:wrap;
   overflow: visible;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .invoice {
@@ -52,8 +52,12 @@
   background: #6AEF9C;
 }
 
-.unpaid {
+.partially-paid {
   background: #efdd43;
+}
+
+.unpaid {
+  background: #e62d2d;
 }
 
 .late {
@@ -92,7 +96,7 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  font-size: 20px;
+  font-size: 46px;  
 }
 
 .create-new-invoice button:hover{
@@ -103,6 +107,11 @@
 @media (min-width: 50px) {
   .container {
     margin: 178px auto 0;
+    justify-content: center;
+  }
+
+  .invoices {
+    justify-content: center;
   }
 }
 
@@ -122,8 +131,13 @@
 
 @media (min-width: 768px) {
   .container {
-    margin-left: 45px;
+    margin-left: 5%;
     margin-top: 52px;
+    justify-content: flex-start;
+  }
+
+  .invoices {
+    justify-content: flex-start;
   }
 
   .invoice {
@@ -138,7 +152,17 @@
 }
 
 @media (min-width: 992px) {
+  .container {
+    margin-left: 2%;
+  }
+
   .invoice {
     width: 266px;
+  }
+}
+
+@media (min-width: 1345px) {
+  .container {
+    margin-left: 0%;
   }
 }
