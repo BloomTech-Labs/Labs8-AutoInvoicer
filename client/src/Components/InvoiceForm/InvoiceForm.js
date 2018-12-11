@@ -485,7 +485,7 @@ class InvoiceForm extends Component {
             </FormGroup>
             <img ref={this.logoRef} className="logo-img" />
             {/* Invoice Header Rigth Side */}
-            <FormGroup row classname="right-indent">
+            <FormGroup row className="invoice-number">
               <Label for="invoice_number" sm={2}>
                 Invoice Number
               </Label>
@@ -499,10 +499,10 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </Col>
-              <Label for="date" sm={2}>
+              <Label for="date" sm={2} className="date-label">
                 Date
               </Label>
-              <Col sm={4}>
+              <Col sm={4} className="date">
                 <Input
                   value={this.state.date}
                   type="date"
@@ -515,8 +515,8 @@ class InvoiceForm extends Component {
             </FormGroup>
             {/* Invoice Customer Company Details */}
             <FormGroup row>
-              <Label for="company_name" sm={2} hidden>Invoice From</Label>
-              <Col sm={6}>
+              <Label for="company_name" sm={2} hidden className="invoice-from-label">Invoice From</Label>
+              <Col sm={6} className="invoice-from">
                 <Input
                   value={this.state.company_name}
                   type="text"
@@ -526,10 +526,10 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </Col>
-              <Label for="due_date" sm={2}>
+              <Label for="due_date" sm={2} className="due-date-label">
                 Due Date
               </Label>
-              <Col sm={4}>
+              <Col sm={4} className="due-date">
                 <Input
                   value={this.state.due_date}
                   type="date"
@@ -541,8 +541,8 @@ class InvoiceForm extends Component {
               </Col>
             </FormGroup>
             <FormGroup row>
-              <Label for="invoiceTo" sm={2}hidden>Invoice To</Label>
-              <Col sm={6}>
+              <Label for="invoiceTo" sm={2}hidden className="invoice=to-label">Invoice To</Label>
+              <Col sm={6} className="invoice-to">
                 <Input
                   value={this.state.invoiceTo}
                   type="text"
@@ -552,23 +552,24 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </Col>
-              <Label for="balance_due" sm={2}>
+              <Label for="balance_due" sm={2} className="balance-due-label">
                 Balance Due
               </Label>
-              <Col sm={4}>
+              <Col sm={4} className="balance-due">
                 <Input
                   value={accounting.formatMoney(this.state.balance_due)}
                   type="text"
                   name="balance_due"
                   id="balance_due"
+                  disabled
                 />
               </Col>
 
             </FormGroup>
             {/* Address, State, Zip */}
             <FormGroup>
-              <Label for="address" hidden>Address</Label>
-              <Input
+              <Label for="address" hidden className="address-label">Address</Label>
+              <Input className="address"
                 value={this.state.address}
                 type="text"
                 name="address"
@@ -580,8 +581,8 @@ class InvoiceForm extends Component {
             <Row form>
               <Col md={2}>
                 <FormGroup>
-                  <Label for="zipcode" hidden>Zip</Label>
-                  <Input
+                  <Label for="zipcode" hidden className="zip-label">Zip</Label>
+                  <Input className="zip"
                     value={this.state.zipcode}
                     type="text"
                     name="zipcode"
@@ -593,8 +594,8 @@ class InvoiceForm extends Component {
               </Col>
               <Col md={6}>
                 <FormGroup>
-                  <Label for="city" hidden>City</Label>
-                  <Input
+                  <Label for="city" hidden className="city-label">City</Label>
+                  <Input className="city"
                     value={this.state.city}
                     type="text"
                     name="city"
@@ -606,8 +607,8 @@ class InvoiceForm extends Component {
               </Col>
               <Col md={4}>
                 <FormGroup>
-                  <Label for="state" hidden>State</Label>
-                  <Input
+                  <Label for="state" hidden className="state-label">State</Label>
+                  <Input className="state"
                     value={this.state.state}
                     type="text"
                     name="state"
