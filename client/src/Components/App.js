@@ -66,6 +66,7 @@ class App extends Component {
           <div className="app-container">
             <Route key={this.routeKey()} path="/" render={props => (
               <NavBar
+                subbed={this.state.user.subscribed_member}
                 credits={this.state.user.credits}
               />
             )} />

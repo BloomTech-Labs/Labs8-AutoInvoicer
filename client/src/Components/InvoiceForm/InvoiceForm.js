@@ -25,7 +25,6 @@ import {
 import LineItems from "./LineItems/LineItems";
 
 import "./InvoiceForm.css";
-import LandingPage from "../Landing/LandingOld";
 
 class InvoiceForm extends Component {
   constructor(props) {
