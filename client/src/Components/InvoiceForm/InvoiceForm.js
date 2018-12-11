@@ -4,7 +4,7 @@ import axios from "axios";
 import qs from "qs";
 import jsPDF from "jspdf";
 import accounting from "accounting";
-import 'jspdf-autotable';
+import "jspdf-autotable";
 
 import {
   Row,
@@ -69,7 +69,7 @@ class InvoiceForm extends Component {
     edit: false,
     toDashboard: false,
     errorMessages: [],
-    disabled: true,
+    disabled: true
   };
 
   async componentDidMount() {
@@ -88,24 +88,28 @@ class InvoiceForm extends Component {
             copyArray.push(lineItem);
           });
           this.setState({ lineItems: copyArray });
-        }
-        else if(item === 'date' || item === 'due_date')
-          this.setState({[item]: invoice[item].substring(0,10)})
-        
+        } else if (item === "date" || item === "due_date")
+          this.setState({ [item]: invoice[item].substring(0, 10) });
         else this.setState({ [item]: invoice[item] });
       }
 
       this.logo = this.state.logo;
 
-      this.logoRef.current.src = window.URL.createObjectURL((await axios.get(this.logo, { responseType:"blob"})).data);
-  
+      this.logoRef.current.src = window.URL.createObjectURL(
+        (await axios.get(this.logo, { responseType: "blob" })).data
+      );
+
       this.calculateTotal();
     }
   }
 
   handleInputChange = event => {
     this.setState({ [event.target.name]: event.target.value });
-    if (event.target.name === "shipping" || event.target.name === "discount" || event.target.name === "tax" ) {
+    if (
+      event.target.name === "shipping" ||
+      event.target.name === "discount" ||
+      event.target.name === "tax"
+    ) {
       this.calculateSubtotal();
     }
   };
@@ -121,9 +125,6 @@ class InvoiceForm extends Component {
     const data = this.state;
     const errCache = [];
 
-    // if (!this.logo)
-    //   errCache.push("Please submit a valid logo file.");
-
     const formErrorValues = {
       date: "Date",
       due_date: "Due Date",
@@ -137,7 +138,7 @@ class InvoiceForm extends Component {
     };
 
     for (const item in formErrorValues) {
-      if (data[item] === "" || data[item] === "null") 
+      if (data[item] === "" || data[item] === "null")
         errCache.push(`Please fill in the ${formErrorValues[item]} field.`);
     }
 
@@ -145,23 +146,16 @@ class InvoiceForm extends Component {
       errCache.push("Please add at least one item.");
     }
 
-    this.setState({errorMessages: errCache});
+    this.setState({ errorMessages: errCache });
 
-    if(this.state.errorMessages.length > 0)
-      return;
+    if (this.state.errorMessages.length > 0) return;
 
-    const unusedData = [
-      "edit",
-      "toDashboard",
-      "errorMessages",
-      "disabled"
-    ]
-
+    const unusedData = ["edit", "toDashboard", "errorMessages", "disabled"];
 
     const newInvoice = new FormData();
 
     newInvoice.append("auth0_userID", this.auth0_userID);
-   
+
     if (this.logo) {
       if (typeof this.logo !== "string") {
         newInvoice.append("logo", this.logo, this.logo.name);
@@ -171,12 +165,12 @@ class InvoiceForm extends Component {
     for (const prop in data) {
       if (prop === "lineItems") {
         newInvoice.append(`${prop}`, JSON.stringify(data[prop]));
-      } else if(!unusedData.includes(prop)){
+      } else if (!unusedData.includes(prop)) {
         newInvoice.append(`${prop}`, `${data[prop]}`);
       }
     }
     return newInvoice;
-  }
+  };
 
   handleSubmit = event => {
     event.preventDefault();
@@ -192,7 +186,7 @@ class InvoiceForm extends Component {
               invoice_num: (invoice_num += 1)
             })
             .then(res => {
-              console.log("invoice added, number incremented")
+              console.log("invoice added, number incremented");
               this.setState({ toDashboard: true });
             })
             .catch(err => console.log(err));
@@ -220,7 +214,7 @@ class InvoiceForm extends Component {
         console.log("ERROR", err);
       });
 
-      this.setState({ toDashboard: true });
+    this.setState({ toDashboard: true });
   };
 
   createPDF = event => {
@@ -246,7 +240,7 @@ class InvoiceForm extends Component {
     });
 
     if (!this.state.disabled) {
-      pdf.addImage(this.logoRef.current, 'JPEG', 30, 15, 75, 75, "MEDIUM", 0);
+      pdf.addImage(this.logoRef.current, "JPEG", 30, 15, 75, 75, "MEDIUM", 0);
     }
     pdf.text(this.state.company_name, 30, 105);
     pdf.text("Invoice Date:", 408, 50);
@@ -271,7 +265,11 @@ class InvoiceForm extends Component {
     pdf.text("Subtotal:", 417, 670);
     pdf.text(`$${this.state.subtotal}`, 500, 670);
     pdf.text("Tax:", 441, 685);
-    pdf.text(`$${(this.state.subtotal * this.state.taxRate).toFixed(2)}`, 500, 685);
+    pdf.text(
+      `$${(this.state.subtotal * this.state.taxRate).toFixed(2)}`,
+      500,
+      685
+    );
     pdf.text("Total:", 435, 700);
     pdf.text(`$${this.state.total.toFixed(2)}`, 500, 700);
     pdf.text("Amount Paid:", 393, 715);
@@ -290,11 +288,15 @@ class InvoiceForm extends Component {
     let tempSubtotal = 0;
 
     for (let i = 0; i < this.state.lineItems.length; i++) {
-      if(this.state.lineItems[i].quantity >= 0 && this.state.lineItems[i].rate >= 0)
-      tempSubtotal += this.state.lineItems[i].quantity * this.state.lineItems[i].rate
+      if (
+        this.state.lineItems[i].quantity >= 0 &&
+        this.state.lineItems[i].rate >= 0
+      )
+        tempSubtotal +=
+          this.state.lineItems[i].quantity * this.state.lineItems[i].rate;
     }
-    
-    this.setState({ subtotal : tempSubtotal }, this.calculateTotal);
+
+    this.setState({ subtotal: tempSubtotal }, this.calculateTotal);
   }
 
   calculateTotal() {
@@ -312,7 +314,7 @@ class InvoiceForm extends Component {
       postalCode: this.state.zipcode,
       country: "US" //Only works in US for free version
     });
-  
+
     let discount = this.state.discount;
     let shipping = this.state.shipping;
     let subtotal = this.state.subtotal;
@@ -321,7 +323,7 @@ class InvoiceForm extends Component {
     shipping = shipping || 0;
     amount_paid = amount_paid || 0;
 
-    if(this.state.zipcode.length === 5) {
+    if (this.state.zipcode.length === 5) {
       axios({
         method: "get",
         url: `https://rest.avatax.com/api/v2/taxrates/byaddress?${query}`,
@@ -337,26 +339,32 @@ class InvoiceForm extends Component {
           //Our tax is the subtotal * tax rate returned by API
           //FOR SHOWCASE PURPOSES
 
-          let newTotal = parseFloat(subtotal) * (1 - discount/100) + parseFloat(tax) + parseFloat(shipping);
-          this.setState({ 
-            total: newTotal, 
+          let newTotal =
+            parseFloat(subtotal) * (1 - discount / 100) +
+            parseFloat(tax) +
+            parseFloat(shipping);
+          this.setState({
+            total: newTotal,
             balance_due: newTotal - amount_paid,
             tax,
             taxRate
-          })
+          });
         })
         .catch(error => {
           console.log(error);
         });
     } else {
-        const tax = subtotal * this.state.taxRate;
+      const tax = subtotal * this.state.taxRate;
 
-        let total = parseFloat(subtotal) * (1 - discount/100) + parseFloat(tax) + parseFloat(shipping);
-        this.setState({ 
-          total: total, 
-          balance_due: total - amount_paid,
-          tax
-    });
+      let total =
+        parseFloat(subtotal) * (1 - discount / 100) +
+        parseFloat(tax) +
+        parseFloat(shipping);
+      this.setState({
+        total: total,
+        balance_due: total - amount_paid,
+        tax
+      });
     }
   }
 
@@ -375,20 +383,26 @@ class InvoiceForm extends Component {
   };
 
   handleBalanceChange = event => {
-    this.setState({[event.target.name]: parseFloat(event.target.value)});
-    this.setState({ balance_due: this.state.total - this.state.amount_paid}, this.calculateTotal);
-  }
+    this.setState({ [event.target.name]: parseFloat(event.target.value) });
+    this.setState(
+      { balance_due: this.state.total - this.state.amount_paid },
+      this.calculateTotal
+    );
+  };
 
   // Handle Zip Change
   handleZipChange = event => {
-    this.setState({ [event.target.name]: event.target.value }, this.getCityState);
+    this.setState(
+      { [event.target.name]: event.target.value },
+      this.getCityState
+    );
   };
 
   // Get City State by Zip
   getCityState() {
     let zipcode = this.state.zipcode;
     if (zipcode.toString().length < 5) {
-      this.setState({taxRate: 0}, this.calculateTotal);
+      this.setState({ taxRate: 0 }, this.calculateTotal);
       return;
     } else {
       axios
@@ -406,22 +420,23 @@ class InvoiceForm extends Component {
             return;
           } else {
             res.data.results[0].address_components.map(item => {
-                if (item.types[0] === "locality") {
-                  city = item.long_name;
+              if (item.types[0] === "locality") {
+                city = item.long_name;
               } else if (item.types[0] === "administrative_area_level_1") {
-                  state = item.short_name;
+                state = item.short_name;
               } else {
-                  return;
+                return;
               }
-            })
+            });
           }
           console.log(`STATE: ${state}`);
           console.log(`CITY: ${city}`);
-          this.setState({
-            city: city,
-            state: state
-          },
-          this.calculateTotal
+          this.setState(
+            {
+              city: city,
+              state: state
+            },
+            this.calculateTotal
           );
         })
         .catch(err => {
@@ -467,8 +482,8 @@ class InvoiceForm extends Component {
   };
 
   handleLogoToggle = () => {
-    this.setState({ disabled: !this.state.disabled })
-  }
+    this.setState({ disabled: !this.state.disabled });
+  };
 
   render() {
     // dcha - Redirects users to dashboard after invoice has been created
@@ -479,8 +494,6 @@ class InvoiceForm extends Component {
       return <Redirect to="/" />;
     }
 
-
-    
     return (
       <div>
         <div className="form-container1">
@@ -497,7 +510,7 @@ class InvoiceForm extends Component {
                 />
                 <Label for="logo-toggle" sm={2}>
                   Add a logo
-                </Label>         
+                </Label>
               </div>
               <Input
                 type="file"
@@ -507,11 +520,15 @@ class InvoiceForm extends Component {
                 onChange={this.handleImageChange}
                 disabled={this.state.disabled}
               />
-              {this.edit ? <FormText color="muted">
-                Browse file to change your company logo.
-              </FormText> : <FormText color="muted">
-                Browse file to add your company logo.
-              </FormText>}
+              {this.edit ? (
+                <FormText color="muted">
+                  Browse file to change your company logo.
+                </FormText>
+              ) : (
+                <FormText color="muted">
+                  Browse file to add your company logo.
+                </FormText>
+              )}
             </FormGroup>
             <img ref={this.logoRef} className="logo-img" />
             {/* Invoice Header Rigth Side */}
@@ -545,7 +562,14 @@ class InvoiceForm extends Component {
             </FormGroup>
             {/* Invoice Customer Company Details */}
             <FormGroup row>
-              <Label for="company_name" sm={2} hidden className="invoice-from-label">Invoice From</Label>
+              <Label
+                for="company_name"
+                sm={2}
+                hidden
+                className="invoice-from-label"
+              >
+                Invoice From
+              </Label>
               <Col sm={6} className="invoice-from">
                 <Input
                   value={this.state.company_name}
@@ -571,7 +595,9 @@ class InvoiceForm extends Component {
               </Col>
             </FormGroup>
             <FormGroup row>
-              <Label for="invoiceTo" sm={2}hidden className="invoice=to-label">Invoice To</Label>
+              <Label for="invoiceTo" sm={2} hidden className="invoice=to-label">
+                Invoice To
+              </Label>
               <Col sm={6} className="invoice-to">
                 <Input
                   value={this.state.invoiceTo}
@@ -594,12 +620,14 @@ class InvoiceForm extends Component {
                   disabled
                 />
               </Col>
-
             </FormGroup>
             {/* Address, State, Zip */}
             <FormGroup>
-              <Label for="address" hidden className="address-label">Address</Label>
-              <Input className="address"
+              <Label for="address" hidden className="address-label">
+                Address
+              </Label>
+              <Input
+                className="address"
                 value={this.state.address}
                 type="text"
                 name="address"
@@ -611,8 +639,11 @@ class InvoiceForm extends Component {
             <Row form>
               <Col md={2}>
                 <FormGroup>
-                  <Label for="zipcode" hidden className="zip-label">Zip</Label>
-                  <Input className="zip"
+                  <Label for="zipcode" hidden className="zip-label">
+                    Zip
+                  </Label>
+                  <Input
+                    className="zip"
                     value={this.state.zipcode}
                     type="text"
                     name="zipcode"
@@ -624,8 +655,11 @@ class InvoiceForm extends Component {
               </Col>
               <Col md={6}>
                 <FormGroup>
-                  <Label for="city" hidden className="city-label">City</Label>
-                  <Input className="city"
+                  <Label for="city" hidden className="city-label">
+                    City
+                  </Label>
+                  <Input
+                    className="city"
                     value={this.state.city}
                     type="text"
                     name="city"
@@ -637,8 +671,11 @@ class InvoiceForm extends Component {
               </Col>
               <Col md={4}>
                 <FormGroup>
-                  <Label for="state" hidden className="state-label">State</Label>
-                  <Input className="state"
+                  <Label for="state" hidden className="state-label">
+                    State
+                  </Label>
+                  <Input
+                    className="state"
                     value={this.state.state}
                     type="text"
                     name="state"
@@ -674,143 +711,24 @@ class InvoiceForm extends Component {
                       />
                     );
                   })}
-                  {/* <tr>
-                    <th scope="row">1</th>
-                    <td>
-                      <Input
-                        value={this.state.item}
-                        type="text"
-                        name="item"
-                        id="item"
-                        placeholder="Add Item Here"
-                        onChange={this.handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <Input
-                        value={this.state.quantity}
-                        type="number"
-                        name="quantity"
-                        id="quantity"
-                        placeholder="1"
-                        onChange={this.handleInputChange}
-                      />
-                    </td>
-                    <td>
-                      <Input
-                        value={this.state.rate}
-                        type="currency"
-                        name="rate"
-                        id="rate"
-                        placeholder="$ 0.00"
-                        onChange={this.handleInputChange}
-                      />
-                    </td>
-                    <td>${this.state.quantity * this.state.rate} </td>
-                  </tr> */}
                 </tbody>
               </Table>
             </div> {/* table-outer-container */}
             {/* Add Line Item */}
             <div>
-              <Button className="button-line-items" color="secondary" onClick={this.addLineItem}>Add Line Item +</Button>
+              <Button
+                className="button-line-items"
+                color="secondary"
+                onClick={this.addLineItem}
+              >
+                Add Line Item +
+              </Button>
             </div>
-            {/* Commented out the following lines below while testing the compatibility of the Reactstrap Table.  */}
-            {/* Item, Quantity, Rate, Amount - using Reacstrap FormGroup */}
-            {/* <Row form>
-              <Col md={6}>
-                <FormGroup>
-                  <Label for="item">Item</Label>
-                  <Input
-                    value={this.state.item}
-                    type="text"
-                    name="item"
-                    id="item"
-                    placeholder="Add Item Here"
-                    onChange={this.handleInputChange}
-                  />
-                </FormGroup>
-              </Col>
-              <Col md={2}>
-                <FormGroup>
-                  <Label for="quantity">Quantity</Label>
-                  <Input
-                    value={this.state.quantity}
-                    type="number"
-                    name="quantity"
-                    id="quantity"
-                    placeholder="1"
-                    onChange={this.handleInputChange}
-                  />
-                </FormGroup>
-              </Col>
-              <Col md={2}>
-                <FormGroup>
-                  <Label for="rate">Rate</Label>
-                  <Input
-                    value={this.state.rate}
-                    type="currency"
-                    name="rate"
-                    id="rate"
-                    placeholder="$ 0.00"
-                    onChange={this.handleInputChange}
-                  />
-                </FormGroup>
-              </Col>
-            </Row> */}
-            {/* Amount */}
-            {/* <div>
-                <Label for="amount">Amount</Label>
-                ${this.state.quantity * this.state.rate}{" "}
-            </div> */}
-            {/* Amount */}
-            {/* <Col md={2}>
-              <FormGroup>
-                <Label for="amount">Amount</Label>
-                <Input
-                  value={this.state.amount}
-                  type="number"
-                  name="amount"
-                  id="amount"
-                  placeholder="$ 0.00"
-                  onChange={this.handleInputChange}
-                />
-              </FormGroup>
-            </Col> */}
-            {/* Add Line Item */}
-            {/* <button>Add Line Item +</button> */}
-            {/* </Row>
-
-            {/* Subtotal*/}
-            {/* <div classname="subtotal">
-            Subtotal: $
-            </div> */}
-            
-            {/* <FormGroup>
-              <Label for="terms">Subtotal </Label>
-              <Input
-                value={this.state.subtotal}
-                type="number"
-                name="subtotal"
-                id="subtotal"
-                placeholder="Subtotal"
-                onChange={this.handleInputChange}
-              /> */}
-            {/* Subtotal */}
-            
             <FormGroup row>
               <Label for="subtotal" sm={2}>
-                Subtotal 
+                Subtotal
               </Label>
               <Col sm={3}>
-                {/* <Input
-                  value={this.state.subtotal}
-                  type="number"
-                  name="subtotal"
-                  id="subtotal"
-                  placeholder="$ 0.00"
-                  onChange={this.handleSubtotalChange}
-                /> */}
                 <Input
                   value={accounting.formatMoney(this.state.subtotal)}
                   type="string"
@@ -818,12 +736,8 @@ class InvoiceForm extends Component {
                   id="subtotal"
                   disabled
                 />
-                {/* <div>
-                  {accounting.formatMoney(this.state.subtotal)}
-                </div> */}
               </Col>
             </FormGroup>
-
             {/* Discount */}
             <FormGroup row>
               <Label for="discount" sm={2}>
@@ -843,17 +757,15 @@ class InvoiceForm extends Component {
                   />
                   <InputGroupAddon addonType="append">%</InputGroupAddon>
                 </InputGroup>
-                {/* <span>%</span> */}
               </Col>
             </FormGroup>
-
             <FormGroup row>
               <Label for="tax" sm={2}>
                 Tax
               </Label>
               <Col sm="2">
                 <InputGroup>
-                  <Input 
+                  <Input
                     value={parseFloat((this.state.taxRate * 100).toFixed(2))}
                     type="percent"
                     name="tax"
@@ -862,14 +774,9 @@ class InvoiceForm extends Component {
                   />
                   <InputGroupAddon addonType="append">%</InputGroupAddon>
                 </InputGroup>
-              
               </Col>
-            
             </FormGroup>
-            {/* <div>Tax: {parseFloat((this.state.taxRate * 100).toFixed(2))}% </div> */}
-
-            {/* Shipping */}   
-
+            {/* Shipping */}
             <FormGroup row>
               <Label for="shipping" sm={2}>
                 Shipping
@@ -891,14 +798,13 @@ class InvoiceForm extends Component {
                 </InputGroup>
               </Col>
             </FormGroup>
-
             {/* Total */}
             <FormGroup row>
               <Label for="total" sm={2}>
                 Total
               </Label>
               <Col sm={3}>
-                <Input 
+                <Input
                   value={accounting.formatMoney(this.state.total)}
                   type="amount"
                   name="total"
@@ -907,7 +813,6 @@ class InvoiceForm extends Component {
                 />
               </Col>
             </FormGroup>
-
             <FormGroup row>
               <Label for="amount-paid" sm={2}>
                 Amount Paid:
@@ -926,10 +831,11 @@ class InvoiceForm extends Component {
                 </InputGroup>
               </Col>
             </FormGroup>
-
             {/* Notes & Terms*/}
             <FormGroup className="notes">
-              <Label for="notes" className="notes-label">Notes</Label>
+              <Label for="notes" className="notes-label">
+                Notes
+              </Label>
               <Input
                 value={this.state.notes}
                 type="text"
@@ -940,7 +846,9 @@ class InvoiceForm extends Component {
               />
             </FormGroup>
             <FormGroup className="terms">
-              <Label for="terms" className="terms-label">Terms</Label>
+              <Label for="terms" className="terms-label">
+                Terms
+              </Label>
               <Input
                 value={this.state.terms}
                 type="text"
@@ -951,21 +859,27 @@ class InvoiceForm extends Component {
               />
             </FormGroup>
 
-            {this.state.errorMessages.map(error => 
-              (
+            {this.state.errorMessages.map(error => (
               <div className="form-error">{error}</div>
-              )
-            )}
+            ))}
 
-            {this.edit ?
-            <Button type="generate" className="update-button" onClick={this.handleUpdate}>
-              Update Invoice
-            </Button>
-            :
-            <Button type="generate" className="save-button" onClick={this.handleSubmit}>
-              Save Invoice
-            </Button>
-            }
+            {this.edit ? (
+              <Button
+                type="generate"
+                className="update-button"
+                onClick={this.handleUpdate}
+              >
+                Update Invoice
+              </Button>
+            ) : (
+              <Button
+                type="generate"
+                className="save-button"
+                onClick={this.handleSubmit}
+              >
+                Save Invoice
+              </Button>
+            )}
             <Button
               className="download-pdf-button"
               type="generate"
