@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import { CardElement, injectStripe } from "react-stripe-elements";
 import axios from "axios";
 
@@ -8,7 +9,8 @@ class CheckoutForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      purchaseOption: ""
+      purchaseOption: "",
+      toDashboard: false
     };
     this.submit = this.submit.bind(this);
   }
@@ -47,9 +49,14 @@ class CheckoutForm extends Component {
         }
       })
       .catch(err => console.log(err));
+    this.setState({ toDashboard: true });
   }
 
   render() {
+    // dcha - Redirects users to dashboard after payment is made
+    if (this.state.toDashboard === true) {
+      return <Redirect to="/" />;
+    }
     return (
       <div className="checkout">
         <div className="card-wrapper">
