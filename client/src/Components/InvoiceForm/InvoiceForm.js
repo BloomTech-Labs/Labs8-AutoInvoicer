@@ -508,6 +508,16 @@ class InvoiceForm extends Component {
                 onChange={this.handleImageChange}
                 disabled={this.state.disabled}
               />
+              <form>
+                <div class="custom-file">
+                  <input type="file" class="custom-file-input" id="customFile"
+                    name="addLogo"
+                    accept="image/png, image/jpeg"
+                    onChange={this.handleImageChange}
+                    disabled={this.state.disabled}
+                  />
+                </div>
+              </form>
               {this.edit ? <FormText color="muted">
                 Browse file to change your company logo.
               </FormText> : <FormText color="muted">
