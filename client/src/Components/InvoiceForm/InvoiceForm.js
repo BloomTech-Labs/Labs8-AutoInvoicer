@@ -843,17 +843,20 @@ class InvoiceForm extends Component {
                 Shipping
               </Label>
               <Col sm="3">
-                <Input
-                  value={this.state.shipping}
-                  // value={accounting.formatMoney(this.state.shipping)}
-                  type="number" 
-                  min="0" 
-                  max="99999" 
-                  name="shipping"
-                  id="shipping"
-                  placeholder="$ 0.00"
-                  onChange={this.handleInputChange}
-                />
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+                  <Input
+                    value={this.state.shipping}
+                    // value={accounting.formatMoney(this.state.shipping)}
+                    type="number" 
+                    min="0" 
+                    max="99999" 
+                    name="shipping"
+                    id="shipping"
+                    placeholder="$ 0.00"
+                    onChange={this.handleInputChange}
+                  />
+                </InputGroup>
               </Col>
             </FormGroup>
 
@@ -878,14 +881,17 @@ class InvoiceForm extends Component {
                 Amount Paid:
               </Label>
               <Col sm="3">
-                <Input
-                  value={this.state.amount_paid}
-                  type="number"
-                  name="amount_paid"
-                  id="amount_paid"
-                  placeholder="$ 0.00"
-                  onChange={this.handleBalanceChange}
-                />
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">$</InputGroupAddon>
+                  <Input
+                    value={this.state.amount_paid}
+                    type="number"
+                    name="amount_paid"
+                    id="amount_paid"
+                    placeholder="$ 0.00"
+                    onChange={this.handleBalanceChange}
+                  />
+                </InputGroup>
               </Col>
             </FormGroup>
 
