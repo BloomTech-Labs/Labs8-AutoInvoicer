@@ -15,7 +15,7 @@ const NavBar = props => {
             <NavLink className="billing" to="/billing" exact>
               Billing
             </NavLink>
-            <NavLink className="create-invoice" to={props.credits <= 0 ? "/billing" : "/create_invoice"} exact>
+            <NavLink className="create-invoice" to={props.credits <= 0 && !props.subbed ? "/billing" : "/create_invoice"} exact>
               Create New Invoice
             </NavLink>
           </div>
