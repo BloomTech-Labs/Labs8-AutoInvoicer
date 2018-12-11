@@ -550,6 +550,7 @@ class InvoiceForm extends Component {
                   type="text"
                   name="balance_due"
                   id="balance_due"
+                  disabled
                 />
               </Col>
 
