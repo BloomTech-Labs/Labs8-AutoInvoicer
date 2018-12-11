@@ -651,65 +651,67 @@ class InvoiceForm extends Component {
               </Col>
             </Row>
             {/* Item, Quantity, Rate, Amount - Using Reacstrap Table */}
-            <Table striped id="line-items-table" className="striped-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Item</th>
-                  <th>Quantity</th>
-                  <th>Rate</th>
-                  <th>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.lineItems.map((row, index) => {
-                  return (
-                    <LineItems
-                      key={index}
-                      rowNumber={index + 1}
-                      item={row.item}
-                      quantity={row.quantity}
-                      rate={row.rate}
-                      handleLineItemChange={this.handleLineItemChange}
-                    />
-                  );
-                })}
-                {/* <tr>
-                  <th scope="row">1</th>
-                  <td>
-                    <Input
-                      value={this.state.item}
-                      type="text"
-                      name="item"
-                      id="item"
-                      placeholder="Add Item Here"
-                      onChange={this.handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <Input
-                      value={this.state.quantity}
-                      type="number"
-                      name="quantity"
-                      id="quantity"
-                      placeholder="1"
-                      onChange={this.handleInputChange}
-                    />
-                  </td>
-                  <td>
-                    <Input
-                      value={this.state.rate}
-                      type="currency"
-                      name="rate"
-                      id="rate"
-                      placeholder="$ 0.00"
-                      onChange={this.handleInputChange}
-                    />
-                  </td>
-                  <td>${this.state.quantity * this.state.rate} </td>
-                </tr> */}
-              </tbody>
-            </Table>
+            <div className="table-outer-container">
+              <Table striped id="line-items-table" className="striped-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.lineItems.map((row, index) => {
+                    return (
+                      <LineItems
+                        key={index}
+                        rowNumber={index + 1}
+                        item={row.item}
+                        quantity={row.quantity}
+                        rate={row.rate}
+                        handleLineItemChange={this.handleLineItemChange}
+                      />
+                    );
+                  })}
+                  {/* <tr>
+                    <th scope="row">1</th>
+                    <td>
+                      <Input
+                        value={this.state.item}
+                        type="text"
+                        name="item"
+                        id="item"
+                        placeholder="Add Item Here"
+                        onChange={this.handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <Input
+                        value={this.state.quantity}
+                        type="number"
+                        name="quantity"
+                        id="quantity"
+                        placeholder="1"
+                        onChange={this.handleInputChange}
+                      />
+                    </td>
+                    <td>
+                      <Input
+                        value={this.state.rate}
+                        type="currency"
+                        name="rate"
+                        id="rate"
+                        placeholder="$ 0.00"
+                        onChange={this.handleInputChange}
+                      />
+                    </td>
+                    <td>${this.state.quantity * this.state.rate} </td>
+                  </tr> */}
+                </tbody>
+              </Table>
+            </div> {/* table-outer-container */}
             {/* Add Line Item */}
             <div>
               <Button className="button-line-items" color="secondary" onClick={this.addLineItem}>Add Line Item +</Button>
@@ -875,11 +877,11 @@ class InvoiceForm extends Component {
               </Label>
               <Col sm="3">
                 <Input
-                  value={this.state.shipping}
+                  value={"$" + this.state.shipping}
                   // value={accounting.formatMoney(this.state.shipping)}
-                  type="number" 
-                  min="0" 
-                  max="99999" 
+                  type="string" 
+                  // min="0" 
+                  // max="99999" 
                   name="shipping"
                   id="shipping"
                   placeholder="$ 0.00"
