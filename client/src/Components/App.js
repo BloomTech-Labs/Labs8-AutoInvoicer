@@ -88,6 +88,7 @@ class App extends Component {
                   path={props.match.path}
                   params={props.match.params}
                   fetchUser={this.fetchUser}
+                  subbed={this.state.user.subscribed_member}
                 />
               )}
             />
@@ -95,7 +96,12 @@ class App extends Component {
               key={this.routeKey()}
               exact
               path="/"
-              render={props => <Invoices credits={this.state.user.credits} />}
+              render={props => (
+                <Invoices
+                  credits={this.state.user.credits}
+                  subbed={this.state.user.subscribed_member}
+                />
+              )}
             />
             <Route
               key={this.routeKey()}
@@ -107,6 +113,7 @@ class App extends Component {
                   mongo_id={this.state.user._id}
                   path={props.match.path}
                   params={props.match.params}
+                  subbed={this.state.user.subscribed_member}
                 />
               )}
             />

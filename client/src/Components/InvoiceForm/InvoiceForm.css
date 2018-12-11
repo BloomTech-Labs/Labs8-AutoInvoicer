@@ -21,6 +21,17 @@
     margin-top: 30px; 
 }
 
+.logo-toggle {
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+.logo-toggle input {
+  z-index: 10;
+  margin: -2px;
+}
+
 .side-nav {
     height: 800px;
 }
@@ -50,8 +61,8 @@
 
 
 .logo-img {
-  /* max-width: 200px; */
-  height: 200px;
+  max-height: 200px;
+  margin-bottom: 15px;
 }
 
 .notes {
@@ -114,4 +125,51 @@
         margin: 0 auto 75px;
         z-index: 1;
     }
+
+    .date-label {
+        margin-top: 14px;
+        order: 2; 
+    }
+
+    .date {
+        order: 2;
+    }
+
+    .due-date-label {
+        order: 3
+    }
+
+    .due-date {
+        order: 3;
+        /* margin-top: 4px; */
+    }
+
+    .balance-due-label {
+        order: 4;
+    }
+
+    .balance-due {
+        display: flex; 
+        order: 4; 
+    }
+
+    .invoice-from-label {
+        order: 5;
+        margin-top: 10px; 
+    }
+
+    .invoice-from {
+        display: flex;
+        order: 5;
+        margin-top: 24px; 
+    }
+    
+    .invoice-to-label {
+        order: 6;
+    }
+
+    .invoice-to {
+        order: 6;
+        margin-top: 24px; 
+    }    
 }

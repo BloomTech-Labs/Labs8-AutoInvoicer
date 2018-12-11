@@ -69,6 +69,7 @@ class InvoiceForm extends Component {
     edit: false,
     toDashboard: false,
     errorMessages: []
+    disabled: true,
   };
 
   async componentDidMount() {
@@ -152,13 +153,19 @@ class InvoiceForm extends Component {
     const unusedData = [
       "edit",
       "toDashboard",
-      "errorMessages"
+      "errorMessages",
+      "disabled"
     ]
 
 
     const newInvoice = new FormData();
+
     newInvoice.append("auth0_userID", this.auth0_userID);
-    newInvoice.append("logo", this.logo, this.logo.name);
+    
+    if (typeof this.logo !== "string") {
+      newInvoice.append("logo", this.logo, this.logo.name);
+    }
+
     for (const prop in data) {
       if (prop === "lineItems") {
         newInvoice.append(`${prop}`, JSON.stringify(data[prop]));
@@ -236,7 +243,9 @@ class InvoiceForm extends Component {
       });
     });
 
-    pdf.addImage(this.logoRef.current, 'JPEG', 30, 15, 75, 75, "MEDIUM", 0);
+    if (!this.state.disabled) {
+      pdf.addImage(this.logoRef.current, 'JPEG', 30, 15, 75, 75, "MEDIUM", 0);
+    }
     pdf.text(this.state.company_name, 30, 105);
     pdf.text("Invoice Date:", 408, 50);
     pdf.text(this.state.date, 500, 50);
@@ -262,7 +271,7 @@ class InvoiceForm extends Component {
     pdf.text("Tax:", 441, 685);
     pdf.text(`$${(this.state.subtotal * this.state.taxRate).toFixed(2)}`, 500, 685);
     pdf.text("Total:", 435, 700);
-    pdf.text(`$${this.state.total}`, 500, 700);
+    pdf.text(`$${this.state.total.toFixed(2)}`, 500, 700);
     pdf.text("Amount Paid:", 393, 715);
     pdf.text(`$${this.state.amount_paid}`, 500, 715);
     pdf.text("Balance Due:", 393, 730);
@@ -455,15 +464,21 @@ class InvoiceForm extends Component {
       });
   };
 
+  handleLogoToggle = () => {
+    this.setState({ disabled: !this.state.disabled })
+  }
+
   render() {
     // dcha - Redirects users to dashboard after invoice has been created
     if (this.state.toDashboard === true) {
-      this.decrementCredits();
+      if (!this.props.subbed) {
+        this.decrementCredits();
+      }
       return <Redirect to="/" />;
     }
 
-    
 
+    
     return (
       <div>
         <div className="form-container1">
@@ -471,12 +486,24 @@ class InvoiceForm extends Component {
             {/* Add Logo */}
             <FormGroup className="logo">
               {/* <Label for="addLogo">Add Your Logo</Label> */}
+              <div className="logo-toggle">
+                <Input
+                  type="checkbox"
+                  name="logo-toggle"
+                  checked={!this.state.disabled}
+                  onClick={this.handleLogoToggle}
+                />
+                <Label for="logo-toggle" sm={2}>
+                  Add a logo
+                </Label>         
+              </div>
               <Input
                 type="file"
                 name="addLogo"
                 id="addLogo"
                 accept="image/png, image/jpeg"
                 onChange={this.handleImageChange}
+                disabled={this.state.disabled}
               />
               {this.edit ? <FormText color="muted">
                 Browse file to change your company logo.
@@ -486,7 +513,7 @@ class InvoiceForm extends Component {
             </FormGroup>
             <img ref={this.logoRef} className="logo-img" />
             {/* Invoice Header Rigth Side */}
-            <FormGroup row classname="right-indent">
+            <FormGroup row className="invoice-number">
               <Label for="invoice_number" sm={2}>
                 Invoice Number
               </Label>
@@ -500,10 +527,10 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </Col>
-              <Label for="date" sm={2}>
+              <Label for="date" sm={2} className="date-label">
                 Date
               </Label>
-              <Col sm={4}>
+              <Col sm={4} className="date">
                 <Input
                   value={this.state.date}
                   type="date"
@@ -516,8 +543,8 @@ class InvoiceForm extends Component {
             </FormGroup>
             {/* Invoice Customer Company Details */}
             <FormGroup row>
-              <Label for="company_name" sm={2} hidden>Invoice From</Label>
-              <Col sm={6}>
+              <Label for="company_name" sm={2} hidden className="invoice-from-label">Invoice From</Label>
+              <Col sm={6} className="invoice-from">
                 <Input
                   value={this.state.company_name}
                   type="text"
@@ -527,10 +554,10 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </Col>
-              <Label for="due_date" sm={2}>
+              <Label for="due_date" sm={2} className="due-date-label">
                 Due Date
               </Label>
-              <Col sm={4}>
+              <Col sm={4} className="due-date">
                 <Input
                   value={this.state.due_date}
                   type="date"
@@ -542,8 +569,8 @@ class InvoiceForm extends Component {
               </Col>
             </FormGroup>
             <FormGroup row>
-              <Label for="invoiceTo" sm={2}hidden>Invoice To</Label>
-              <Col sm={6}>
+              <Label for="invoiceTo" sm={2}hidden className="invoice=to-label">Invoice To</Label>
+              <Col sm={6} className="invoice-to">
                 <Input
                   value={this.state.invoiceTo}
                   type="text"
@@ -553,23 +580,24 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                 />
               </Col>
-              <Label for="balance_due" sm={2}>
+              <Label for="balance_due" sm={2} className="balance-due-label">
                 Balance Due
               </Label>
-              <Col sm={4}>
+              <Col sm={4} className="balance-due">
                 <Input
                   value={accounting.formatMoney(this.state.balance_due)}
                   type="text"
                   name="balance_due"
                   id="balance_due"
+                  disabled
                 />
               </Col>
 
             </FormGroup>
             {/* Address, State, Zip */}
             <FormGroup>
-              <Label for="address" hidden>Address</Label>
-              <Input
+              <Label for="address" hidden className="address-label">Address</Label>
+              <Input className="address"
                 value={this.state.address}
                 type="text"
                 name="address"
@@ -581,8 +609,8 @@ class InvoiceForm extends Component {
             <Row form>
               <Col md={2}>
                 <FormGroup>
-                  <Label for="zipcode" hidden>Zip</Label>
-                  <Input
+                  <Label for="zipcode" hidden className="zip-label">Zip</Label>
+                  <Input className="zip"
                     value={this.state.zipcode}
                     type="text"
                     name="zipcode"
@@ -594,8 +622,8 @@ class InvoiceForm extends Component {
               </Col>
               <Col md={6}>
                 <FormGroup>
-                  <Label for="city" hidden>City</Label>
-                  <Input
+                  <Label for="city" hidden className="city-label">City</Label>
+                  <Input className="city"
                     value={this.state.city}
                     type="text"
                     name="city"
@@ -607,8 +635,8 @@ class InvoiceForm extends Component {
               </Col>
               <Col md={4}>
                 <FormGroup>
-                  <Label for="state" hidden>State</Label>
-                  <Input
+                  <Label for="state" hidden className="state-label">State</Label>
+                  <Input className="state"
                     value={this.state.state}
                     type="text"
                     name="state"
@@ -765,12 +793,12 @@ class InvoiceForm extends Component {
                 onChange={this.handleInputChange}
               /> */}
             {/* Subtotal */}
-
+            
             <FormGroup row>
               <Label for="subtotal" sm={2}>
                 Subtotal 
               </Label>
-              <Col sm={2}>
+              <Col sm={3}>
                 {/* <Input
                   value={this.state.subtotal}
                   type="number"
@@ -784,6 +812,7 @@ class InvoiceForm extends Component {
                   type="string"
                   name="subtotal"
                   id="subtotal"
+                  disabled
                 />
                 {/* <div>
                   {accounting.formatMoney(this.state.subtotal)}
@@ -841,7 +870,7 @@ class InvoiceForm extends Component {
               <Label for="shipping" sm={2}>
                 Shipping
               </Label>
-              <Col sm="2">
+              <Col sm="3">
                 <Input
                   value={this.state.shipping}
                   // value={accounting.formatMoney(this.state.shipping)}
@@ -861,12 +890,13 @@ class InvoiceForm extends Component {
               <Label for="total" sm={2}>
                 Total
               </Label>
-              <Col sm={2}>
+              <Col sm={3}>
                 <Input 
                   value={accounting.formatMoney(this.state.total)}
                   type="amount"
                   name="total"
                   id="total"
+                  disabled
                 />
               </Col>
             </FormGroup>
@@ -875,7 +905,7 @@ class InvoiceForm extends Component {
               <Label for="amount-paid" sm={2}>
                 Amount Paid:
               </Label>
-              <Col sm="2">
+              <Col sm="3">
                 <Input
                   value={this.state.amount_paid}
                   type="number"

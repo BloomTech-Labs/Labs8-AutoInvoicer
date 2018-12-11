@@ -30,7 +30,8 @@ class CheckoutForm extends Component {
           console.log("user: " + purchase.user);
           axios
             .put(`/api/users/${purchase.user}`, {
-              subscribed_member: true
+              subscribed_member: true,
+              subscribed_since: Date.now()
             })
             .then(res => this.props.fetchUser())
             .catch(err => console.log(err));
