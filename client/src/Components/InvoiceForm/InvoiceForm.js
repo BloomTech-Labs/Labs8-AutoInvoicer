@@ -68,7 +68,7 @@ class InvoiceForm extends Component {
     ],
     edit: false,
     toDashboard: false,
-    errorMessages: []
+    errorMessages: [],
     disabled: true,
   };
 
