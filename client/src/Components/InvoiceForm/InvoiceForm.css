@@ -21,6 +21,17 @@
     margin-top: 30px; 
 }
 
+.logo-toggle {
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+}
+
+.logo-toggle input {
+  z-index: 10;
+  margin: -2px;
+}
+
 .side-nav {
     height: 800px;
 }
@@ -49,8 +60,8 @@
 
 
 .logo-img {
-  /* max-width: 200px; */
-  height: 200px;
+  max-height: 200px;
+  margin-bottom: 15px;
 }
 
 .notes {

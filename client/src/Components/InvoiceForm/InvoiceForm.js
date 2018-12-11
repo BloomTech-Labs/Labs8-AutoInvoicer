@@ -68,7 +68,8 @@ class InvoiceForm extends Component {
       }
     ],
     edit: false,
-    toDashboard: false
+    toDashboard: false,
+    disabled: true,
   };
 
   async componentDidMount() {
@@ -235,7 +236,9 @@ class InvoiceForm extends Component {
       });
     });
 
-    pdf.addImage(this.logoRef.current, 'JPEG', 30, 15, 75, 75, "MEDIUM", 0);
+    if (!this.state.disabled) {
+      pdf.addImage(this.logoRef.current, 'JPEG', 30, 15, 75, 75, "MEDIUM", 0);
+    }
     pdf.text(this.state.company_name, 30, 105);
     pdf.text("Invoice Date:", 408, 50);
     pdf.text(this.state.date, 500, 50);
@@ -261,7 +264,7 @@ class InvoiceForm extends Component {
     pdf.text("Tax:", 441, 685);
     pdf.text(`$${(this.state.subtotal * this.state.taxRate).toFixed(2)}`, 500, 685);
     pdf.text("Total:", 435, 700);
-    pdf.text(`$${this.state.total}`, 500, 700);
+    pdf.text(`$${this.state.total.toFixed(2)}`, 500, 700);
     pdf.text("Amount Paid:", 393, 715);
     pdf.text(`$${this.state.amount_paid}`, 500, 715);
     pdf.text("Balance Due:", 393, 730);
@@ -454,6 +457,10 @@ class InvoiceForm extends Component {
       });
   };
 
+  handleLogoToggle = () => {
+    this.setState({ disabled: !this.state.disabled })
+  }
+
   render() {
     // dcha - Redirects users to dashboard after invoice has been created
     if (this.state.toDashboard === true) {
@@ -470,12 +477,24 @@ class InvoiceForm extends Component {
             {/* Add Logo */}
             <FormGroup className="logo">
               {/* <Label for="addLogo">Add Your Logo</Label> */}
+              <div className="logo-toggle">
+                <Input
+                  type="checkbox"
+                  name="logo-toggle"
+                  checked={!this.state.disabled}
+                  onClick={this.handleLogoToggle}
+                />
+                <Label for="logo-toggle" sm={2}>
+                  Add a logo
+                </Label>         
+              </div>
               <Input
                 type="file"
                 name="addLogo"
                 id="addLogo"
                 accept="image/png, image/jpeg"
                 onChange={this.handleImageChange}
+                disabled={this.state.disabled}
               />
               {this.edit ? <FormText color="muted">
                 Browse file to change your company logo.
