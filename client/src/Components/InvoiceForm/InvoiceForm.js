@@ -36,7 +36,6 @@ class InvoiceForm extends Component {
     this.logoRaw = null;
     this.invalidForm = false;
     this.edit = false;
-    this.errMessage = '';
     this.logoRef = React.createRef();
   }
   state = {
@@ -68,7 +67,8 @@ class InvoiceForm extends Component {
       }
     ],
     edit: false,
-    toDashboard: false
+    toDashboard: false,
+    errorMessages: []
   };
 
   async componentDidMount() {
@@ -118,13 +118,10 @@ class InvoiceForm extends Component {
 
   validateForm = () => {
     const data = this.state;
+    const errCache = [];
 
-    if (!this.logo) {
-      this.invalidForm = true;
-      this.errMessage = "Please submit a valid logo file.";
-      this.invalidForm = false;
-      return;
-    }
+    if (!this.logo)
+      errCache.push("Please submit a valid logo file.");
 
     const formErrorValues = {
       date: "Date",
@@ -139,16 +136,25 @@ class InvoiceForm extends Component {
     };
 
     for (const item in formErrorValues) {
-      if (data[item] === "" || data[item] === "null") {
-        this.errMessage = `Please fill in the ${formErrorValues[item]} field.`;
-        return;
-      }
+      if (data[item] === "" || data[item] === "null") 
+        errCache.push(`Please fill in the ${formErrorValues[item]} field.`);
     }
 
     if (isNaN(data.total)) {
-      this.errMessage = "Please add at least one item.";
-      return;
+      errCache.push("Please add at least one item.");
     }
+
+    this.setState({errorMessages: errCache});
+
+    if(this.state.errorMessages.length > 0)
+      return;
+
+    const unusedData = [
+      "edit",
+      "toDashboard",
+      "errorMessages"
+    ]
+
 
     const newInvoice = new FormData();
     newInvoice.append("auth0_userID", this.auth0_userID);
@@ -156,7 +162,7 @@ class InvoiceForm extends Component {
     for (const prop in data) {
       if (prop === "lineItems") {
         newInvoice.append(`${prop}`, JSON.stringify(data[prop]));
-      } else {
+      } else if(!unusedData.includes(prop)){
         newInvoice.append(`${prop}`, `${data[prop]}`);
       }
     }
@@ -904,7 +910,13 @@ class InvoiceForm extends Component {
                 onChange={this.handleInputChange}
               />
             </FormGroup>
-            
+
+            {this.state.errorMessages.map(error => 
+              (
+              <div className="form-error">{error}</div>
+              )
+            )}
+
             {this.edit ?
             <Button type="generate" className="update-button" onClick={this.handleUpdate}>
               Update Invoice
@@ -921,7 +933,6 @@ class InvoiceForm extends Component {
             >
               Download PDF
             </Button>
-            <div className="form-error">{this.errMessage}</div>
           </Form>
         </div>
       </div>
