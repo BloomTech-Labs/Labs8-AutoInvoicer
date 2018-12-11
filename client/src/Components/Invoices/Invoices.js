@@ -23,7 +23,8 @@ export default class Invoices extends Component {
   }
 
   addInvoice = () => {
-    if (this.props.credits > 0) {
+    // pulls in subbed prop from app to check if tru since subbed is tied to unlimited.
+    if (this.props.credits > 0 || this.props.subbed) {
       return <AddInvoice />;
     } else {
       return (
@@ -48,7 +49,7 @@ export default class Invoices extends Component {
                 <div className="status-circle-container">
                   <div
                     className={
-                      invoice.balance_due  === 0
+                      invoice.balance_due === 0
                         ? "status-circle paid"
                         : "status-circle unpaid"
                     }
@@ -56,7 +57,15 @@ export default class Invoices extends Component {
                 </div>
                 <Link to={`/invoices/${invoice._id}`}>
                   <h4>Invoice #{invoice.invoice_number}</h4>
-                  <p> Due Date: {invoice.due_date ? moment(invoice.due_date).add(1, 'd').format("MMM Do YYYY") : ""}</p>
+                  <p>
+                    {" "}
+                    Due Date:{" "}
+                    {invoice.due_date
+                      ? moment(invoice.due_date)
+                          .add(1, "d")
+                          .format("MMM Do YYYY")
+                      : ""}
+                  </p>
                   <p> Company: {invoice.company_name}</p>
                   <p>
                     {invoice.balance_due === 0
@@ -66,8 +75,7 @@ export default class Invoices extends Component {
                         )}`}
                   </p>
                   <p className="late">
-                    {invoice.due_date < Date.now() &&
-                    invoice.balance_due  > 0
+                    {invoice.due_date < Date.now() && invoice.balance_due > 0
                       ? "Status: Overdue"
                       : ""}
                   </p>
