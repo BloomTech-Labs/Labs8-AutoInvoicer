@@ -25,7 +25,6 @@ import {
 import LineItems from "./LineItems/LineItems";
 
 import "./InvoiceForm.css";
-import LandingPage from "../Landing/LandingOld";
 
 class InvoiceForm extends Component {
   constructor(props) {
@@ -146,13 +145,10 @@ class InvoiceForm extends Component {
       errCache.push("Please add at least one item.");
     }
 
-    this.setState({ errorMessages: errCache });
-
-    if (this.state.errorMessages.length > 0) return;
-
-    const unusedData = ["edit", "toDashboard", "errorMessages", "disabled"];
 
     const newInvoice = new FormData();
+    const unusedData = ["edit", "toDashboard", "errorMessages", "disabled"];
+
 
     newInvoice.append("auth0_userID", this.auth0_userID);
 
@@ -169,6 +165,10 @@ class InvoiceForm extends Component {
         newInvoice.append(`${prop}`, `${data[prop]}`);
       }
     }
+
+    
+    this.setState({ errorMessages: errCache });
+    if (errCache.length > 0) return null;
     return newInvoice;
   };
 
@@ -186,7 +186,6 @@ class InvoiceForm extends Component {
               invoice_num: (invoice_num += 1)
             })
             .then(res => {
-              console.log("invoice added, number incremented");
               this.setState({ toDashboard: true });
             })
             .catch(err => console.log(err));
@@ -204,17 +203,16 @@ class InvoiceForm extends Component {
 
     const params = this.props.params;
 
-    console.log(newInvoice);
-    axios
+    if(newInvoice){
+      axios
       .put(process.env.REACT_APP_NEW_INVOICE + `/${params.id}`, newInvoice)
       .then(res => {
-        console.log(res);
+        this.setState({ toDashboard: true });
       })
       .catch(err => {
         console.log("ERROR", err);
       });
-
-    this.setState({ toDashboard: true });
+    }
   };
 
   createPDF = event => {
@@ -304,7 +302,6 @@ class InvoiceForm extends Component {
     //Calculated using the zipcode
 
     //Turn our data into a querystring
-    console.log(this.state);
     const query = qs.stringify({
       // line1: this.state.address, //Line 1,2,3 are used for addresses. 2 and 3 are optional
       // line2: "",
@@ -413,7 +410,6 @@ class InvoiceForm extends Component {
           }
         })
         .then(res => {
-          console.log(res);
           let city = "";
           let state = "";
           if (res.data.status !== "OK") {
@@ -429,8 +425,6 @@ class InvoiceForm extends Component {
               }
             });
           }
-          console.log(`STATE: ${state}`);
-          console.log(`CITY: ${city}`);
           this.setState(
             {
               city: city,
@@ -467,7 +461,6 @@ class InvoiceForm extends Component {
       .get(`/api/users/${this.mongo_id}`)
       .then(res => {
         let credits = res.data.credits;
-        console.log(credits);
         axios
           .put(`/api/users/${this.mongo_id}`, {
             credits: (credits -= 1)
