@@ -9,42 +9,86 @@ const LineItems = props => {
     <tr className="table_row">
       <th scope="row" className="table_header">{props.rowNumber}</th>
       <td>
-        <Input
-          value={props.item}
-          type="text"
-          name="item"
-          id="item"
-          placeholder="Add Item Here"
-          onChange={e => {
-            props.handleLineItemChange(e, props.rowNumber - 1, "item");
-          }}
-        />
+        {props.edit 
+        ?
+          <Input
+            value={props.item}
+            type="text"
+            name="item"
+            id="item"
+            placeholder="No item"
+            onChange={e => {
+              props.handleLineItemChange(e, props.rowNumber - 1, "item");
+            }}
+            disabled
+          /> 
+        :
+          <Input
+            value={props.item}
+            type="text"
+            name="item"
+            id="item"
+            placeholder="Add Item Here"
+            onChange={e => {
+              props.handleLineItemChange(e, props.rowNumber - 1, "item");
+            }}
+          /> 
+        }
       </td>
       <td>
-        <Input
-          value={props.quantity}
-          type="number"
-          name="quantity"
-          id="quantity"
-          placeholder="1"
-          onChange={e => {
-            props.handleLineItemChange(e, props.rowNumber - 1, "quantity");
-          }}
-        />
+        {props.edit 
+        ?
+          <Input
+            value={props.quantity}
+            type="number"
+            name="quantity"
+            id="quantity"
+            placeholder="1"
+            onChange={e => {
+              props.handleLineItemChange(e, props.rowNumber - 1, "quantity");
+            }}
+            disabled
+          />
+        : 
+          <Input
+            value={props.quantity}
+            type="number"
+            name="quantity"
+            id="quantity"
+            placeholder="1"
+            onChange={e => {
+              props.handleLineItemChange(e, props.rowNumber - 1, "quantity");
+            }}
+          />
+        }
       </td>
       <td>
         <InputGroup>
           <InputGroupAddon addonType="prepend">$</InputGroupAddon>
-          <Input
-            value={props.rate}
-            type="number"
-            name="rate"
-            id="rate"
-            placeholder="$ 0.00"
-            onChange={e => {
-              props.handleLineItemChange(e, props.rowNumber - 1, "rate");
-            }}
-          />
+          {props.edit ?
+            <Input
+              value={props.rate}
+              type="number"
+              name="rate"
+              id="rate"
+              placeholder="$ 0.00"
+              onChange={e => {
+                props.handleLineItemChange(e, props.rowNumber - 1, "rate");
+              }}
+              disabled
+            />
+          : 
+            <Input
+                value={props.rate}
+                type="number"
+                name="rate"
+                id="rate"
+                placeholder="$ 0.00"
+                onChange={e => {
+                  props.handleLineItemChange(e, props.rowNumber - 1, "rate");
+                }}
+            />
+          }
         </InputGroup>
       </td>
       <td className="row_amount"> 
