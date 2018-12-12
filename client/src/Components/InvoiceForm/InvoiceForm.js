@@ -75,7 +75,7 @@ class InvoiceForm extends Component {
 
     if (path === "/invoices/:id") {
       const params = this.props.params;
-      this.state.edit = true;
+      this.setState({edit: true});
       const invoice = (await axios.get(
         process.env.REACT_APP_NEW_INVOICE + `/${params.id}`
       )).data;
@@ -85,16 +85,16 @@ class InvoiceForm extends Component {
           invoice[item].forEach(lineItem => {
             copyArray.push(lineItem);
           });
-          this.setState({ lineItems: copyArray });
+          // this.setState({ lineItems: copyArray });
         } else if (item === "date" || item === "due_date")
-          this.setState({ [item]: invoice[item].substring(0, 10) });
-        else this.setState({ [item]: invoice[item] });
+          // this.setState({ [item]: invoice[item].substring(0, 10) });
+        else // this.setState({ [item]: invoice[item] });
       }
 
       this.logo = this.state.logo;
 
       if (this.logo) {
-        this.setState({ disabled: false })
+        this.setState({ disabled: false });
       }
 
       this.logoRef.current.src = window.URL.createObjectURL(
@@ -148,10 +148,8 @@ class InvoiceForm extends Component {
       errCache.push("Please add at least one item.");
     }
 
-
     const newInvoice = new FormData();
     const unusedData = ["edit", "toDashboard", "errorMessages", "disabled"];
-
 
     newInvoice.append("auth0_userID", this.auth0_userID);
 
@@ -169,7 +167,6 @@ class InvoiceForm extends Component {
       }
     }
 
-    
     this.setState({ errorMessages: errCache });
     if (errCache.length > 0) return null;
     return newInvoice;
@@ -206,15 +203,15 @@ class InvoiceForm extends Component {
 
     const params = this.props.params;
 
-    if(newInvoice){
+    if (newInvoice) {
       axios
-      .put(process.env.REACT_APP_NEW_INVOICE + `/${params.id}`, newInvoice)
-      .then(res => {
-        this.setState({ toDashboard: true });
-      })
-      .catch(err => {
-        console.log("ERROR", err);
-      });
+        .put(process.env.REACT_APP_NEW_INVOICE + `/${params.id}`, newInvoice)
+        .then(res => {
+          this.setState({ toDashboard: true });
+        })
+        .catch(err => {
+          console.log("ERROR", err);
+        });
     }
   };
 
@@ -533,51 +530,51 @@ class InvoiceForm extends Component {
                 Invoice Number
               </Label>
               <Col sm={4}>
-                {this.state.edit ? 
-                <Input
-                  value={this.state.invoice_number}
-                  type="number"
-                  name="invoice_number"
-                  id="invoice_number"
-                  placeholder="Invoice Number"
-                  onChange={this.handleInputChange}
-                  disabled
-                />
-                :
-                <Input
-                  value={this.state.invoice_number}
-                  type="number"
-                  name="invoice_number"
-                  id="invoice_number"
-                  placeholder="Invoice Number"
-                  onChange={this.handleInputChange}
-                />
-                }
+                {this.state.edit ? (
+                  <Input
+                    value={this.state.invoice_number}
+                    type="number"
+                    name="invoice_number"
+                    id="invoice_number"
+                    placeholder="Invoice Number"
+                    onChange={this.handleInputChange}
+                    disabled
+                  />
+                ) : (
+                  <Input
+                    value={this.state.invoice_number}
+                    type="number"
+                    name="invoice_number"
+                    id="invoice_number"
+                    placeholder="Invoice Number"
+                    onChange={this.handleInputChange}
+                  />
+                )}
               </Col>
               <Label for="date" sm={2} className="date-label">
                 Date
               </Label>
               <Col sm={4} className="date">
-                {this.state.edit ?
-                <Input
-                  value={this.state.date}
-                  type="date"
-                  name="date"
-                  id="date"
-                  placeholder="Date"
-                  onChange={this.handleInputChange}
-                  disabled
-                />
-                :
-                <Input
-                  value={this.state.date}
-                  type="date"
-                  name="date"
-                  id="date"
-                  placeholder="Date"
-                  onChange={this.handleInputChange}
-                />
-                }
+                {this.state.edit ? (
+                  <Input
+                    value={this.state.date}
+                    type="date"
+                    name="date"
+                    id="date"
+                    placeholder="Date"
+                    onChange={this.handleInputChange}
+                    disabled
+                  />
+                ) : (
+                  <Input
+                    value={this.state.date}
+                    type="date"
+                    name="date"
+                    id="date"
+                    placeholder="Date"
+                    onChange={this.handleInputChange}
+                  />
+                )}
               </Col>
             </FormGroup>
             {/* Invoice Customer Company Details */}
@@ -591,51 +588,51 @@ class InvoiceForm extends Component {
                 Invoice From
               </Label>
               <Col sm={6} className="invoice-from">
-                {this.state.edit ? 
-                <Input
-                  value={this.state.company_name}
-                  type="text"
-                  name="company_name"
-                  id="company_name"
-                  placeholder="Invoice From"
-                  onChange={this.handleInputChange}
-                  disabled
-                />
-                :
-                <Input
-                  value={this.state.company_name}
-                  type="text"
-                  name="company_name"
-                  id="company_name"
-                  placeholder="Invoice From"
-                  onChange={this.handleInputChange}
-                />
-                }
+                {this.state.edit ? (
+                  <Input
+                    value={this.state.company_name}
+                    type="text"
+                    name="company_name"
+                    id="company_name"
+                    placeholder="Invoice From"
+                    onChange={this.handleInputChange}
+                    disabled
+                  />
+                ) : (
+                  <Input
+                    value={this.state.company_name}
+                    type="text"
+                    name="company_name"
+                    id="company_name"
+                    placeholder="Invoice From"
+                    onChange={this.handleInputChange}
+                  />
+                )}
               </Col>
               <Label for="due_date" sm={2} className="due-date-label">
                 Due Date
               </Label>
               <Col sm={4} className="due-date">
-                {this.state.edit ?
-                <Input
-                  value={this.state.due_date}
-                  type="date"
-                  name="due_date"
-                  id="due_date"
-                  placeholder="Due Date"
-                  onChange={this.handleInputChange}
-                  disabled
-                />
-                :
-                <Input
-                  value={this.state.due_date}
-                  type="date"
-                  name="due_date"
-                  id="due_date"
-                  placeholder="Due Date"
-                  onChange={this.handleInputChange}
-                />
-                }
+                {this.state.edit ? (
+                  <Input
+                    value={this.state.due_date}
+                    type="date"
+                    name="due_date"
+                    id="due_date"
+                    placeholder="Due Date"
+                    onChange={this.handleInputChange}
+                    disabled
+                  />
+                ) : (
+                  <Input
+                    value={this.state.due_date}
+                    type="date"
+                    name="due_date"
+                    id="due_date"
+                    placeholder="Due Date"
+                    onChange={this.handleInputChange}
+                  />
+                )}
               </Col>
             </FormGroup>
             <FormGroup row>
@@ -643,26 +640,26 @@ class InvoiceForm extends Component {
                 Invoice To
               </Label>
               <Col sm={6} className="invoice-to">
-                {this.state.edit ? 
-                <Input
-                  value={this.state.invoiceTo}
-                  type="text"
-                  name="invoiceTo"
-                  id="invoiceTo"
-                  placeholder="Invoice To"
-                  onChange={this.handleInputChange}
-                  disabled
-                />
-                :
-                <Input
-                  value={this.state.invoiceTo}
-                  type="text"
-                  name="invoiceTo"
-                  id="invoiceTo"
-                  placeholder="Invoice To"
-                  onChange={this.handleInputChange}
-                />
-                }
+                {this.state.edit ? (
+                  <Input
+                    value={this.state.invoiceTo}
+                    type="text"
+                    name="invoiceTo"
+                    id="invoiceTo"
+                    placeholder="Invoice To"
+                    onChange={this.handleInputChange}
+                    disabled
+                  />
+                ) : (
+                  <Input
+                    value={this.state.invoiceTo}
+                    type="text"
+                    name="invoiceTo"
+                    id="invoiceTo"
+                    placeholder="Invoice To"
+                    onChange={this.handleInputChange}
+                  />
+                )}
               </Col>
               <Label for="balance_due" sm={2} className="balance-due-label">
                 Balance Due
@@ -682,8 +679,7 @@ class InvoiceForm extends Component {
               <Label for="address" hidden className="address-label">
                 Address
               </Label>
-              {this.state.edit 
-              ?
+              {this.state.edit ? (
                 <Input
                   className="address"
                   value={this.state.address}
@@ -694,7 +690,7 @@ class InvoiceForm extends Component {
                   onChange={this.handleInputChange}
                   disabled
                 />
-              : 
+              ) : (
                 <Input
                   className="address"
                   value={this.state.address}
@@ -704,7 +700,7 @@ class InvoiceForm extends Component {
                   placeholder="Address"
                   onChange={this.handleInputChange}
                 />
-              }
+              )}
             </FormGroup>
             <Row form>
               <Col md={2}>
@@ -712,7 +708,7 @@ class InvoiceForm extends Component {
                   <Label for="zipcode" hidden className="zip-label">
                     Zip
                   </Label>
-                  {this.state.edit ? 
+                  {this.state.edit ? (
                     <Input
                       className="zip"
                       value={this.state.zipcode}
@@ -723,7 +719,7 @@ class InvoiceForm extends Component {
                       onChange={this.handleZipChange}
                       disabled
                     />
-                  : 
+                  ) : (
                     <Input
                       className="zip"
                       value={this.state.zipcode}
@@ -733,7 +729,7 @@ class InvoiceForm extends Component {
                       placeholder="Zip"
                       onChange={this.handleZipChange}
                     />
-                  }
+                  )}
                 </FormGroup>
               </Col>
               <Col md={6}>
@@ -741,7 +737,7 @@ class InvoiceForm extends Component {
                   <Label for="city" hidden className="city-label">
                     City
                   </Label>
-                  {this.state.edit ? 
+                  {this.state.edit ? (
                     <Input
                       className="city"
                       value={this.state.city}
@@ -752,7 +748,7 @@ class InvoiceForm extends Component {
                       onChange={this.handleTaxChange}
                       disabled
                     />
-                  :
+                  ) : (
                     <Input
                       className="city"
                       value={this.state.city}
@@ -762,7 +758,7 @@ class InvoiceForm extends Component {
                       placeholder="City"
                       onChange={this.handleTaxChange}
                     />
-                  }
+                  )}
                 </FormGroup>
               </Col>
               <Col md={4}>
@@ -770,8 +766,7 @@ class InvoiceForm extends Component {
                   <Label for="state" hidden className="state-label">
                     State
                   </Label>
-                  {this.state.edit 
-                  ? 
+                  {this.state.edit ? (
                     <Input
                       className="state"
                       value={this.state.state}
@@ -782,7 +777,7 @@ class InvoiceForm extends Component {
                       onChange={this.handleTaxChange}
                       disabled
                     />
-                  : 
+                  ) : (
                     <Input
                       className="state"
                       value={this.state.state}
@@ -792,7 +787,7 @@ class InvoiceForm extends Component {
                       placeholder="State"
                       onChange={this.handleTaxChange}
                     />
-                  }
+                  )}
                 </FormGroup>
               </Col>
             </Row>
@@ -824,10 +819,11 @@ class InvoiceForm extends Component {
                   })}
                 </tbody>
               </Table>
-            </div> {/* table-outer-container */}
+            </div>{" "}
+            {/* table-outer-container */}
             {/* Add Line Item */}
             <div>
-              {this.state.edit ? 
+              {this.state.edit ? (
                 <Button
                   className="button-line-items"
                   color="secondary"
@@ -835,8 +831,8 @@ class InvoiceForm extends Component {
                   disabled
                 >
                   Add Line Item +
-                </Button> 
-              :
+                </Button>
+              ) : (
                 <Button
                   className="button-line-items"
                   color="secondary"
@@ -844,7 +840,7 @@ class InvoiceForm extends Component {
                 >
                   Add Line Item +
                 </Button>
-              }
+              )}
             </div>
             <FormGroup row>
               <Label for="subtotal" sm={2}>
@@ -867,8 +863,7 @@ class InvoiceForm extends Component {
               </Label>
               <Col sm="2">
                 <InputGroup>
-                  {this.state.edit 
-                  ? 
+                  {this.state.edit ? (
                     <Input
                       value={this.state.discount}
                       type="number"
@@ -880,7 +875,7 @@ class InvoiceForm extends Component {
                       onChange={this.handleInputChange}
                       disabled
                     />
-                  : 
+                  ) : (
                     <Input
                       value={this.state.discount}
                       type="number"
@@ -891,7 +886,7 @@ class InvoiceForm extends Component {
                       placeholder="0"
                       onChange={this.handleInputChange}
                     />
-                  }
+                  )}
                   <InputGroupAddon addonType="append">%</InputGroupAddon>
                 </InputGroup>
               </Col>
@@ -902,8 +897,7 @@ class InvoiceForm extends Component {
               </Label>
               <Col sm="2">
                 <InputGroup>
-                  {this.state.edit 
-                  ? 
+                  {this.state.edit ? (
                     <Input
                       value={parseFloat((this.state.taxRate * 100).toFixed(2))}
                       type="percent"
@@ -912,7 +906,7 @@ class InvoiceForm extends Component {
                       placeholder="0%"
                       disabled
                     />
-                  : 
+                  ) : (
                     <Input
                       value={parseFloat((this.state.taxRate * 100).toFixed(2))}
                       type="percent"
@@ -920,7 +914,7 @@ class InvoiceForm extends Component {
                       id="tax"
                       placeholder="0%"
                     />
-                  }
+                  )}
                   <InputGroupAddon addonType="append">%</InputGroupAddon>
                 </InputGroup>
               </Col>
@@ -933,33 +927,32 @@ class InvoiceForm extends Component {
               <Col sm="3">
                 <InputGroup>
                   <InputGroupAddon addonType="prepend">$</InputGroupAddon>
-                  {this.state.edit
-                  ?
-                  <Input
-                    value={this.state.shipping}
-                    // value={accounting.formatMoney(this.state.shipping)}
-                    type="number" 
-                    min="0" 
-                    max="99999" 
-                    name="shipping"
-                    id="shipping"
-                    placeholder="0.00"
-                    onChange={this.handleInputChange}
-                    disabled
-                  />
-                  :
-                  <Input
-                    value={this.state.shipping}
-                    // value={accounting.formatMoney(this.state.shipping)}
-                    type="number" 
-                    min="0" 
-                    max="99999" 
-                    name="shipping"
-                    id="shipping"
-                    placeholder="0.00"
-                    onChange={this.handleInputChange}
-                  />
-                  }
+                  {this.state.edit ? (
+                    <Input
+                      value={this.state.shipping}
+                      // value={accounting.formatMoney(this.state.shipping)}
+                      type="number"
+                      min="0"
+                      max="99999"
+                      name="shipping"
+                      id="shipping"
+                      placeholder="0.00"
+                      onChange={this.handleInputChange}
+                      disabled
+                    />
+                  ) : (
+                    <Input
+                      value={this.state.shipping}
+                      // value={accounting.formatMoney(this.state.shipping)}
+                      type="number"
+                      min="0"
+                      max="99999"
+                      name="shipping"
+                      id="shipping"
+                      placeholder="0.00"
+                      onChange={this.handleInputChange}
+                    />
+                  )}
                 </InputGroup>
               </Col>
             </FormGroup>
@@ -1014,31 +1007,30 @@ class InvoiceForm extends Component {
               <Label for="terms" className="terms-label">
                 Terms
               </Label>
-              {this.state.edit ? 
-              <Input
-                value={this.state.terms}
-                type="text"
-                name="terms"
-                id="terms"
-                placeholder="Add Terms Here"
-                onChange={this.handleInputChange}
-                disabled
-              />
-              : 
-              <Input
-                value={this.state.terms}
-                type="text"
-                name="terms"
-                id="terms"
-                placeholder="Add Terms Here"
-                onChange={this.handleInputChange}
-              />}
+              {this.state.edit ? (
+                <Input
+                  value={this.state.terms}
+                  type="text"
+                  name="terms"
+                  id="terms"
+                  placeholder="Add Terms Here"
+                  onChange={this.handleInputChange}
+                  disabled
+                />
+              ) : (
+                <Input
+                  value={this.state.terms}
+                  type="text"
+                  name="terms"
+                  id="terms"
+                  placeholder="Add Terms Here"
+                  onChange={this.handleInputChange}
+                />
+              )}
             </FormGroup>
-
             {this.state.errorMessages.map(error => (
               <div className="form-error">{error}</div>
             ))}
-
             {this.state.edit ? (
               <Button
                 type="generate"
