@@ -34,7 +34,6 @@ class InvoiceForm extends Component {
     this.logo = null;
     this.logoRaw = null;
     this.invalidForm = false;
-    this.edit = false;
     this.logoRef = React.createRef();
   }
   state = {
@@ -76,7 +75,7 @@ class InvoiceForm extends Component {
 
     if (path === "/invoices/:id") {
       const params = this.props.params;
-      this.edit = true;
+      this.state.edit = true;
       const invoice = (await axios.get(
         process.env.REACT_APP_NEW_INVOICE + `/${params.id}`
       )).data;
@@ -517,7 +516,7 @@ class InvoiceForm extends Component {
                 onChange={this.handleImageChange}
                 disabled={this.state.disabled}
               />
-              {this.edit ? (
+              {this.state.edit ? (
                 <FormText color="muted">
                   Browse file to change your company logo.
                 </FormText>
@@ -534,7 +533,7 @@ class InvoiceForm extends Component {
                 Invoice Number
               </Label>
               <Col sm={4}>
-                {this.edit ? 
+                {this.state.edit ? 
                 <Input
                   value={this.state.invoice_number}
                   type="number"
@@ -559,7 +558,7 @@ class InvoiceForm extends Component {
                 Date
               </Label>
               <Col sm={4} className="date">
-                {this.edit ?
+                {this.state.edit ?
                 <Input
                   value={this.state.date}
                   type="date"
@@ -592,7 +591,7 @@ class InvoiceForm extends Component {
                 Invoice From
               </Label>
               <Col sm={6} className="invoice-from">
-                {this.edit ? 
+                {this.state.edit ? 
                 <Input
                   value={this.state.company_name}
                   type="text"
@@ -617,7 +616,7 @@ class InvoiceForm extends Component {
                 Due Date
               </Label>
               <Col sm={4} className="due-date">
-                {this.edit ?
+                {this.state.edit ?
                 <Input
                   value={this.state.due_date}
                   type="date"
@@ -644,7 +643,7 @@ class InvoiceForm extends Component {
                 Invoice To
               </Label>
               <Col sm={6} className="invoice-to">
-                {this.edit ? 
+                {this.state.edit ? 
                 <Input
                   value={this.state.invoiceTo}
                   type="text"
@@ -683,7 +682,7 @@ class InvoiceForm extends Component {
               <Label for="address" hidden className="address-label">
                 Address
               </Label>
-              {this.edit 
+              {this.state.edit 
               ?
                 <Input
                   className="address"
@@ -713,7 +712,7 @@ class InvoiceForm extends Component {
                   <Label for="zipcode" hidden className="zip-label">
                     Zip
                   </Label>
-                  {this.edit ? 
+                  {this.state.edit ? 
                     <Input
                       className="zip"
                       value={this.state.zipcode}
@@ -742,7 +741,7 @@ class InvoiceForm extends Component {
                   <Label for="city" hidden className="city-label">
                     City
                   </Label>
-                  {this.edit ? 
+                  {this.state.edit ? 
                     <Input
                       className="city"
                       value={this.state.city}
@@ -771,7 +770,7 @@ class InvoiceForm extends Component {
                   <Label for="state" hidden className="state-label">
                     State
                   </Label>
-                  {this.edit 
+                  {this.state.edit 
                   ? 
                     <Input
                       className="state"
@@ -819,7 +818,7 @@ class InvoiceForm extends Component {
                         quantity={row.quantity}
                         rate={row.rate}
                         handleLineItemChange={this.handleLineItemChange}
-                        edit={this.edit}
+                        edit={this.state.edit}
                       />
                     );
                   })}
@@ -828,7 +827,7 @@ class InvoiceForm extends Component {
             </div> {/* table-outer-container */}
             {/* Add Line Item */}
             <div>
-              {this.edit ? 
+              {this.state.edit ? 
                 <Button
                   className="button-line-items"
                   color="secondary"
@@ -868,7 +867,7 @@ class InvoiceForm extends Component {
               </Label>
               <Col sm="2">
                 <InputGroup>
-                  {this.edit 
+                  {this.state.edit 
                   ? 
                     <Input
                       value={this.state.discount}
@@ -903,7 +902,7 @@ class InvoiceForm extends Component {
               </Label>
               <Col sm="2">
                 <InputGroup>
-                  {this.edit 
+                  {this.state.edit 
                   ? 
                     <Input
                       value={parseFloat((this.state.taxRate * 100).toFixed(2))}
@@ -934,7 +933,7 @@ class InvoiceForm extends Component {
               <Col sm="3">
                 <InputGroup>
                   <InputGroupAddon addonType="prepend">$</InputGroupAddon>
-                  {this.edit
+                  {this.state.edit
                   ?
                   <Input
                     value={this.state.shipping}
@@ -1015,7 +1014,7 @@ class InvoiceForm extends Component {
               <Label for="terms" className="terms-label">
                 Terms
               </Label>
-              {this.edit ? 
+              {this.state.edit ? 
               <Input
                 value={this.state.terms}
                 type="text"
@@ -1040,7 +1039,7 @@ class InvoiceForm extends Component {
               <div className="form-error">{error}</div>
             ))}
 
-            {this.edit ? (
+            {this.state.edit ? (
               <Button
                 type="generate"
                 className="update-button"
