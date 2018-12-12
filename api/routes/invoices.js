@@ -84,7 +84,7 @@ router.post("/", upload.single("logo"), (req, res) => {
     row.rate = Number(row.rate);
   });
 
-  const logo = null;
+  let logo = null;
 
   if (req.file) {
     const ext = req.file.originalname.split(".")[1];

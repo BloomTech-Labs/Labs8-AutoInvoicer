@@ -34,7 +34,6 @@ class InvoiceForm extends Component {
     this.logo = null;
     this.logoRaw = null;
     this.invalidForm = false;
-    this.edit = false;
     this.logoRef = React.createRef();
   }
   state = {
@@ -76,7 +75,7 @@ class InvoiceForm extends Component {
 
     if (path === "/invoices/:id") {
       const params = this.props.params;
-      this.edit = true;
+      this.setState({ edit: true })
       const invoice = (await axios.get(
         process.env.REACT_APP_NEW_INVOICE + `/${params.id}`
       )).data;
@@ -282,8 +281,12 @@ class InvoiceForm extends Component {
     pdf.text(this.state.notes, 75, 745);
     pdf.text("Terms -", 30, 760);
     pdf.text(this.state.terms, 75, 760);
-
-    pdf.save(`Invoice${this.state.invoice_number}`);
+    if (!this.state.edit) {
+      pdf.save(`Invoice${this.state.invoice_number}`);
+      this.handleSubmit(event);
+    } else {
+      pdf.save(`Invoice${this.state.invoice_number}`);
+    }    
   };
 
   calculateSubtotal() {
@@ -517,7 +520,7 @@ class InvoiceForm extends Component {
                 onChange={this.handleImageChange}
                 disabled={this.state.disabled}
               />
-              {this.edit ? (
+              {this.state.edit ? (
                 <FormText color="muted">
                   Browse file to change your company logo.
                 </FormText>
@@ -860,7 +863,7 @@ class InvoiceForm extends Component {
               <div className="form-error">{error}</div>
             ))}
 
-            {this.edit ? (
+            {this.state.edit ? (
               <Button
                 type="generate"
                 className="update-button"
