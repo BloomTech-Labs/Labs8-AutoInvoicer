@@ -75,7 +75,7 @@ class InvoiceForm extends Component {
 
     if (path === "/invoices/:id") {
       const params = this.props.params;
-      this.setState({ edit: true })
+      this.setState({ edit: true });
       const invoice = (await axios.get(
         process.env.REACT_APP_NEW_INVOICE + `/${params.id}`
       )).data;
@@ -488,7 +488,8 @@ class InvoiceForm extends Component {
   render() {
     // dcha - Redirects users to dashboard after invoice has been created
     if (this.state.toDashboard === true) {
-      if (!this.props.subbed) {
+      if (!this.props.subbed && !this.state.edit) {
+        console.log(this.state.edit);
         this.decrementCredits();
       }
       return <Redirect to="/" />;

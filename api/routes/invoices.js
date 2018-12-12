@@ -70,13 +70,6 @@ router.post("/", upload.single("logo"), (req, res) => {
   console.log("File: ", req.file);
   console.log(req.body);
   const auth0_userID = req.body.auth0_userID;
-
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_KEY,
-    api_secret: process.env.CLOUDINARY_SECRET
-  });
-
   const lineItems = JSON.parse(req.body.lineItems);
 
   lineItems.forEach(row => {
@@ -84,9 +77,13 @@ router.post("/", upload.single("logo"), (req, res) => {
     row.rate = Number(row.rate);
   });
 
-  let logo = null;
-
   if (req.file) {
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_NAME,
+      api_key: process.env.CLOUDINARY_KEY,
+      api_secret: process.env.CLOUDINARY_SECRET
+    });
+
     const ext = req.file.originalname.split(".")[1];
     const tmp = os.tmpdir() + "/deleteme." + ext;
     fs.writeFileSync(tmp, req.file.buffer);
@@ -94,51 +91,85 @@ router.post("/", upload.single("logo"), (req, res) => {
     tmp,
       { public_id: `auto-invoicer/${Date.now()}` },
       (error, result) => {
-        console.log(error);
-        logo = result.secure_url;
+        const newInvoice = new Invoice({
+          logo: result.secure_url,
+          invoice_number: Number(req.body.invoice_number),
+          date: req.body.date,
+          due_date: req.body.due_date,
+          balance_due: Number(req.body.balance_due),
+          address: req.body.address,
+          zipcode: req.body.zipcode,
+          city: req.body.city,
+          state: req.body.state,
+          company_name: req.body.company_name,
+          // item: req.body.item,
+          // quantity: Number(req.body.quantity),
+          // rate: Number(req.body.rate),
+          invoiceTo: req.body.invoiceTo,
+          line_items: lineItems,
+          amount: Number(req.body.amount),
+          subtotal: Number(req.body.subtotal),
+          discount: Number(req.body.discount),
+          tax: Number(req.body.tax),
+          shipping: Number(req.body.shipping),
+          total: Number(req.body.total),
+          amount_paid: Number(req.body.amount_paid),
+          notes: req.body.notes,
+          terms: req.body.terms
+        });
+      
+        User.findOne({ auth0_userID }).then(user => {
+          newInvoice
+            .save()
+            .then(invoice => {
+              user.invoices.push(invoice._id);
+              user.save().then(() => {
+                res.send("Success!");
+              });
+            })
+            .catch(err => console.log(err));
+        });
       }
     );
-  }
-
-
-  const newInvoice = new Invoice({
-    logo,
-    invoice_number: Number(req.body.invoice_number),
-    date: req.body.date,
-    due_date: req.body.due_date,
-    balance_due: Number(req.body.balance_due),
-    address: req.body.address,
-    zipcode: req.body.zipcode,
-    city: req.body.city,
-    state: req.body.state,
-    company_name: req.body.company_name,
-    // item: req.body.item,
-    // quantity: Number(req.body.quantity),
-    // rate: Number(req.body.rate),
-    invoiceTo: req.body.invoiceTo,
-    line_items: lineItems,
-    amount: Number(req.body.amount),
-    subtotal: Number(req.body.subtotal),
-    discount: Number(req.body.discount),
-    tax: Number(req.body.tax),
-    shipping: Number(req.body.shipping),
-    total: Number(req.body.total),
-    amount_paid: Number(req.body.amount_paid),
-    notes: req.body.notes,
-    terms: req.body.terms
-  });
-
-  User.findOne({ auth0_userID }).then(user => {
-    newInvoice
-      .save()
-      .then(invoice => {
-        user.invoices.push(invoice._id);
-        user.save().then(() => {
-          res.send("Success!");
-        });
-      })
-      .catch(err => console.log(err));
-  });
+  } else {
+    const newInvoice = new Invoice({
+      invoice_number: Number(req.body.invoice_number),
+      date: req.body.date,
+      due_date: req.body.due_date,
+      balance_due: Number(req.body.balance_due),
+      address: req.body.address,
+      zipcode: req.body.zipcode,
+      city: req.body.city,
+      state: req.body.state,
+      company_name: req.body.company_name,
+      // item: req.body.item,
+      // quantity: Number(req.body.quantity),
+      // rate: Number(req.body.rate),
+      invoiceTo: req.body.invoiceTo,
+      line_items: lineItems,
+      amount: Number(req.body.amount),
+      subtotal: Number(req.body.subtotal),
+      discount: Number(req.body.discount),
+      tax: Number(req.body.tax),
+      shipping: Number(req.body.shipping),
+      total: Number(req.body.total),
+      amount_paid: Number(req.body.amount_paid),
+      notes: req.body.notes,
+      terms: req.body.terms
+    });
+  
+    User.findOne({ auth0_userID }).then(user => {
+      newInvoice
+        .save()
+        .then(invoice => {
+          user.invoices.push(invoice._id);
+          user.save().then(() => {
+            res.send("Success!");
+          });
+        })
+        .catch(err => console.log(err));
+    });
+  }  
 });
 
 router.put("/api/invoices/:_id", upload.single("logo"), (req, res) => {
