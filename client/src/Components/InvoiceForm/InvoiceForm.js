@@ -75,7 +75,7 @@ class InvoiceForm extends Component {
 
     if (path === "/invoices/:id") {
       const params = this.props.params;
-      this.setState({edit: true});
+      this.setState({ edit: true });
       const invoice = (await axios.get(
         process.env.REACT_APP_NEW_INVOICE + `/${params.id}`
       )).data;
@@ -278,8 +278,12 @@ class InvoiceForm extends Component {
     pdf.text(this.state.notes, 75, 745);
     pdf.text("Terms -", 30, 760);
     pdf.text(this.state.terms, 75, 760);
-
-    pdf.save(`Invoice${this.state.invoice_number}`);
+    if (!this.state.edit) {
+      pdf.save(`Invoice${this.state.invoice_number}`);
+      this.handleSubmit(event);
+    } else {
+      pdf.save(`Invoice${this.state.invoice_number}`);
+    }    
   };
 
   calculateSubtotal() {
@@ -481,7 +485,8 @@ class InvoiceForm extends Component {
   render() {
     // dcha - Redirects users to dashboard after invoice has been created
     if (this.state.toDashboard === true) {
-      if (!this.props.subbed) {
+      if (!this.props.subbed && !this.state.edit) {
+        console.log(this.state.edit);
         this.decrementCredits();
       }
       return <Redirect to="/" />;
@@ -1031,6 +1036,7 @@ class InvoiceForm extends Component {
             {this.state.errorMessages.map(error => (
               <div className="form-error">{error}</div>
             ))}
+
             {this.state.edit ? (
               <Button
                 type="generate"
