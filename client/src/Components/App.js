@@ -46,7 +46,7 @@ class App extends Component {
   };
 
   setRoutes() {
-    console.log("component did update");
+    // console.log("component did update");
     // console.log(this.state.routes);
     // console.log(this.state.user);
 

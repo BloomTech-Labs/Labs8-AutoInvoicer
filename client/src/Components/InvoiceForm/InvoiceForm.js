@@ -85,10 +85,10 @@ class InvoiceForm extends Component {
           invoice[item].forEach(lineItem => {
             copyArray.push(lineItem);
           });
-          // this.setState({ lineItems: copyArray });
+          this.setState({ lineItems: copyArray });
         } else if (item === "date" || item === "due_date")
-          // this.setState({ [item]: invoice[item].substring(0, 10) });
-        else // this.setState({ [item]: invoice[item] });
+          this.setState({ [item]: invoice[item].substring(0, 10) });
+        else this.setState({ [item]: invoice[item] });
       }
 
       this.logo = this.state.logo;
@@ -232,8 +232,8 @@ class InvoiceForm extends Component {
         "#": index + 1,
         item: row.item,
         quantity: row.quantity,
-        rate: `$${row.rate}`,
-        amount: `$${row.quantity * row.rate}`
+        rate: `${accounting.formatMoney(row.rate)}`,
+        amount: `${accounting.formatMoney(row.quantity * row.rate)}`
       });
     });
 
@@ -259,21 +259,21 @@ class InvoiceForm extends Component {
     pdf.text("Discount:", 414, 640);
     pdf.text(`${this.state.discount}%`, 500, 640);
     pdf.text("Shipping:", 414, 655);
-    pdf.text(`$${this.state.shipping}`, 500, 655);
+    pdf.text(`${accounting.formatMoney(this.state.shipping)}`, 500, 655);
     pdf.text("Subtotal:", 417, 670);
-    pdf.text(`$${this.state.subtotal}`, 500, 670);
+    pdf.text(`${accounting.formatMoney(this.state.subtotal)}`, 500, 670);
     pdf.text("Tax:", 441, 685);
     pdf.text(
-      `$${(this.state.subtotal * this.state.taxRate).toFixed(2)}`,
+      `${accounting.formatMoney(this.state.subtotal * this.state.taxRate)}`,
       500,
       685
     );
     pdf.text("Total:", 435, 700);
-    pdf.text(`$${this.state.total.toFixed(2)}`, 500, 700);
+    pdf.text(`${accounting.formatMoney(this.state.total)}`, 500, 700);
     pdf.text("Amount Paid:", 393, 715);
-    pdf.text(`$${this.state.amount_paid}`, 500, 715);
+    pdf.text(`${accounting.formatMoney(this.state.amount_paid)}`, 500, 715);
     pdf.text("Balance Due:", 393, 730);
-    pdf.text(`$${this.state.balance_due.toFixed(2)}`, 500, 730);
+    pdf.text(`${accounting.formatMoney(this.state.balance_due)}`, 500, 730);
     pdf.text("Notes -", 30, 745);
     pdf.text(this.state.notes, 75, 745);
     pdf.text("Terms -", 30, 760);
