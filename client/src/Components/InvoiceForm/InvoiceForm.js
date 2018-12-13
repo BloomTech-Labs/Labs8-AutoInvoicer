@@ -453,6 +453,14 @@ class InvoiceForm extends Component {
     this.setState({ lineItems: [...this.state.lineItems, newLineItem] });
   };
 
+  removeLineItem = event => {
+    event.preventDefault();
+    if ( this.state.lineItems.length >= 2) {
+      this.state.lineItems.pop();
+    }
+    this.setState({ lineItems: [...this.state.lineItems] });
+  };
+
   handleLineItemChange = (event, index, item) => {
     let lineItems = [...this.state.lineItems];
     lineItems[index][item] = event.target.value;
@@ -724,14 +732,22 @@ class InvoiceForm extends Component {
             </div>{" "}
             {/* table-outer-container */}
             {/* Add Line Item */}
-            <div>
+            <div className ="buttons-container">
                 <Button
-                  className="button-line-items"
+                  className="button-line-items mr-2"
                   color="secondary"
                   onClick={this.addLineItem}
                   disabled={this.state.edit}
                 >
                   Add Line Item +
+                </Button>
+                <Button
+                  className="button-line-items"
+                  color="secondary"
+                  onClick={this.removeLineItem}
+                  disabled={this.state.edit || this.state.lineItems.length < 2}
+                >
+                  Remove Line Item -
                 </Button>
             </div>
             <FormGroup row>
