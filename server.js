@@ -1,10 +1,11 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const connectMongo = require("./config/mongo");
-const routeConfig = require("./config/routes");
 const moduleConfig = require("./config/modules");
-const serveClient = require("./config/serveClient");
 const passportConfig = require("./config/passport");
+const routeConfig = require("./config/routes");
+const connectMongo = require("./config/mongo");
+const serveClient = require("./config/serveClient");
+
 
 const server = express();
 
