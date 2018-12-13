@@ -238,7 +238,7 @@ class InvoiceForm extends Component {
     });
 
     if (!this.state.disabled) {
-      pdf.addImage(this.logoRef.current, "JPEG", 30, 15, 75, 75, "MEDIUM", 0);
+      pdf.addImage(this.logoRef.current, "PNG", 30, 15, 75, 75, "MEDIUM", 0);
     }
     pdf.text(this.state.company_name, 30, 105);
     pdf.text("Invoice Date:", 408, 50);
