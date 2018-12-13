@@ -6,7 +6,6 @@
     "dev": "concurrently --kill-others-on-fail \"yarn run server\" \"yarn run client\""
   },
   "devDependencies": {
-    "cors": "^2.8.4",
     "nodemon": "^1.18.4"
   },
   "dependencies": {
