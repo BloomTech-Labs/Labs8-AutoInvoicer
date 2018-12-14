@@ -126,6 +126,10 @@ input::-webkit-inner-spin-button {
     overflow-x: hidden;
 }
 
+.buttons-container {
+    display: flex;
+}
+
 @media (max-width: 768px) {
     .form-container1 {
         top: 190px;
