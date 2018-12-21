@@ -3,6 +3,10 @@ const Auth0Strategy = require("passport-auth0");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 
+require("dotenv").config();
+
+
+
 const strategy = new Auth0Strategy(
   {
     domain: process.env.AUTH0_DOMAIN,

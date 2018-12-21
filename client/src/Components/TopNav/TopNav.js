@@ -49,7 +49,7 @@ class TopNav extends Component {
                 {this.subbed ? (
                   <p>Unlimited</p>
                 ) : (
-                  <p>Credits: {this.credits}</p>
+                  <p>Credits: {this.props.credits}</p>
                 )}
               </div>
               <a href={process.env.REACT_APP_LOGOUT}>Sign Out</a>
